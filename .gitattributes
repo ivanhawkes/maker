@@ -1,0 +1,2 @@
+# FreeCAD
+*.fcstd filter=lfs diff=lfs merge=lfs -text
