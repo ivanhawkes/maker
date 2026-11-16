@@ -3,6 +3,7 @@
 ## Confirmed
 
 - Design a personal keyboard as two physically separate, mirrored halves using the existing accepted left-hand prototype as the ergonomic baseline. Allow for small later adjustments.
+- The accepted left-hand prototype is expected to have 28 switch holes, for 28 switches per half when mirrored.
 - Fit Cherry MX-compatible mechanical switches. Exact switch and keycap models are not yet selected.
 - Provide a microcontroller and rechargeable battery in each half.
 - Support optional under-key RGB lighting on each half. The keyboard must work without any LEDs populated.
