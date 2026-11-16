@@ -10,13 +10,16 @@ This is a handoff for future work, not a claim that implementation has started. 
 
 **Gate:** owner accepts the recorded baseline and intended mirror; unresolved measurements are identified, not guessed.
 
+**Inspection to date:** On 2026-11-16, `FreeCADCmd --version` reported FreeCAD 1.1.3. A read-only `FreeCADCmd -c` attempt to open `test-pad.fcstd` and inspect object bounds terminated unexpectedly, so it did not verify the geometry. The prototype was later moved to `prototype/left-hand/`, with matching SHA-256 checksums for all four files. No physical inspection or test was performed.
+
 ## 2. Choose The Architecture
 
-1. Compare feasible switch construction methods, supported BLE/USB controllers, firmware, RGB parts, batteries, charging/protection, and tenting approaches against requirements and budget.
+1. Compare PCBWay and JLCPCB fabrication and assembly options, ESP32-S3 and supported BLE/USB controller alternatives, firmware, and optional RGB parts against requirements and budget. Assess attachment and trial angles for the approved printed wedges. Battery specification and design are deferred for Claude.
 2. Check the selected firmware version's two-peripheral dongle, matrix, lighting, power, and USB support against chosen hardware. Prepare an initial power budget and physical space allocation.
 3. Confirm printer specifications, material and slicer choices. Present tradeoffs and request the owner's decisions. Capture the selected components, data sheets, pin budget, and rationale.
+4. With the owner's approval for flashing and physical testing, use the in-stock boards to test both BLE peripherals connected simultaneously to a USB HID central. Check pairing persistence, reconnect, representative key events, and current in active, connected-idle, and sleep states. Record exact boards, USB wiring, firmware and dependency versions, measurements, and results; test optional RGB separately.
 
-**Gate:** architecture and important constraints are agreed before ordering parts or committing to fabrication.
+**Gate:** architecture and important constraints are agreed and the chosen controller/firmware combination is demonstrated before ordering parts or committing to fabrication. If the proof fails, document alternatives and tradeoffs for the owner.
 
 ## 3. Design And Prototype
 
