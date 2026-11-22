@@ -7,3 +7,6 @@
 .devenv.flake.nix
 .direnv/
 devenv.local.nix
+
+# Python bytecode
+__pycache__/

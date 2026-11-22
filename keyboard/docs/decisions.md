@@ -7,7 +7,7 @@ No parts, firmware versions, manufacturing orders, or geometry changes are appro
 | Prototype geometry | What are the verified switch count, positions, orientations, plate thickness, and export relationships? Which small changes, if any, are desired? | All subsequent design work |
 | Layout and keymap | Row roles are agreed: a number row plus three alpha rows (see [concept.md](concept.md)). Which switch and keycap models, legends, and layers? | Fit, PCB, firmware |
 | Construction | Hot-swap sockets and a dev board on a custom PCB are agreed. PCBWay or JLCPCB? Bare boards, or assembled with sockets, diodes and LEDs? | Electrical, case, cost, serviceability |
-| Controllers and firmware | The nice!nano is selected for all three parts. Which pinned ZMK release? | GPIO, charging, BLE, USB, firmware |
+| Controllers and firmware | The nice!nano is selected for all three parts; ZMK `main` is pinned to a commit (see the decision record). Confirm the boards are v2 on arrival. | GPIO, charging, BLE, USB, firmware |
 | Batteries and charging | Target runtime is weeks per charge with RGB off, charging through the dev board's USB-C. Cell size, use while charging, and replaceability remain open. The design is deferred to Claude. | Power budget, safety, case |
 | RGB | Agreed: one optional LED per key, ambient global effects, off when idle, on while typing, fading to black after 60 s without a key press, LED power switched off in hardware. Still to choose: the LED part, a brightness cap, how to handle the LED supply voltage, and how to implement the fade. | Firmware, LED selection, power |
 | Tenting | Interchangeable printed wedges are approved; determine comfortable angles, attachment method, and stability while preserving flat use. | Case and stability |
@@ -27,7 +27,7 @@ No parts, firmware versions, manufacturing orders, or geometry changes are appro
 - **Approved:** Use removable, interchangeable printed wedges for optional tenting. Trial angles of approximately 5, 10, and 15 degrees are starting points, not final specifications; test comfort and stability.
 - **Decided 2026-11-22 (concept review, see [concept.md](concept.md)):**
   - Rows: a number row plus three alpha rows. The outer pinky column holds edge keys. The thumbs hold Space, Enter, Backspace, layer keys and modifiers.
-  - Controllers: nRF52840 dev boards (nice!nano-class) in both halves and the dongle, mounted on custom PCBs. This replaces the earlier ESP32-S3 preference because of ZMK support and battery life. The in-stock ESP32-S3 and Pico boards are not part of the build. The exact board is not yet chosen.
+  - Controllers: nice!nano (nRF52840) boards in both halves and the dongle, mounted on custom PCBs. This replaces the earlier ESP32-S3 preference because of ZMK support and battery life. The in-stock ESP32-S3 and Pico boards are not part of the build.
   - Switches: plate-mounted MX-compatible switches in Kailh hot-swap sockets.
   - RGB: optional per-key under-switch LEDs with ambient global effects only. Off by default, with LED power switched off when unused. Per-key reactive effects and layer colours are out of scope.
   - Extras: none on the halves; a small status display on the dongle.
@@ -35,5 +35,33 @@ No parts, firmware versions, manufacturing orders, or geometry changes are appro
   - Hosts: Linux and Windows. macOS is not a target.
   - Board: nice!nano for both halves and the dongle. The owner will order and bench-test the boards; design work assumes they are fit for purpose as a mature, widely used ZMK board.
   - RGB behaviour: expected to be used lightly, if at all. It stays off unless the owner is typing and fades to black after 60 s without a key press.
+- **Decided 2026-11-22 (owner):**
+  - Keycaps: [KLP Lamé](https://github.com/braindefender/KLP-Lame-Keycaps) by braindefender (CC-BY-SA-4.0), MX stem. The owner's order is a moulded set from AliExpress (item 1005010095351207), variant "MX Black 60 Keys". The listing could not be read automatically, so the set's contents (in particular how many 1.5u Thumb caps, and whether they are H or V) are **to confirm** when it arrives. The four fanned thumb keys stay, and two of them use the wider 1.5u Thumb caps.
+  - Switches: **Kailh Speed Bronze** (confirmed by the owner). Published specs ([Keychron](https://www.keychron.com/collections/all-switches/products/kailh-speed-switch?page=8), checked 2026-11-22):
+    - Clicky, MX stem, 3-pin plate mount.
+    - 50 ± 10 gf operating force, 1.1 ± 0.4 mm pre-travel, 3.5 ± 0.4 mm total travel. [RTINGS](https://www.rtings.com/keyboard-switch/reviews/kailh/speed-bronze) measured 1.4 mm and 57 gf.
+    - Transparent PC top housing with an SMD-LED window, so it suits reverse-mount under-key LEDs.
+    - Suits Kailh MX hot-swap sockets (CPG151101S11); the socket datasheet was not retrieved.
+    - The MX plate specification is 1.5 ± 0.1 mm. In the printed prototype's 1.6 mm PETG plate the switches "stay in the plate well. A good fit." (owner, 2026-11-22). Long-term hold is untested.
+  - Plate outline and thickness: the prototype's 170 × 122 mm outline, its 1.6 mm thickness and the test rim were only a rough template for trying the layout. They may be changed in the case design. Only the switch positions are the accepted layout. If the thickness changes, re-check switch retention with a printed test.
+- **Measured 2026-11-22** from the repo's STEP files (commit `8e4b89b`, 2026-10-10) with FreeCAD 1.1.4. These are the published design models; the moulded caps should be measured on arrival before the thumb cluster is finalised.
+  - MX stem, MX size: 1u Normal/Thumb 17.99 × 17.99 mm; 1.5u Thumb H/V 26.99 × 17.99 mm. About 5.7 mm tall, with the stem at the centre of each cap.
+  - MX stem, Choc size: 1u 17.50 × 16.49 mm; 1.5u Thumb H 26.52 × 16.50 mm.
+- **Owner's test 2026-11-22:** the two 1.5u thumb caps fit on the printed prototype when fitted vertically (long side along the finger direction). They are on T2 and T3, the two outermost thumb keys (the owner counts these as T3 and T4), with the stem centred. Using the real rounded cap outline, T2 and T3 clear each other by 0.56 mm (see [layout/README.md](../layout/README.md)). An earlier calculation with sharp-cornered rectangles wrongly predicted collisions.
+- **Decided 2026-11-22 (owner): firmware, LEDs and dongle display.** Background research is in [architecture.md](architecture.md#firmware-and-pin-research-2026-11-22).
+  - **ZMK:** `main`, pinned to a commit rather than v0.3.0. Initial pin: `4de313367288aad5aeaa1243890e40dc813f7008` (2026-11-14), which uses Zephyr `v4.1.0+zmk-fixes`. Re-pin deliberately and record why. Nothing has been built against this commit yet.
+  - **LED supply:** left open until PCB design (options A–D in architecture.md). The PCB must still work with no LEDs fitted.
+  - **Dongle display:** a 128 × 64 I²C OLED (0.96" SSD1306 or 1.3" SH1106) running [englmaxi/zmk-dongle-display](https://github.com/englmaxi/zmk-dongle-display) (MIT), tracking `main`. Initial pin: `2bb333f87136d33e94a49d86236ed9ec254a8060` (2026-02-13). The owner is choosing a display module on AliExpress.
+- **Decided 2026-11-22 (owner): case design.**
+  - Claude has full rein over case design. Case work starts once the PCB design is settled, and may produce more than one case design.
+  - **Keyboard 1** (black KLP Lamé caps): a modern, sleek case.
+  - **Keyboard 2** (being considered, with white KLP Lamé caps): a 1970s retro-futurist case, using that decade's colour palette and industrial design. The owner cites the look of Gerry Anderson productions such as *Space: 1999*, and the original *Lost in Space*.
+  - Both cases share the layout, PCB and firmware. Only the printed case parts and the keycaps differ, so case designs must not move switch positions or need PCB changes.
+  - The retro case is an original design inspired by that era's look. It does not reproduce any show's logos, names or specific props.
+- **Found 2026-11-22** in the prototype's `test-pad.3mf`, a Bambu Studio 02.07.01.62 project. These are the slicer settings it was printed with, not a verified specification of the printer:
+  - Printer: Bambu Lab X2D, 0.4 mm nozzle (two nozzles listed), profile "0.20mm Standard @BBL X2D".
+  - Material: Bambu PETG Basic at 250 °C, on a textured PEI plate at 70 °C.
+  - Print: 0.2 mm layers, 2 walls, 5 top and 3 bottom layers, 15% grid infill, no supports. Elephant-foot compensation 0.15 mm, no XY hole or contour compensation.
+  - Build area in the profile: 256 × 256 × 261 mm.
 - **Deferred:** Battery specification and design are for Claude to undertake later, subject to owner approval and safety review.
-- **Proposed, not selected:** ZMK with the desk controller as central and both halves as peripherals. See [architecture.md](architecture.md) for supporting sources and limitations.
+- **Decided 2026-11-22:** ZMK firmware, with the desk controller as central and both halves as peripherals (see [concept.md](concept.md) and [architecture.md](architecture.md)). The release to pin is still open.

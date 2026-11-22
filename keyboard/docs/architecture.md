@@ -20,20 +20,89 @@ Each half scans its own switches and controls its lighting. The desk controller 
 
 ZMK's [lighting documentation](https://zmk.dev/docs/features/lighting) says its RGB underglow feature can also drive per-key addressable LEDs. This does not by itself establish support for arbitrary per-key effects or the desired LED, voltage, and controller combination. Verify the desired controls and power behavior with the selected parts. The halves cannot operate as independent host keyboards in the described ZMK peripheral configuration without changing the architecture or firmware.
 
-**Update 2026-11-22:** The concept review chose nRF52840 dev boards (nice!nano-class) for all three parts; see [concept.md](concept.md). The ESP32-S3 research below is kept as history. The exact board and the pinned ZMK version are not yet selected.
+### Controller
 
-### ESP32-S3 Compatibility Research
+**Decided 2026-11-22:** the nice!nano (nRF52840) is used for both halves and the desk controller; see [concept.md](concept.md). It is on the [ZMK hardware list](https://zmk.dev/docs/hardware) and provides BLE, USB device support and on-board LiPo charging. The pinned ZMK release is not yet selected. The GPIO budget, charging behaviour and electrical integration still need checking against the published pinout and schematic. (Earlier ESP32-S3 research is in git history before this change; those boards and the in-stock Pico boards are not part of the build.)
 
-Research checked on 2026-11-16; these findings are not a successful build or hardware test for this project.
+Before a PCB commitment, use the ordered nice!nanos to test both halves connected at once to a USB HID central (the dongle build), reconnect and bonding persistence, key events, and representative active, connected-idle, and sleep current. Compare against an agreed runtime target. Distinguish a compile-only result from real measurements. Consult the owner before flashing boards or undertaking physical testing.
 
-- ESP32-S3 supports BLE, and [Zephyr 4.1's ESP32-S3 board documentation](https://docs.zephyrproject.org/4.1.0/boards/espressif/esp32s3_devkitc/doc/index.html) lists a Bluetooth HCI driver. Zephyr documents a separate prerequisite to fetch Espressif radio binary blobs; their licensing and the project's open-source requirements need review.
-- The [ZMK supported hardware page](https://zmk.dev/docs/hardware) does not list ESP32-S3 as a preconfigured target. At research time, the ZMK development branch's [manifest](https://github.com/zmkfirmware/zmk/blob/main/app/west.yml) specified the `v4.1.0+zmk-fixes` Zephyr fork; this is not a project version selection and may change.
-- A [2024 ZMK proof of concept](https://github.com/zmkfirmware/zmk/issues/2173) reported BLE operation including a split keyboard on ESP32-S3 with Zephyr 3.6, using custom board configuration. The tester reported USB device support was unavailable in that version and noted an NVS problem in that setup. These historical reports do not establish the behavior of a current build or our three-controller topology.
-- The tester reported approximately 100 mA at 5 V for the whole keyboard while active, with no sleep-mode configuration or sleep current specified. This is not a measurement of our board or its battery current, and the cause was not established. [Espressif's ESP-IDF BLE low-power documentation](https://docs.espressif.com/projects/esp-idf/en/stable/esp32s3/api-guides/low-power-mode/low-power-mode-ble.html) describes light-sleep and clock tradeoffs, but does not prove equivalent support in ZMK's selected Zephyr version.
-- [Current Zephyr documentation](https://docs.zephyrproject.org/latest/boards/espressif/esp32s3_devkitc/doc/index.html) lists an ESP32-S3 USB OTG controller; that does not prove ZMK USB HID works with its pinned Zephyr fork or the owner's exact board. Check USB connector wiring, settings persistence, radio bonding, power management, wake behavior, and optional RGB support on the actual hardware.
-- The **selected direction** (2026-11-22) is an nRF52840-based ZMK-supported board such as the nice!nano or XIAO BLE, which appears on the [ZMK hardware list](https://zmk.dev/docs/hardware). It provides BLE and USB device capability, but availability, GPIO budget, electrical design, and charging behavior still need verification.
+### Firmware And Pin Research (2026-11-22)
 
-Before a PCB commitment, use the in-stock boards to test both halves connected at once to a USB HID central, reconnect and bonding persistence, key events, and representative active, connected-idle, and sleep current. Verify the USB path on the specific board and compare against an agreed runtime target. Distinguish a compile-only result from real measurements. Consult the owner before flashing existing boards or undertaking physical testing.
+This is desk research from published sources and the ZMK repository. Nothing has been built,
+flashed or measured.
+
+**ZMK version.** From the GitHub API and repository files on 2026-11-22:
+
+| Ref | Date | Zephyr | Dongle docs | `ZMK_RGB_UNDERGLOW_AUTO_OFF_IDLE`, `_EXT_POWER`, `ZMK_IDLE_TIMEOUT` | nice!nano board |
+| --- | --- | --- | --- | --- | --- |
+| `v0.3.0` (latest release) | 2025-08-01 | `v3.5.0+zmk-fixes` | Yes (`docs/development/hardware-integration/dongle.mdx`) | All present | `nice_nano_v2` (Zephyr hardware model v1) |
+| `main` (active; last commit 2026-11-14) | rolling | `v4.1.0+zmk-fixes` | Yes (`docs/hardware-integration/dongle.mdx`) | All present | `nice_nano` with revision `2.0.0` (hardware model v2) |
+
+- **Tradeoff:** v0.3.0 is the only stable release, but it is 15 months old and uses
+  Zephyr 3.5. `main` uses Zephyr 4.1 and is where development happens, but it would have
+  to be pinned to a specific commit. The board names and some configuration differ between
+  them.
+- **Toolchain risk:** the devenv shell provides GCC 15 (`gcc-arm-embedded` 15.3) rather
+  than the Zephyr SDK, and building Zephyr 3.5 with GCC 15 is unverified. ZMK's standard
+  GitHub Actions build, which uses a pinned container image, is the fallback.
+- **Gradual fade:** neither ref has a built-in fade-to-black. `AUTO_OFF_IDLE` switches the
+  lighting off when the keyboard goes idle.
+
+**Dongle display.** [englmaxi/zmk-dongle-display](https://github.com/englmaxi/zmk-dongle-display)
+(MIT; last push 2026-02-21) replaces the status screen on a ZMK dongle.
+
+- **Displays:** 128 × 64 I²C OLEDs, either the 0.96" SSD1306 or the 1.3" SH1106. 128 × 32
+  works with some widgets removed.
+- **Shows:** active modifiers, layer name, output status and the halves' battery levels.
+- **Versions:** it tracks ZMK `main`, and its README says to use its `v0.3` branch with ZMK
+  v0.3. For a nice!nano, use `pro_micro_i2c`.
+
+**nice!nano.** Sources: ZMK board files at both refs, and
+[nicekeyboards.com docs](https://nicekeyboards.com/docs/nice-nano/).
+
+| | v1 | v2 |
+| --- | --- | --- |
+| VCC switch (P0.13) | `GPIO_ACTIVE_LOW`: high turns VCC off. The docs' "set it to high" note is the v1 behaviour | `GPIO_ACTIVE_HIGH` (ZMK definition) |
+| Battery sense | Voltage divider on P0.04/AIN2, which uses that pin | Internal VDDH monitor (`zmk,battery-nrf-vddh`); no pin |
+
+- **Check on arrival:** the board revision, because firmware differs. Bench-check the VCC
+  switch polarity.
+- **GPIO:** 18 on the Pro Micro edge, plus 3 on the underside (21 in total, per the docs).
+  The edge pins map to P0.08, P0.06, P0.17, P0.20, P0.22, P0.24, P1.00, P0.11, P1.04, P1.06,
+  P0.09, P0.10, P1.11, P1.13, P1.15, P0.02, P0.29 and P0.31.
+- **Pin use:** P0.09 and P0.10 are the nRF52840's NFC pins. Which pins Nordic limits to
+  low-frequency I/O must be checked in the nRF52840 Product Specification before the LED data
+  pin is chosen. LED data runs at about 800 kHz.
+- **Power:** VCC is "3.3V", with the regulator's current limit not stated. The board charges
+  a "3.7v" LiPo from USB-C at about 100 mA, or about 500 mA with the "boost" jumper; the docs
+  suggest 100–500 mAh cells at the default rate and up to 2000 mAh. The docs warn LEDs "can eat
+  1mA each even when off".
+- **Assembly:** do not socket B+ or B−.
+
+**Pin budget per half (proposal, not a pin assignment).**
+
+| Function | Pins | Notes |
+| --- | --- | --- |
+| 4 × 7 matrix with diodes | 11 | Matrix scanning is low-frequency |
+| LED data | 1 | Use a pin Nordic does not restrict |
+| LED power | 0 | The board's P0.13-switched VCC, if the LED supply question is settled that way |
+| Battery sense | 0 | v2 internal monitor |
+| **Total** | **12 of 18** | 6 spare |
+
+**LED supply (open).** The SK6812MINI-E is rated for 3.7–5.5 V
+([datasheet mirror](https://akizukidenshi.com/goodsaffix/sk6812mini-e.pdf)), with VIH ≥ 0.7 VDD.
+The nice!nano's switched VCC is 3.3 V, below that range. The options:
+
+| Option | Approach | Tradeoffs |
+| --- | --- | --- |
+| A | SK6812MINI-E on the 3.3 V switched VCC | Common hobby practice, but out of specification; colour and brightness may suffer. Simplest. Bench test before relying on it |
+| B | LEDs on the battery through a GPIO-controlled load switch | 3.0–4.2 V, so in specification only above 3.7 V; the 3.3 V data meets VIH at 4.2 V. One extra part |
+| C | 5 V boost plus a level shifter, both switched off when dark | Within specification; more parts and board area |
+| D | A reverse-mount addressable LED rated for 3.3 V | None found in this search; needs more research |
+
+- **Current:** whichever option is chosen, lighting needs a brightness cap. 28 LEDs at full
+  white draw far more than a small LiPo or the 3.3 V regulator is known to supply.
+- **Owner context:** lighting is expected to be used lightly, if at all.
 
 ## Mechanical And Layout
 

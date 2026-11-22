@@ -66,7 +66,8 @@ tried on the test print.
 | --- | --- | --- |
 | Controller ×3 | **nice!nano** (nRF52840, Pro Micro footprint), selected 2026-11-22. The owner orders and bench-tests the boards. The design assumes they are fit for purpose because the board is mature and widely used with ZMK | Pin assignment against the published pinout. Use the board's switchable VCC output for LED power |
 | Integration | The dev board solders or sockets onto a custom half PCB (JLCPCB or PCBWay) | Mounting height against the case, antenna overhang/keep-out, USB-C access from the case edge |
-| Switches | MX-compatible, plate-mounted, Kailh hot-swap sockets on the PCB | The two 14.077 mm cutouts, plate thickness for clip retention |
+| Switches | Kailh Speed Bronze (confirmed; MX-compatible, clicky), plate-mounted, Kailh hot-swap sockets on the PCB. The two 14.077 mm cutouts were a CAD defect, fixed in `cad/left-hand/plate.fcstd` | The 1.6 mm printed PETG plate holds the switches well (owner). The plate's outline and thickness were only a template and may change; re-test retention if the thickness changes |
+| Keycaps | KLP Lamé, MX stem, 17.99 mm 1u. Two of the four thumb keys use 1.5u Thumb caps The 1.5u caps are on T2 and T3 (the owner's T3/T4), fitted vertically, and fit on the printed prototype (owner's test; real-outline calculation gives a 0.56 mm gap). Measure the moulded caps on arrival |
 | Matrix | 28 keys per half, e.g. 4 rows × 7 columns (11 GPIO) with diodes | Pin budget leaves room for LED data, battery sense and LED power control |
 | RGB | Optional per-key reverse-mount LEDs (e.g. SK6812MINI-E class) on one chain per half | LED minimum supply voltage vs. LiPo discharge range, logic level at 3.3 V, current cap |
 | Power | One LiPo with protection per half, charged by USB-C through the dev board, plus a power switch | Cell size and fit, charge current vs. cell rating, case temperature while charging |
@@ -101,6 +102,10 @@ has no power constraint and handles the keymap, the display and USB.
 - The stack is keycaps → switches → printed or fabricated plate (the
   prototype plate is the baseline) → PCB with hot-swap sockets → battery and
   controller space → printed bottom case. The case is printed on the X2D.
+- Case styling (owner, 2026-11-22): a modern, sleek case for the black-cap keyboard. A
+  possible second keyboard with white caps would get a 1970s retro-futurist case, inspired by
+  Gerry Anderson-era and original *Lost in Space* industrial design. Both share one PCB and
+  layout, and the case design starts once the PCB is settled.
 - The halves have no encoders, displays or pointing devices. This keeps them
   thin and simple.
 - Tenting uses swappable printed wedges with trial angles of about 5°, 10° and
