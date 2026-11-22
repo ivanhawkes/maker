@@ -1,0 +1,16 @@
+(version 1)
+
+# KiCad's stock SK6812MINI-E reverse-mount footprint puts its pads 0.247 mm from its own
+# cut-out (measured by DRC, KiCad 10.0.8). The board-setup minimum is a floor that custom
+# rules cannot relax, so it is 0.2 mm (RULES["copper_edge_floor"]) and this rule restores
+# 0.3 mm everywhere except at the LED cut-outs. To verify against the chosen fab house's
+# copper-to-cut-out minimum before ordering.
+(rule "Copper to edge except LED cut-outs"
+  (constraint edge_clearance (min 0.3mm))
+  (condition "!A.memberOfFootprint('LED*') && !B.memberOfFootprint('LED*')"))
+
+# The keep-out between the controller's pin rows blocks the inward thermal spoke, so GND
+# pins there get at least one spoke instead of two.
+(rule "Controller GND spokes"
+  (constraint min_resolved_spokes (min 1))
+  (condition "A.memberOfFootprint('U1') || B.memberOfFootprint('U1')"))

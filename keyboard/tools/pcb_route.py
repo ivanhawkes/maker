@@ -1,0 +1,79 @@
+#!/usr/bin/env python3
+"""Auto-route the generated boards with Freerouting, then import the result.
+
+    python tools/pcb_route.py [left|right ...]     # default: both
+
+For each board: export a Specctra DSN with KiCad 10's pcbnew API, run Freerouting
+headless, import the SES session back, and save the board in place. Run
+tools/pcb_generate.py first. Re-running the generator discards the routing.
+
+Needs `freerouting` on PATH (2.5.0, provided by the devenv shell) and KiCad's pcbnew
+module. Freerouting's own settings and logs go under $FREEROUTING_HOME (default: a
+temporary directory), not the user's home.
+"""
+
+from __future__ import annotations
+
+import os
+import shutil
+import subprocess
+import sys
+import tempfile
+from pathlib import Path
+
+import pcbnew
+
+ROOT = Path(__file__).resolve().parent.parent
+MAX_PASSES = int(os.environ.get("FREEROUTING_PASSES", "60"))
+
+
+def route(side: str) -> int:
+    board_path = ROOT / "pcb" / side / f"{side}.kicad_pcb"
+    board = pcbnew.LoadBoard(str(board_path))
+    exe = shutil.which("freerouting")
+    if not exe:
+        raise SystemExit("freerouting not found on PATH")
+    with tempfile.TemporaryDirectory(prefix=f"route-{side}-") as tmp:
+        tmp = Path(tmp)
+        dsn, ses = tmp / f"{side}.dsn", tmp / f"{side}.ses"
+        if not pcbnew.ExportSpecctraDSN(board, str(dsn)):
+            raise SystemExit(f"{side}: DSN export failed")
+        # Freerouting takes its user-data and log paths from Java's user.home and the XDG
+        # variables, not $HOME, so redirect all of them.
+        home = Path(os.environ.get("FREEROUTING_HOME", str(tmp / "home")))
+        home.mkdir(parents=True, exist_ok=True)
+        env = dict(os.environ, HOME=str(home), XDG_CONFIG_HOME=str(home / "config"),
+                   XDG_STATE_HOME=str(home / "state"), XDG_DATA_HOME=str(home / "data"),
+                   XDG_CACHE_HOME=str(home / "cache"),
+                   JAVA_TOOL_OPTIONS=f"-Duser.home={home} -Djava.awt.headless=true")
+        cmd = [exe, "-de", str(dsn), "-do", str(ses), f"--router.autorouter.max_passes={MAX_PASSES}",
+               "--gui.enabled=false"]
+        print(f"{side}: {' '.join(cmd)}", flush=True)
+        log_path = ROOT / "pcb" / side / f"{side}-freerouting.log"
+        with log_path.open("w") as log_file:
+            proc = subprocess.run(cmd, env=env, stdout=log_file, stderr=subprocess.STDOUT, text=True)
+        print(f"{side}: freerouting exit {proc.returncode}; log {log_path.relative_to(ROOT)}")
+        for line in log_path.read_text(errors="replace").strip().splitlines()[-6:]:
+            print(f"  | {line[:200]}")
+        if proc.returncode != 0 or not ses.exists():
+            raise SystemExit(f"{side}: freerouting failed (exit {proc.returncode})")
+        if not pcbnew.ImportSpecctraSES(board, str(ses)):
+            raise SystemExit(f"{side}: SES import failed")
+    board.BuildConnectivity()
+    if not pcbnew.ZONE_FILLER(board).Fill(board.Zones()):  # refill the GND pours around the new tracks
+        raise SystemExit(f"{side}: zone refill failed")
+    pcbnew.SaveBoard(str(board_path), board)
+    tracks = [t for t in board.GetTracks() if t.GetClass() == "PCB_TRACK"]
+    vias = [t for t in board.GetTracks() if t.GetClass() == "PCB_VIA"]
+    print(f"{side}: saved {board_path.relative_to(ROOT)} with {len(tracks)} track segments, {len(vias)} vias")
+    return 0
+
+
+def main(argv: list[str]) -> int:
+    for side in argv or ["left", "right"]:
+        route(side)
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))
