@@ -163,10 +163,10 @@ Changes from v0 (`tools/pcb_generate.py`):
   empty `.kicad_pro`, then reloads the board in a subprocess (`--finish`) to apply and save
   the rules: in KiCad 10.0.8 `SaveBoard` writes the project file only in a process that did
   not build the board. `check_rules()` reads them back.
-- `<board>.kicad_dru`: the board-setup copper-to-edge floor is 0.2 mm because custom rules
+- `<board>.kicad_dru`: (superseded by [fab house design rules](#fab-house-design-rules-2026-11-23))
+  the board-setup copper-to-edge floor was 0.2 mm because custom rules
   cannot relax it; a custom rule restores 0.3 mm everywhere except the LED cut-outs, where
-  KiCad's stock SK6812MINI-E reverse-mount pads sit 0.247 mm from their own cut-out. **Check
-  0.2 mm against the chosen fab house.**
+  KiCad's stock SK6812MINI-E reverse-mount pads sit 0.247 mm from their own cut-out.
 - Pin map (`pcb/pins.yaml`): nine matrix lines on the inner pin row, facing the keys, and two
   on pads 21 and 22 at the thumb end of the outer row. In v0, six sat on the outer row and had
   to pass the USB end.
@@ -204,11 +204,56 @@ plan-local x = 2.54 through each column, the LED chain and VLED) and leave only 
 the controller to Freerouting; route VLED at signal width, since LED current per key is small
 (to check against the LED supply design).
 
+## Fab House Design Rules (2026-11-23)
+
+Read on 2026-11-23 from [JLCPCB's PCB capabilities](https://jlcpcb.com/capabilities/pcb-capabilities)
+and [PCBWay's capabilities](https://www.pcbway.com/capabilities.html), for a 2-layer, 1.6 mm FR-4
+board with 1 oz outer copper. Both pages are summaries, and neither labels most limits as
+standard or surcharged. For PCBWay, the "normal" column of its Advanced PCB table is used where
+it is stricter than the Standard PCB table. The board is set to the stricter value in every row,
+so either house can make it. The values live in `FAB_MIN` and `CUSTOM_RULES` in
+`tools/pcb_generate.py`. **Re-read both pages before ordering:** they change without notice.
+
+| Rule | JLCPCB | PCBWay | Board setting |
+| --- | --- | --- | --- |
+| Min track width | 0.10 mm (4 mil) | 4 mil standard; 5 mil normal (outer 1 oz) | **0.127 mm** |
+| Min clearance | 0.10 mm; SMD pad to pad 0.15 mm | 4 mil standard; 6 mil normal | **0.152 mm** |
+| Copper to routed edge | 0.2 mm (V-cut 0.4 mm) | 0.25 mm normal, 0.20 mm medium | **0.25 mm** floor; 0.3 mm by custom rule except LED cut-outs |
+| Min drill | 0.15 mm; via 0.2–0.25 mm with pad < 0.45 mm costs more | 0.15 mm; under 0.2 mm costs extra | **0.2 mm** |
+| Min via diameter | 0.25 mm; hole + 0.1 mm (0.15 mm preferred) | Not stated | **0.45 mm** |
+| Via annular ring | (via diameter − hole) ≥ 0.1 mm | 5 mil normal | **0.13 mm** |
+| PTH annular ring | 0.18 mm minimum, 0.25 mm recommended | 10 mil normal | **0.254 mm** (custom rule) |
+| Hole to other copper | Via 0.2 mm, NPTH 0.2 mm, PTH 0.28 mm (0.35 mm recommended) | 4-layer only | **0.2 mm** floor; PTH **0.28 mm** (custom rule) |
+| Hole to hole | Via 0.2 mm, pad 0.45 mm | Component hole 16 mil, via 11 mil | **0.45 mm** |
+| NPTH min | 0.5 mm | Not stated | Not a KiCad rule. All NPTH here are larger |
+| Slot width | Plated 0.5 mm, non-plated 1.0 mm | Plated 0.5 mm, non-plated 0.8 mm | Not a KiCad rule. No slots yet |
+| Solder mask bridge | 0.10 mm green, **0.13 mm black or white** | 4 mil green, 4.5 mil black | **0.13 mm** |
+| Mask opening to other copper | 0.09 mm | Not stated | **0.09 mm** |
+| Silkscreen line width | 0.15 mm | 0.15 mm (etched legend: 8 mil normal) | **0.15 mm** text thickness |
+| Silkscreen text height | 1.0 mm | 0.8 mm | **1.0 mm** |
+| Silkscreen to pad | 0.15 mm | Not stated | **0.15 mm** |
+| Hole position tolerance | ±0.075 mm | ±0.075 mm | — |
+| PTH hole tolerance | +0.13 / −0.08 mm | ±0.08 mm | — |
+
+DRC with these rules (KiCad 10.0.8, the v1 routed boards, not re-routed):
+
+- The track-width errors from Freerouting's neck-downs are gone, apart from one 0.125 mm
+  segment on the right board.
+- **New: 140 `copper_edge_clearance` errors per board, all at the LED cut-outs.** KiCad's stock
+  SK6812MINI-E reverse-mount pads sit 0.2467 mm from their own cut-out, 3 µm under PCBWay's
+  0.25 mm. The rest are routed tracks 0.21–0.249 mm from a cut-out. Fixes, to choose: a local copy
+  of the footprint with a cut-out about 0.1 mm smaller each way (measure the LED body first), or
+  PCBWay's medium tier (0.20 mm, may cost more), or JLCPCB only.
+- 48 `text_height` warnings per board: the controller footprint's pin labels are 0.8 mm. PCBWay
+  allows this; JLCPCB's minimum is 1.0 mm, so they may print illegibly.
+
 ## Running The Tools
 
-All from `keyboard/`, with the devenv shell's tools (`devenv shell` in the repository root;
-in Claude Code's sandbox it needs the sandbox disabled, since `~/.cache` and the Nix store
-are read-only there).
+All from `keyboard/`, with the devenv shell's tools. When Claude Code is started inside the
+devenv shell, `kicad-cli`, `freerouting` and KiCad's Python are on `PATH` or in the Nix store,
+and the generator (`--finish`) and DRC run inside Claude Code's sandbox (checked 2026-11-23).
+Only starting a new `devenv shell` from inside the sandbox fails, since `~/.cache` and the
+Nix store are read-only there.
 
 - **`pcbnew` in Python.** The devenv shell's `python3` cannot import `pcbnew`. KiCad's own
   Python environment (the `python3-3.14.10-env` in `nix-store -qR` of the `kicad` package)

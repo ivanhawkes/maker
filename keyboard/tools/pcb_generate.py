@@ -69,21 +69,39 @@ def mm(v: float) -> int:
     return pcbnew.FromMM(v)
 
 
-# Design rules: conservative values inside JLCPCB's and PCBWay's standard 2-layer
-# capabilities. Re-check against the chosen fab house before ordering.
+# Net class values: what the router uses, wider than the fab minimums below.
 RULES = {
     "track": 0.25, "clearance": 0.2, "via_diameter": 0.6, "via_drill": 0.3,
     "power_track": 0.5, "power_via_diameter": 0.8, "power_via_drill": 0.4,
-    "copper_edge": 0.3,        # enforced by the custom rule in CUSTOM_RULES
-    "copper_edge_floor": 0.2,  # board-setup minimum; only the LED cut-outs use it
+    "copper_edge": 0.3,  # enforced by the custom rule in CUSTOM_RULES
+}
+
+# Board-setup minimums (mm): the stricter of JLCPCB's and PCBWay's no-surcharge limits for a
+# 2-layer, 1.6 mm, 1 oz board, read 2026-11-23, so either can make the board. Sources and the
+# comparison are in docs/pcb.md, "Fab house design rules".
+# BOARD_DESIGN_SETTINGS attribute: (value, .kicad_pro rules key, or None if kept in the board).
+FAB_MIN = {
+    "m_TrackMinWidth": (0.127, "min_track_width"),            # PCBWay 5 mil
+    "m_MinClearance": (0.152, "min_clearance"),               # PCBWay 6 mil
+    "m_CopperEdgeClearance": (0.25, "min_copper_edge_clearance"),  # PCBWay CNC edge
+    "m_HoleClearance": (0.2, "min_hole_clearance"),  # JLCPCB via, NPTH; PTH 0.28 in CUSTOM_RULES
+    "m_HoleToHoleMin": (0.45, "min_hole_to_hole"),            # JLCPCB pad hole to hole
+    "m_MinThroughDrill": (0.2, "min_through_hole_diameter"),  # PCBWay: smaller costs extra
+    "m_ViasMinSize": (0.45, "min_via_diameter"),              # JLCPCB: smaller costs extra
+    "m_ViasMinAnnularWidth": (0.13, "min_via_annular_width"),  # PCBWay 5 mil via ring
+    "m_SilkClearance": (0.15, "min_silk_clearance"),          # JLCPCB silk to pad
+    "m_MinSilkTextHeight": (1.0, "min_text_height"),          # JLCPCB 1.0 mm
+    "m_MinSilkTextThickness": (0.15, "min_text_thickness"),   # both 0.15 mm
+    "m_SolderMaskToCopperClearance": (0.09, "solder_mask_to_copper_clearance"),  # JLCPCB
+    "m_SolderMaskMinWidth": (0.13, None),                     # JLCPCB, black or white mask
 }
 POWER_NETS = ("GND", "RAW", "BAT_IN", "VLED", "VCC_3V3_SW")
 
 
 def apply_rules(board: pcbnew.BOARD) -> None:
     ds = board.GetDesignSettings()
-    ds.m_CopperEdgeClearance = mm(RULES["copper_edge_floor"])
-    ds.m_TrackMinWidth = mm(0.2)  # fab minimum we allow; netclasses use wider tracks
+    for attr, (value, _) in FAB_MIN.items():
+        setattr(ds, attr, mm(value))
     ns = ds.m_NetSettings
     dc = ns.GetDefaultNetclass()
     dc.SetTrackWidth(mm(RULES["track"]))
@@ -106,11 +124,9 @@ def apply_rules(board: pcbnew.BOARD) -> None:
 # rule for a specific footprint, with the reason.
 CUSTOM_RULES = """(version 1)
 
-# KiCad's stock SK6812MINI-E reverse-mount footprint puts its pads 0.247 mm from its own
-# cut-out (measured by DRC, KiCad 10.0.8). The board-setup minimum is a floor that custom
-# rules cannot relax, so it is 0.2 mm (RULES["copper_edge_floor"]) and this rule restores
-# 0.3 mm everywhere except at the LED cut-outs. To verify against the chosen fab house's
-# copper-to-cut-out minimum before ordering.
+# The board-setup copper-to-edge minimum is the fab floor, 0.25 mm (FAB_MIN). This rule keeps
+# 0.3 mm everywhere except at the LED cut-outs, where KiCad's stock SK6812MINI-E reverse-mount
+# pads sit 0.247 mm from their own cut-out (DRC, KiCad 10.0.8), so they fail the floor.
 (rule "Copper to edge except LED cut-outs"
   (constraint edge_clearance (min 0.3mm))
   (condition "!A.memberOfFootprint('LED*') && !B.memberOfFootprint('LED*')"))
@@ -120,6 +136,16 @@ CUSTOM_RULES = """(version 1)
 (rule "Controller GND spokes"
   (constraint min_resolved_spokes (min 1))
   (condition "A.memberOfFootprint('U1') || B.memberOfFootprint('U1')"))
+
+# Plated-through pads: JLCPCB wants 0.28 mm from the hole to other copper (vias and NPTH 0.2 mm,
+# the board floor), and PCBWay's 10 mil component-hole ring is stricter than JLCPCB's 0.18 mm.
+(rule "PTH hole to copper"
+  (constraint hole_clearance (min 0.28mm))
+  (condition "A.Type == 'Pad' && A.Pad_Type == 'Through-hole'"))
+
+(rule "PTH pad annular ring"
+  (constraint annular_width (min 0.254mm))
+  (condition "A.Type == 'Pad' && A.Pad_Type == 'Through-hole'"))
 """
 
 
@@ -131,8 +157,9 @@ def check_rules(board_path: Path) -> None:
     classes = {c["name"]: c for c in pro["net_settings"]["classes"]}
     patterns = {p["pattern"]: p["netclass"] for p in pro["net_settings"].get("netclass_patterns") or []}
     problems = []
-    if abs(rules["min_copper_edge_clearance"] - RULES["copper_edge_floor"]) > 1e-6:
-        problems.append(f"copper edge {rules['min_copper_edge_clearance']}")
+    for value, key in FAB_MIN.values():
+        if key and abs(rules[key] - value) > 1e-6:
+            problems.append(f"{key} {rules[key]}")
     if abs(classes["Default"]["track_width"] - RULES["track"]) > 1e-6:
         problems.append(f"default track {classes['Default']['track_width']}")
     if "Power" not in classes or abs(classes["Power"]["track_width"] - RULES["power_track"]) > 1e-6:

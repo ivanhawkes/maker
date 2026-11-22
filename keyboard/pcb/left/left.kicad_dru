@@ -1,10 +1,8 @@
 (version 1)
 
-# KiCad's stock SK6812MINI-E reverse-mount footprint puts its pads 0.247 mm from its own
-# cut-out (measured by DRC, KiCad 10.0.8). The board-setup minimum is a floor that custom
-# rules cannot relax, so it is 0.2 mm (RULES["copper_edge_floor"]) and this rule restores
-# 0.3 mm everywhere except at the LED cut-outs. To verify against the chosen fab house's
-# copper-to-cut-out minimum before ordering.
+# The board-setup copper-to-edge minimum is the fab floor, 0.25 mm (FAB_MIN). This rule keeps
+# 0.3 mm everywhere except at the LED cut-outs, where KiCad's stock SK6812MINI-E reverse-mount
+# pads sit 0.247 mm from their own cut-out (DRC, KiCad 10.0.8), so they fail the floor.
 (rule "Copper to edge except LED cut-outs"
   (constraint edge_clearance (min 0.3mm))
   (condition "!A.memberOfFootprint('LED*') && !B.memberOfFootprint('LED*')"))
@@ -14,3 +12,13 @@
 (rule "Controller GND spokes"
   (constraint min_resolved_spokes (min 1))
   (condition "A.memberOfFootprint('U1') || B.memberOfFootprint('U1')"))
+
+# Plated-through pads: JLCPCB wants 0.28 mm from the hole to other copper (vias and NPTH 0.2 mm,
+# the board floor), and PCBWay's 10 mil component-hole ring is stricter than JLCPCB's 0.18 mm.
+(rule "PTH hole to copper"
+  (constraint hole_clearance (min 0.28mm))
+  (condition "A.Type == 'Pad' && A.Pad_Type == 'Through-hole'"))
+
+(rule "PTH pad annular ring"
+  (constraint annular_width (min 0.254mm))
+  (condition "A.Type == 'Pad' && A.Pad_Type == 'Through-hole'"))

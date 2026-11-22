@@ -48,8 +48,10 @@ minimum. Details are in [pcb.md](pcb.md#v1-routing-results-2026-11-23). Next, in
 1. Script the regular routing in the generator: one straight F.Cu track per column, the LED
    data chain, and VLED at signal width. VLED width needs checking against the LED supply
    design, which is still open. Leave only the fan-in to the controller to Freerouting.
-2. Choose the fab house, then set the minimum track width to what it allows, or stop the
-   neck-downs.
+2. Done 2026-11-23: the board rules are the stricter of JLCPCB's and PCBWay's limits, so either
+   can make it ([fab house design rules](pcb.md#fab-house-design-rules-2026-11-23)). The 0.127 mm
+   track minimum clears all but one neck-down. New: the LED cut-outs fail the 0.25 mm
+   copper-to-edge minimum, and a fix needs choosing.
 3. If routing still fails, move the controller or widen the board around it. There is about
    2 mm of board beyond the USB end now.
 4. Find out why RST is unrouted on the right board, and fix the controller GND pad that has a
