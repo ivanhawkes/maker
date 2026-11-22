@@ -1,0 +1,5 @@
+# Inputs use devenv's defaults (pinned in devenv.lock).
+nixpkgs:
+  # Allow only these unfree packages, not unfree software in general.
+  permitted_unfree_packages:
+    - bambu-studio

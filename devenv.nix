@@ -45,7 +45,37 @@
     mypy
 
     imagemagick
+
+    # --- CAD, PCB and printing (versions as resolved from devenv.lock on 2026-11-22) ---
+    freecad       # 1.1.4; mechanical CAD. Overrides the system 1.1.3 inside the shell.
+    kicad         # 10.0.8 with symbol/footprint/3D libraries; kicad-cli runs ERC/DRC and exports.
+    # kikit is omitted: in this nixpkgs it depends on pybars3, which is marked insecure
+    # (CVE-2026-119716). kicad-cli covers Gerber/drill/BOM/position exports.
+    # gerbv is omitted: it depends on gtk2, which this nixpkgs marks broken.
+    # Use KiCad's own Gerber viewer (gerbview) for Gerber/drill review.
+    blender       # 5.2.3; renders and visual fit checks.
+    bambu-studio  # 02.08.00.50; slicer for the Bambu Lab printer (X2D support still to verify).
+                  # Unfree in nixpkgs; permitted individually in devenv.yaml.
+
+    # --- ZMK / Zephyr firmware builds (nice!nano, nRF52840) ---
+    # Zephyr is built with the GNU Arm Embedded toolchain via ZEPHYR_TOOLCHAIN_VARIANT=gnuarmemb
+    # (see env below) because nixpkgs has no Zephyr SDK. Compatibility with the pinned ZMK
+    # release is unverified until a first build succeeds.
+    gcc-arm-embedded  # 15.3.rel2
+    cmake
+    ninja
+    dtc
+    gperf
+    ccache
+    protobuf      # protoc, used by ZMK Studio's nanopb RPC when enabled
+    tio           # serial console for USB logging from the boards
+    usbutils      # lsusb, to check enumeration of the dongle
   ];
+
+  env = {
+    ZEPHYR_TOOLCHAIN_VARIANT = "gnuarmemb";
+    GNUARMEMB_TOOLCHAIN_PATH = "${pkgs.gcc-arm-embedded}";
+  };
 
   delta.enable = true;
 
@@ -56,6 +86,33 @@
       ps.pillow
       ps.pytest
       ps.ipython
+
+      # Zephyr/ZMK build requirements (west manages the ZMK and Zephyr checkouts).
+      ps.west
+      ps.pyelftools
+      ps.pyyaml
+      ps.pykwalify
+      ps.packaging
+      ps.intelhex
+      ps.jsonschema
+      ps.anytree
+      ps.canopen
+      ps.progress
+      ps.psutil
+      ps.pyserial
+      ps.semver
+      ps.tqdm
+      ps.requests
+      ps.protobuf
+      ps.grpcio-tools
+
+      # Layout source, geometry and export checks (keyboard project).
+      ps.ezdxf       # read/write the baseplate DXF
+      ps.shapely     # 2D plate/outline geometry checks
+      ps.trimesh     # STL/3MF inspection and interference checks
+      ps.scipy
+      ps.matplotlib  # layout plots
+      ps.jinja2      # generating KiCad/ZMK files from the layout source
     ]);
   };
     
