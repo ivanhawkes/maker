@@ -6,7 +6,7 @@ No parts, firmware versions, manufacturing orders, or geometry changes are appro
 | --- | --- | --- |
 | Prototype geometry | What are the verified switch count, positions, orientations, plate thickness, and export relationships? Which small changes, if any, are desired? | All subsequent design work |
 | Layout and keymap | Row roles are agreed: a number row plus three alpha rows (see [concept.md](concept.md)). Which switch and keycap models, legends, and layers? | Fit, PCB, firmware |
-| Construction | Hot-swap sockets and a dev board on a custom PCB are agreed. PCBWay or JLCPCB? Bare boards, or assembled with sockets, diodes and LEDs? | Electrical, case, cost, serviceability |
+| Construction | Decided 2026-11-23: two mirrored PCBs, bare boards hand-soldered by the owner, the nice!nano on low-profile sockets, JST-PH battery connector, power switch and reset button (see [pcb.md](pcb.md)). Still open: JLCPCB or PCBWay. | Electrical, case, cost, serviceability |
 | Controllers and firmware | The nice!nano is selected for all three parts; ZMK `main` is pinned to a commit (see the decision record). Confirm the boards are v2 on arrival. | GPIO, charging, BLE, USB, firmware |
 | Batteries and charging | Target runtime is weeks per charge with RGB off, charging through the dev board's USB-C. Cell size, use while charging, and replaceability remain open. The design is deferred to Claude. | Power budget, safety, case |
 | RGB | Agreed: one optional LED per key, ambient global effects, off when idle, on while typing, fading to black after 60 s without a key press, LED power switched off in hardware. Still to choose: the LED part, a brightness cap, how to handle the LED supply voltage, and how to implement the fade. | Firmware, LED selection, power |

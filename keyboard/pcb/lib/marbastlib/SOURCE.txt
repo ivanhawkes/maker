@@ -1,0 +1,4 @@
+Source: https://github.com/ebastler/marbastlib
+Commit: 6b0a9a73f579e377816d60b58eac2b3252de7868
+Licence: see LICENSE (CERN-OHL-P-2.0 per GitHub)
+Copied: 2026-11-23, unmodified.

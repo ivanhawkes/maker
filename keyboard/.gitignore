@@ -10,3 +10,10 @@ devenv.local.nix
 
 # Python bytecode
 __pycache__/
+
+# KiCad per-user and generated state
+*.kicad_prl
+*-backups/
+fp-info-cache
+_autosave-*
+*.lck

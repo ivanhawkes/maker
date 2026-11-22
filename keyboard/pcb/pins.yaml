@@ -1,0 +1,69 @@
+# Single source for the controller pin assignment. Read by tools/pcb_generate.py
+# and, later, by the ZMK shield generator, so the PCB and firmware cannot diverge.
+#
+# Status: PROPOSAL (2026-11-23). Same mapping on both halves.
+#
+# Sources:
+#   - Footprint pad numbers and silkscreen names: marbastlib
+#     ProMicro_Reversible_Single (commit 6b0a9a7). The silkscreen uses ATmega32U4
+#     port names (D3, F4, ...).
+#   - Pro Micro pin -> nRF52840 GPIO: ZMK arduino_pro_micro_pins.dtsi (nice!nano).
+#   - Low-frequency (<= 10 kHz) restriction: nRF52840 Product Specification,
+#     aQFN73 ball assignments.
+
+controller:
+  board: nice!nano v2
+  footprint: marbastlib-xp-promicroish:ProMicro_Reversible_Single
+  # pad: [pro_micro_name, atmega_silk, gpio, low_frequency_only]
+  pads:
+    1:  [D1,  PD3, P0.06, false]
+    2:  [D0,  PD2, P0.08, false]
+    3:  [GND, GND, null,  null]
+    4:  [GND, GND, null,  null]
+    5:  [D2,  PD1, P0.17, false]
+    6:  [D3,  PD0, P0.20, false]
+    7:  [D4,  PD4, P0.22, false]
+    8:  [D5,  PC6, P0.24, false]
+    9:  [D6,  PD7, P1.00, false]
+    10: [D7,  PE6, P0.11, false]
+    11: [D8,  PB4, P1.04, true]
+    12: [D9,  PB5, P1.06, true]
+    13: [RAW, RAW, null,  null]   # nice!nano v2: "BATTERY+"; battery via power switch
+    14: [GND, GND, null,  null]
+    15: [RST, RST, null,  null]
+    16: [VCC, VCC, null,  null]   # 3.3 V, switched by P0.13 (EXT_POWER) on v2
+    17: [D21, PF4, P0.31, true]
+    18: [D20, PF5, P0.29, true]
+    19: [D19, PF6, P0.02, true]
+    20: [D18, PF7, P1.15, true]
+    21: [D15, PB1, P1.13, true]
+    22: [D14, PB3, P1.11, true]
+    23: [D16, PB2, P0.10, true]   # NFC2: avoid
+    24: [D10, PB6, P0.09, true]   # NFC1: avoid
+
+# Matrix: ZMK col2row. Diode cathode to the row.
+rows:            # R1 (number row) .. R4
+  R1: 11
+  R2: 12
+  R3: 21
+  R4: 22
+columns:         # C0 (outer pinky) .. C5, then T (thumb keys T0..T3 on rows R1..R4)
+  C0: 20
+  C1: 19
+  C2: 18
+  C3: 17
+  C4: 10
+  C5: 9
+  T:  8
+thumb_rows:      # which row each thumb key uses
+  T0: R1
+  T1: R2
+  T2: R3
+  T3: R4
+
+led_data: 1      # P0.06; unrestricted pin, needed for about 800 kHz LED data
+power:
+  gnd: [3, 4, 14]
+  rst: 15
+  vcc: 16
+  raw: 13
