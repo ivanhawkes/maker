@@ -1,0 +1,9 @@
+# Local secrets loaded by devenv's dotenv support
+.env
+.env.*
+
+# devenv / direnv state
+.devenv/
+.devenv.flake.nix
+.direnv/
+devenv.local.nix
