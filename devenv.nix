@@ -47,7 +47,10 @@
     imagemagick
 
     # --- CAD, PCB and printing (versions as resolved from devenv.lock on 2026-11-22) ---
-    freecad       # 1.1.4; mechanical CAD. Overrides the system 1.1.3 inside the shell.
+    # FreeCAD is NOT provided here (owner decision 2026-11-23): devenv's patched nixpkgs
+    # has no cached FreeCAD/VTK build, so the shell would compile both from source (hours).
+    # Use the system FreeCAD instead (FreeCADCmd 1.1.4 on the owner's NixOS, checked
+    # 2026-11-23); scripts print the FreeCAD version they ran with.
     kicad         # 10.0.8 with symbol/footprint/3D libraries; kicad-cli runs ERC/DRC and exports.
     # kikit is omitted: in this nixpkgs it depends on pybars3, which is marked insecure
     # (CVE-2026-119716). kicad-cli covers Gerber/drill/BOM/position exports.
