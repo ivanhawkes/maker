@@ -27,9 +27,9 @@ FreeCADCmd -c 'import FreeCAD, Part; doc=FreeCAD.openDocument("prototype/left-ha
 1. Compare PCBWay and JLCPCB fabrication and assembly options, ESP32-S3 and supported BLE/USB controller alternatives, firmware, and optional RGB parts against requirements and budget. Assess attachment and trial angles for the approved printed wedges. Battery specification and design are deferred for Claude.
 2. Check the selected firmware version's two-peripheral dongle, matrix, lighting, power, and USB support against chosen hardware. Prepare an initial power budget and physical space allocation.
 3. Confirm printer specifications, material and slicer choices. Present tradeoffs and request the owner's decisions. Capture the selected components, data sheets, pin budget, and rationale.
-4. With the owner's approval for flashing and physical testing, use the in-stock boards to test both BLE peripherals connected simultaneously to a USB HID central. Check pairing persistence, reconnect, representative key events, and current in active, connected-idle, and sleep states. Record exact boards, USB wiring, firmware and dependency versions, measurements, and results; test optional RGB separately.
+4. The owner orders the nice!nano boards and bench-tests them on arrival (decided 2026-11-22). PCB and firmware design proceed in parallel on the assumption that the boards work as documented. When testing, use the boards to test both BLE peripherals connected simultaneously to a USB HID central. Check pairing persistence, reconnect, representative key events, and current in active, connected-idle, and sleep states. Record exact boards, USB wiring, firmware and dependency versions, measurements, and results; test optional RGB separately.
 
-**Gate:** architecture and important constraints are agreed and the chosen controller/firmware combination is demonstrated before ordering parts or committing to fabrication. If the proof fails, document alternatives and tradeoffs for the owner.
+**Gate:** architecture and important constraints are agreed and the chosen controller/firmware combination is demonstrated on the owner's bench before committing to PCB fabrication. The controllers themselves are ordered by the owner up front. If the proof fails, document alternatives and tradeoffs for the owner.
 
 ## 3. Design And Prototype
 

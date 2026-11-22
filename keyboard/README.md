@@ -16,6 +16,7 @@ The geometry, switch count, dimensions, and relationships between the source and
 
 ## Documentation
 
+- [Concept](docs/concept.md): the agreed shape of the keyboard, covering layout, electronics, firmware, mechanics and scope.
 - [Requirements](docs/requirements.md): agreed goals and acceptance criteria.
 - [Architecture](docs/architecture.md): proposed mechanical, electrical, and firmware approach and research links.
 - [Decisions](docs/decisions.md): open questions and their design implications.
