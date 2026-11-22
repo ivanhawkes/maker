@@ -40,6 +40,21 @@ FreeCADCmd -c 'import FreeCAD, Part; doc=FreeCAD.openDocument("prototype/left-ha
 
 **Gate:** reviewed, reproducible design artifacts and a documented, approved physical build plan.
 
+**PCB progress (2026-11-23):** v1 placement is generated for both halves and auto-routed with
+Freerouting 2.5.0, which does not finish them. KiCad DRC leaves 41 unconnected items on the left
+and 52 on the right, plus track-width errors from Freerouting's neck-downs below the 0.2 mm
+minimum. Details are in [pcb.md](pcb.md#v1-routing-results-2026-11-23). Next, in order:
+
+1. Script the regular routing in the generator: one straight F.Cu track per column, the LED
+   data chain, and VLED at signal width. VLED width needs checking against the LED supply
+   design, which is still open. Leave only the fan-in to the controller to Freerouting.
+2. Choose the fab house, then set the minimum track width to what it allows, or stop the
+   neck-downs.
+3. If routing still fails, move the controller or widen the board around it. There is about
+   2 mm of board beyond the USB end now.
+4. Find out why RST is unrouted on the right board, and fix the controller GND pad that has a
+   single thermal spoke.
+
 ## 4. Assemble And Validate
 
 Build and test each half and the central incrementally using [verification.md](verification.md). Record actual results, measurements, limitations, and any changes. Have the owner evaluate comfort, keymap, tenting, lighting, and battery life; revise and retest as necessary.

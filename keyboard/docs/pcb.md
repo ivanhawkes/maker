@@ -1,13 +1,10 @@
 # PCB Design Brief
 
-Status: design started 2026-11-23. **v0 placement generated, not routed.** Generate with
-`python tools/pcb_generate.py`; the boards are written to `pcb/left/left.kicad_pcb` and
-`pcb/right/right.kicad_pcb`. Nothing is routed, checked for fabrication, or ordered.
-
-v0 DRC (KiCad 10.0.8): no courtyard overlaps. Expected unrouted connections. 112
-copper-to-edge warnings per board, all from the reverse-mount LED footprint's own cut-out,
-whose pads sit 0.35 mm from the cut-out. This needs a rule exception checked against the fab
-house's minimum. There are also minor silkscreen overlaps. This brief collects
+Status: design started 2026-11-23. **v1 placement generated and auto-routed; routing incomplete.**
+Generate with `python tools/pcb_generate.py` and route with `python tools/pcb_route.py`; the boards
+are written to `pcb/left/left.kicad_pcb` and `pcb/right/right.kicad_pcb`. Nothing is fully routed,
+checked for fabrication, or ordered. Results are in [v1 routing results](#v1-routing-results-2026-11-23).
+This brief collects
 the owner's decisions, the proposed electrical design, and how the boards will be generated
 and checked. Decisions are marked **Decided**; everything else is a proposal until reviewed.
 
@@ -86,8 +83,10 @@ LiPo (protected cell) ── JST-PH ── slide switch ── nice!nano RAW (= 
 - **VCC cutoff:** the same image says "When P0.13 is set low, it will shut off power to the
   3.3V VCC pin", which agrees with ZMK's v2 `GPIO_ACTIVE_HIGH`. Its high- and low-frequency
   pin legend matches the Nordic table above.
-- **Antenna:** its position on the module has not been verified. The generator puts a copper
-  keep-out (no tracks, vias or fills) under the whole controller on both layers.
+- **Antenna:** its position on the module has not been verified. The generator's copper
+  keep-outs (`CONTROLLER_KEEPOUTS`) cover the area between the two pin rows and a strip beyond
+  the module's far end from USB (plan −y), where the antenna is expected. v0 kept out the whole
+  controller, pads included, so no track could reach it.
 
 - **Switch placement:** the switch sits between the cell and B+. With the switch off the cell
   is fully disconnected, so it **does not charge**. This is the usual behaviour for nice!nano
@@ -149,3 +148,91 @@ file, so the design is reproducible.
 **Gate before ordering:** ERC and DRC are clean, every footprint is checked against its
 datasheet, the matrix and pin map match the ZMK shield, the owner has reviewed the board, and
 the owner has approved the order.
+
+## v1 Routing Results (2026-11-23)
+
+Changes from v0 (`tools/pcb_generate.py`):
+
+- Controller keep-outs leave the pads reachable (see Power, Antenna).
+- GND poured on both layers, filled at generation time.
+- `join_same_pads()`: the marbastlib hot-swap footprint gives each socket pin a plated hole and
+  two overlapping SMD tabs with the same pad number. KiCad treats them as connected; Freerouting
+  does not, so short tracks join them.
+- Design rules now persist. A board made with `pcbnew.BOARD()` has no project, so its net
+  classes were silently dropped; earlier routing used KiCad's defaults. The generator writes an
+  empty `.kicad_pro`, then reloads the board in a subprocess (`--finish`) to apply and save
+  the rules: in KiCad 10.0.8 `SaveBoard` writes the project file only in a process that did
+  not build the board. `check_rules()` reads them back.
+- `<board>.kicad_dru`: the board-setup copper-to-edge floor is 0.2 mm because custom rules
+  cannot relax it; a custom rule restores 0.3 mm everywhere except the LED cut-outs, where
+  KiCad's stock SK6812MINI-E reverse-mount pads sit 0.247 mm from their own cut-out. **Check
+  0.2 mm against the chosen fab house.**
+- Pin map (`pcb/pins.yaml`): nine matrix lines on the inner pin row, facing the keys, and two
+  on pads 21 and 22 at the thumb end of the outer row. In v0, six sat on the outer row and had
+  to pass the USB end.
+
+Run on 2026-11-23 (desktop, 24 cores): KiCad 10.0.8, Freerouting 2.5.0, `FREEROUTING_PASSES=30`,
+both boards routed in parallel.
+
+| Check | Left | Right |
+| --- | --- | --- |
+| Generator | 89 footprints, 74 nets | 89 footprints, 74 nets |
+| DRC before routing | 144 unconnected, 2 `starved_thermal`, silkscreen warnings | same |
+| Freerouting | stopped after 18 passes (11 min): best was pass 1, 68 unrouted, 0 violations | 18 passes (17 min): best was pass 1, 89 unrouted |
+| Result | 1030 track segments, 118 vias | 987 segments, 120 vias |
+| DRC after routing: unconnected | 41 | 52 |
+| DRC after routing: errors | 136 `track_width`, 9 `starved_thermal` | 102 `track_width`, 10 `starved_thermal` |
+| DRC after routing: warnings | 40 `via_dangling`, 2 `track_dangling`, silkscreen | 43 `via_dangling`, silkscreen |
+
+Findings:
+
+- **Freerouting does not finish these boards.** Its best result is always its first pass;
+  later passes get worse, and it stops when the score has not improved for about 10 passes.
+  Freerouting's count is higher than KiCad's because it still lists the same-pad hot-swap joins.
+- **Unrouted (KiCad DRC), left:** VLED 5, GND 7 (pour islands), the column and row nets
+  (C0 4, C1 4, C5 2, T 2, R1 2, R2–R4 1 each), and single key-to-diode and LED-chain links.
+  Freerouting alone reported all 28 VLED links unrouted: the 0.5 mm power width has no room
+  between the LED pads. The right board is similar, plus RST.
+- **Track width errors** are Freerouting's neck-downs into small pads (0.1874 mm, a few 0.15 mm),
+  below the 0.2 mm board minimum. The DSN carries the correct classes (0.25 mm signal, 0.5 mm
+  power). Either raise the floor to what the fab allows or stop the neck-downs.
+- The routed `.kicad_pro` gains a `top_level_sheets` entry on save; harmless.
+
+Next ideas, not yet tried: move the controller or widen the board around it (about 2 mm
+beyond the USB end now); script the regular parts (straight column tracks on F.Cu at
+plan-local x = 2.54 through each column, the LED chain and VLED) and leave only the fan-in to
+the controller to Freerouting; route VLED at signal width, since LED current per key is small
+(to check against the LED supply design).
+
+## Running The Tools
+
+All from `keyboard/`, with the devenv shell's tools (`devenv shell` in the repository root;
+in Claude Code's sandbox it needs the sandbox disabled, since `~/.cache` and the Nix store
+are read-only there).
+
+- **`pcbnew` in Python.** The devenv shell's `python3` cannot import `pcbnew`. KiCad's own
+  Python environment (the `python3-3.14.10-env` in `nix-store -qR` of the `kicad` package)
+  works with `PYTHONPATH` set to `kicad-base-10.0.8/lib/python3.14/site-packages` plus a
+  Python 3.14 PyYAML `site-packages`. On the laptop, a bare Python with the same
+  `PYTHONPATH` worked; the devenv Python failed with a libprotobuf symbol error.
+- `KICAD10_FOOTPRINT_DIR`: `share/kicad/footprints` of the `kicad-footprints` package.
+- Routing: `FREEROUTING_PASSES=30 FREEROUTING_HOME=<scratch dir> python tools/pcb_route.py left right`.
+  Freerouting ignores `$HOME`; the script redirects `user.home` and the XDG variables.
+  Pass one side per process to route both in parallel.
+- DRC: `kicad-cli pcb drc --format json -o <out>.json pcb/left/left.kicad_pcb`. Do not pass
+  `--schematic-parity=false`: this kicad-cli rejects it and writes no report.
+- Review render: `kicad-cli pcb export svg --layers F.Cu,B.Cu,Edge.Cuts --mode-single
+  --fit-page-to-board --exclude-drawing-sheet`, then `magick -density 150 in.svg -background
+  white -flatten out.png`.
+- FreeCAD: use the system `FreeCADCmd` (1.1.4); the devenv shell does not provide it.
+
+## Open Items
+
+- One controller GND pad per board has a single thermal spoke (`starved_thermal`); the custom
+  rule meant to fix it does not.
+- Verify the Kailh CPG151101S11 socket footprint and the low-profile socket pin holes against
+  their datasheets.
+- Add the real KLP Lamé keycap outlines to `tools/layout.py check` (the prototype shows they fit,
+  about 2 mm apart by eye).
+- Later: generate the schematic, write the ZMK shield from `pcb/pins.yaml`, and settle the
+  board outline with the case design.
