@@ -403,6 +403,7 @@ def build(side: str) -> Board:
     row_cells: dict[str, dict] = {}  # finger row -> {column: (x, y, r, cathode pad)}
     thumb_links: list = []  # thumb keys: (x, y, r, switch pin 1 hole, diode anode)
     frames: dict[str, tuple[float, float, float]] = {}  # key id -> (x, y, rotation)
+    parts_by_key: dict[str, tuple] = {}  # key id -> (switch, diode)
     thumb_pin2: dict[str, pcbnew.PAD] = {}  # thumb key id -> pin 2 plated hole
     for i, k in enumerate(keys, start=1):
         x, y, r = float(k["x_mm"]), float(k["y_mm"]), float(k["rotation_deg"])
@@ -427,6 +428,7 @@ def build(side: str) -> Board:
         if col != "T":
             row_cells.setdefault(row, {})[col] = (x, y, r, next(p for p in d.Pads() if p.GetNumber() == "1"))
         B.connect(d, "2", f"K_{kid}")
+        parts_by_key[kid] = (sw, d)
         if col == "T":
             thumb_links.append((x, y, r, next(p for p in sw.Pads() if p.GetNumber() == "1" and p.GetAttribute() == pcbnew.PAD_ATTRIB_PTH),
                                 next(p for p in d.Pads() if p.GetNumber() == "2")))
@@ -444,68 +446,8 @@ def build(side: str) -> Board:
         B.keepout([(cx_ + a, cy_ + b) for a, b in (rot(-2.1, -1.9, r), rot(2.1, -1.9, r), rot(2.1, 1.9, r), rot(-2.1, 1.9, r))],
                   f"led-cutout-{kid}")
 
-    # Finger columns: the keys of a column are collinear, so one straight F.Cu track joins each
-    # pin 2 hole to the next. It clears the stem hole by 0.42 mm and the LED cut-out by 0.6 mm.
-    # Locked, so Freerouting keeps it.
-    for col, pads in col_pins.items():
-        pads.sort(key=lambda t: t[0])
-        for (_, a), (_, b) in zip(pads, pads[1:]):
-            t = pcbnew.PCB_TRACK(B.b)
-            t.SetStart(a.GetPosition())
-            t.SetEnd(b.GetPosition())
-            t.SetWidth(mm(RULES["track"]))
-            t.SetLayer(pcbnew.F_Cu)
-            t.SetNet(a.GetNet())
-            t.SetLocked(True)
-            B.b.Add(t)
-
-    # Finger rows: one locked B.Cu track per row, at key-local y = -2.35 mm (the cathode's
-    # height): it clears the stem hole by 0.225 mm and the LED cut-out keep-out by 0.7 mm. It
-    # leaves each cathode to key-local x = 8.6, between the diode and the next column's socket,
-    # jogs to the next column's x = -10.45 (19.05 mm on) and runs to that column's cathode.
-    for row, cells in row_cells.items():
-        # Left to right on the board: C0 first on the left half, C5 first on the mirrored right.
-        cols = sorted(cells, key=lambda c: cells[c][0])
-        for a, b in zip(cols, cols[1:]):
-            ax, ay, ar, apad = cells[a]
-            bx, by, br, bpad = cells[b]
-            ox, oy = rot(8.6, -2.35, ar)
-            ix, iy = rot(-10.45, -2.35, br)
-            pts = [apad.GetPosition(), to_board(ax + ox, ay + oy), to_board(bx + ix, by + iy), bpad.GetPosition()]
-            for s, e in zip(pts, pts[1:]):
-                if math.hypot(s.x - e.x, s.y - e.y) < mm(0.001):
-                    continue
-                t = pcbnew.PCB_TRACK(B.b)
-                t.SetStart(s)
-                t.SetEnd(e)
-                t.SetWidth(mm(RULES["track"]))
-                t.SetLayer(pcbnew.B_Cu)
-                t.SetNet(apad.GetNet())
-                t.SetLocked(True)
-                B.b.Add(t)
-
-    # Thumb key-to-diode links, which Freerouting leaves open (it routes the finger keys' own).
-    # B.Cu, key-local: pin 1 straight down to y = -2.65 (0.2 mm under the stem hole, clear of
-    # the LED cut-out keep-out), across above the LED pads to x = 5.5, down, then to the anode.
-    for x, y, r, pin, anode in thumb_links:
-        pts = [pin.GetPosition()]
-        for lx_, ly_ in ((-3.81, -2.65), (5.5, -2.65), (5.5, -4.6)):
-            ox, oy = rot(lx_, ly_, r)
-            pts.append(to_board(x + ox, y + oy))
-        pts.append(anode.GetPosition())
-        for s, e in zip(pts, pts[1:]):
-            t = pcbnew.PCB_TRACK(B.b)
-            t.SetStart(s)
-            t.SetEnd(e)
-            t.SetWidth(mm(RULES["track"]))
-            t.SetLayer(pcbnew.B_Cu)
-            t.SetNet(pin.GetNet())
-            t.SetLocked(True)
-            B.b.Add(t)
-
     # LED chain: from the controller's thumb end, up C5, serpentine across to C0 (ending at
-    # C0R4, bottom left), then along the bottom edge to the thumb keys T0..T3. Each link is
-    # short except C0R4 to T0, which has free board along the bottom edge.
+    # C0R4, bottom left), then along the bottom edge to the thumb keys T0..T3.
     col_order = ["C5", "C4", "C3", "C2", "C1", "C0", "T"]
     chain = []
     for ci, col in enumerate(col_order):
@@ -521,81 +463,52 @@ def build(side: str) -> Board:
         B.connect(led, "3", "GND")              # VSS
         prev = nxt
 
-    # Thumb column: a locked F.Cu trunk through key-local (2.54, 7.6) of each thumb, above the
-    # switch pins, with a drop to each pin 2. A straight pin-to-pin track would pass 0.17 mm from
-    # the next thumb's pin 1.
-    tpins = sorted(((frames[k], p) for k, p in thumb_pin2.items()), key=lambda t: t[0][0] * sx)
-    trunk = []
-    for (kx, ky, kr), pin in tpins:
-        ox, oy = rot(2.54, 7.6, kr)
-        trunk.append(to_board(kx + ox, ky + oy))
-        t = pcbnew.PCB_TRACK(B.b)
-        t.SetStart(pin.GetPosition())
-        t.SetEnd(trunk[-1])
-        t.SetWidth(mm(RULES["track"]))
-        t.SetLayer(pcbnew.F_Cu)
-        t.SetNet(pin.GetNet())
-        t.SetLocked(True)
-        B.b.Add(t)
-    for s, e in zip(trunk, trunk[1:]):
-        t = pcbnew.PCB_TRACK(B.b)
-        t.SetStart(s)
-        t.SetEnd(e)
-        t.SetWidth(mm(RULES["track"]))
-        t.SetLayer(pcbnew.F_Cu)
-        t.SetNet(tpins[0][1].GetNet())
-        t.SetLocked(True)
-        B.b.Add(t)
-
-    # Thumb LED chain, which Freerouting leaves open: B.Cu, below the LEDs. Key-local, left
-    # half: DOUT right to x = 4.85 (between the VLED via and the thumb key-to-diode link), down
-    # to y = -8.3, across to the next thumb's x = -4.1, up to DIN's height and in. The right
-    # half runs the other way with its thumb LEDs turned, so the same path mirrored in x.
-    thumbs = [(kid, led) for col, _, kid, led in chain if col == "T"]
-    out_pts, in_pts = ((4.85, -4.33), (4.85, -8.3)), ((-4.1, -8.3), (-4.1, -5.83))
-    if side == "right":
-        out_pts, in_pts = ((-4.1, -5.83), (-4.1, -8.3)), ((4.85, -8.3), (4.85, -4.33))
-    # The link into the first thumb starts at the last finger LED (C0R4), whose LED is not
-    # turned, so it leaves the left-half way on both halves: a long run 4 mm inside the
-    # bottom edge.
-    finger_last = next(t for t in reversed(chain) if t[0] != "T")
-    links = [((finger_last[2], finger_last[3]), thumbs[0], ((4.85, -4.33), (4.85, -8.3)))]
-    links += [(a, b, out_pts) for a, b in zip(thumbs, thumbs[1:])]
-    for (ka, la), (kb, lb), outs in links:
-        dout = next(p for p in la.Pads() if p.GetNumber() == "2")
-        din = next(p for p in lb.Pads() if p.GetNumber() == "4")
-        pts = [dout.GetPosition()]
-        for kid, local in ((ka, outs), (kb, in_pts)):
-            kx, ky, kr = frames[kid]
-            for px_, py_ in local:
-                ox, oy = rot(px_, py_, kr)
-                pts.append(to_board(kx + ox, ky + oy))
-        pts.append(din.GetPosition())
-        for s, e in zip(pts, pts[1:]):
-            t = pcbnew.PCB_TRACK(B.b)
-            t.SetStart(s)
-            t.SetEnd(e)
-            t.SetWidth(mm(RULES["track"]))
-            t.SetLayer(pcbnew.B_Cu)
-            t.SetNet(dout.GetNet())
-            t.SetLocked(True)
-            B.b.Add(t)
-
     # Controller (top side, USB towards the far edge).
     cx, cy = CONTROLLER_AT[0] * sx, CONTROLLER_AT[1]
     u = B.place(load(MARB / "marbastlib-xp-promicroish.pretty", "ProMicro_Reversible_Single"), "U1", cx, cy, 0.0, False,
                 "nice!nano v2 (socketed)")
     if side == "right":
-        # PROVISIONAL (2026-11-23, owner to confirm): on the right half the nice!nano mounts
-        # upside down (components towards the PCB), the usual practice on split boards, which
-        # mirrors its pins: the matrix pins (pads 1-12) then face the keys and RAW/RST face the
-        # power switch and reset, as on the left. In KiCad that is the footprint flipped in x.
+        # Decided (owner, 2026-11-23): on the right half the nice!nano mounts upside down
+        # (components towards the PCB), the usual practice on split boards, which mirrors its
+        # pins: the matrix pins (pads 1-12) then face the keys and RAW/RST face the power switch
+        # and reset, as on the left. In KiCad that is the footprint flipped in x.
         u.Flip(u.GetPosition(), pcbnew.FLIP_DIRECTION_LEFT_RIGHT)  # checked: pad 1 at (-44.38, 33.97)
-    for pad, net in pad_net.items():
-        B.connect(u, str(pad), net)
+    for pad_no, net in pad_net.items():
+        B.connect(u, str(pad_no), net)
+    upads = {p.GetNumber(): p for p in u.Pads()}
 
-    def track(pts, net, layer=pcbnew.B_Cu):
+    # ------------------------------------------------------------------ scripted routing
+    # Every track below is placed by rule and locked, so a board is the same on every run.
+    # Freerouting 2.5.0 is not repeatable and leaves short links open (docs/pcb.md). The paths
+    # were checked by hand in key-local coordinates and then by KiCad DRC. A point is a board
+    # point, a plan (x, y), or a key-local (key id, x, y); the key-local facts used:
+    #   switch pin 1 (-3.81, 2.54), pin 2 (2.54, 5.08), holes 3.3 mm; socket tabs on B.Cu out to
+    #   x = -8.64 and 7.37; stem hole r 2.0 at (0, 0); pegs r 0.875 at (+/-5.08, 0);
+    #   diode cathode (7, -2.35), anode (7, -5.65); LED pads at x = +/-2.785, y = -4.33 and -5.83
+    #   (DOUT right upper, DIN left lower), its keep-out |x| <= 2.1, y -6.98..-3.18;
+    #   plane vias at (3.92, -6.14) and (-4.02, -4.0).
+    F, BK = pcbnew.F_Cu, pcbnew.B_Cu
+    def pt(p):
+        if isinstance(p, pcbnew.VECTOR2I):
+            return p
+        if isinstance(p[0], str):
+            kx, ky, kr = frames[p[0]]
+            ox, oy = rot(p[1], p[2], kr)
+            return to_board(kx + ox, ky + oy)
+        return to_board(*p)
+
+    def plan(p):
+        return pcbnew.ToMM(p.x) - ORIGIN[0], ORIGIN[1] - pcbnew.ToMM(p.y)
+
+    def pad_of(fp, number, pth=False):
+        return next(p for p in fp.Pads() if p.GetNumber() == number
+                    and (not pth or p.GetAttribute() == pcbnew.PAD_ATTRIB_PTH))
+
+    def track(pts, net, layer=BK):
+        pts = [pt(p) for p in pts]
         for s, e in zip(pts, pts[1:]):
+            if math.hypot(s.x - e.x, s.y - e.y) < mm(0.001):
+                continue
             t = pcbnew.PCB_TRACK(B.b)
             t.SetStart(s)
             t.SetEnd(e)
@@ -604,47 +517,156 @@ def build(side: str) -> Board:
             t.SetNet(net)
             t.SetLocked(True)
             B.b.Add(t)
-    # Left half: LED data from pad 10 down F.Cu beside the controller (x = 41.9, clear of the
-    # antenna keep-out), under C5R4 to a via, then B.Cu into the first LED's DIN as the thumb
-    # links do. Freerouting leaves it open; on the right half DIN faces the controller and
-    # Freerouting routes it.
-    if side == "left":
-        first = chain[0]
-        kx, ky, kr = frames[first[2]]
-        din = next(p for p in first[3].Pads() if p.GetNumber() == "4")
-        dpad = {p.GetNumber(): p for p in u.Pads()}[str(pins["led_data"])]
-        dy_ = -(pcbnew.ToMM(dpad.GetPosition().y) - ORIGIN[1])
-        vx, vy = rot(-4.1, -8.3, kr)
-        at = to_board(kx + vx, ky + vy)
-        via = pcbnew.PCB_VIA(B.b)
-        via.SetPosition(at)
-        via.SetWidth(mm(RULES["via_diameter"]))
-        via.SetDrill(mm(RULES["via_drill"]))
-        via.SetNet(din.GetNet())
-        via.SetLocked(True)
-        B.b.Add(via)
-        bx, by = rot(-4.1, -5.83, kr)
-        track([dpad.GetPosition(), to_board(41.9, dy_), to_board(41.9, -24.5), at], din.GetNet(), pcbnew.F_Cu)
-        track([at, to_board(kx + bx, ky + by), din.GetPosition()], din.GetNet())
+        return pts[-1]
 
-    # Row ends: from the last finger column's cathode (C5, next to the controller) to the row's
-    # controller pad, locked B.Cu. Freerouting runs the column fan-ins up the gap between C5 and
-    # the controller and then cannot get the rows across them. A row on the inner pin row leaves
-    # the cathode outward past C5's cell edge (x = 40.3) and angles to 2 mm short of its pad; a
-    # row on the outer pin row passes under the antenna keep-out (y = -1.6) and comes up beside
-    # the outer row (x = 62.5).
-    upads = {p.GetNumber(): p for p in u.Pads()}
+    def via_at(p, net):
+        v = pcbnew.PCB_VIA(B.b)
+        v.SetPosition(pt(p))
+        v.SetWidth(mm(RULES["via_diameter"]))
+        v.SetDrill(mm(RULES["via_drill"]))
+        v.SetNet(net)
+        v.SetLocked(True)
+        B.b.Add(v)
+
+    def path(net, *runs):
+        """Tracks on alternating layers: each (layer, points) run starts, through a via, where the last ended."""
+        last = None
+        for layer, pts in runs:
+            if last is not None:
+                via_at(last, net)
+                pts = [last, *pts]
+            last = track(pts, net, layer)
+
+    # Finger columns: the keys of a column are collinear, so one straight F.Cu track joins the
+    # pin 2 holes. It clears the stem hole by 0.42 mm and the LED cut-out by 0.6 mm.
+    for pads in col_pins.values():
+        pads.sort(key=lambda t: t[0])
+        track([p.GetPosition() for _, p in pads], pads[0][1].GetNet(), F)
+
+    # Finger rows: B.Cu at key-local y = -2.35 (the cathode's height; 0.225 mm under the stem
+    # hole, 0.7 mm over the LED keep-out). From each cathode to x = 8.6, between the diode and
+    # the next column's socket, across to the next column's x = -10.45, then to its cathode.
+    # Columns in board order, so the mirrored half works.
     for row, cells in row_cells.items():
-        cpad = cells["C5"][3]
-        upad = upads[str(pins["rows"][row])]
-        cy_ = -(pcbnew.ToMM(cpad.GetPosition().y) - ORIGIN[1])
-        ux = pcbnew.ToMM(upad.GetPosition().x) - ORIGIN[0]
-        uy = -(pcbnew.ToMM(upad.GetPosition().y) - ORIGIN[1])
+        cols = sorted(cells, key=lambda c: cells[c][0])
+        for a, b in zip(cols, cols[1:]):
+            track([cells[a][3].GetPosition(), (a + row, 8.6, -2.35), (b + row, -10.45, -2.35), cells[b][3].GetPosition()],
+                  cells[a][3].GetNet())
+
+    # Row ends, from C5's cathode (next to the controller) to the row's pad. A row on the inner
+    # pin row leaves outward past C5's cell edge (x = 40.3) and angles to 2 mm short of its pad;
+    # a row on the outer pin row passes under the antenna keep-out (y = -1.6) and comes up
+    # beside the outer row (x = 62.5).
+    for row, cells in row_cells.items():
+        cpad, upad = cells["C5"][3], upads[str(pins["rows"][row])]
+        (_, cy_), (ux, uy) = plan(cpad.GetPosition()), plan(upad.GetPosition())
         if (ux - cx) * sx < 0:  # inner pin row, facing the keys
-            mid = [to_board(40.3 * sx, cy_), to_board(ux - 2.0 * sx, uy)]
+            mid = [(40.3 * sx, cy_), (ux - 2.0 * sx, uy)]
         else:
-            mid = [to_board(40.3 * sx, cy_), to_board(40.3 * sx, -1.6), to_board(62.5 * sx, -1.6), to_board(62.5 * sx, uy)]
+            mid = [(40.3 * sx, cy_), (40.3 * sx, -1.6), (62.5 * sx, -1.6), (62.5 * sx, uy)]
         track([cpad.GetPosition(), *mid, upad.GetPosition()], cpad.GetNet())
+
+    # Key-to-diode links. Thumbs (no row passes through them): B.Cu from pin 1 down to
+    # y = -2.65, across above the LED pads to x = 5.5, down, then to the anode. Fingers: the row
+    # is in the way on B.Cu, so pin 1 goes down F.Cu (0.27 mm from the peg) to a via under the
+    # row, then B.Cu at y = -3.0, between the row and the LED keep-out, to the same end.
+    for kid, (sw, d) in parts_by_key.items():
+        p1, an = pad_of(sw, "1", True), pad_of(d, "2")
+        if kid.startswith("T"):
+            track([p1.GetPosition(), (kid, -3.81, -2.65), (kid, 5.5, -2.65), (kid, 5.5, -4.6), an.GetPosition()], p1.GetNet())
+        else:
+            path(p1.GetNet(), (F, [p1.GetPosition(), (kid, -3.81, -2.5), (kid, -3.2, -3.1)]),
+                 (BK, [(kid, -2.6, -3.0), (kid, 5.5, -3.0), (kid, 5.5, -4.6), an.GetPosition()]))
+
+    # LED chain links, DOUT of one LED to DIN of the next. DOUT leaves to the right, between the
+    # VLED via and the key-to-diode link; DIN is entered from below-left at x = -4.1.
+    #   down a column: B.Cu to a via under the LED, F.Cu down the right of the column track
+    #     (x = 4.85 past the next pin 2, then x = 3.05 between the column track and the peg),
+    #     a via under the next LED (at x = 3.2, to clear the column track), B.Cu across to DIN.
+    #   up a column: a via beside DOUT, F.Cu up the same corridor, a via under the next LED.
+    #   between columns and to the thumbs: see the branches; they differ by half because the
+    #     next column is to the left on the left half and to the right on the mirrored half.
+    thumb_out, thumb_in = [(4.85, -4.33), (4.85, -8.3)], [(-4.1, -8.3), (-4.1, -5.83)]
+    if side == "right":  # thumb LEDs turned 180 degrees
+        thumb_out, thumb_in = [(-4.1, -5.83), (-4.1, -8.3)], [(4.85, -8.3), (4.85, -4.33)]
+    for (ca, ra, ka, la), (cb, rb, kb, lb) in zip(chain, chain[1:]):
+        dout, din = pad_of(la, "2"), pad_of(lb, "4")
+        net, o, i = dout.GetNet(), dout.GetPosition(), din.GetPosition()
+
+        def at(kid, pts):
+            return [(kid, x_, y_) for x_, y_ in pts]
+        enter = [(kb, -4.1, -5.83), i]
+        if ca == "T":
+            track([o, *at(ka, thumb_out), *at(kb, thumb_in), i], net)
+        elif cb == "T":
+            # The long run to the first thumb, about 3 mm inside the bottom edge. On the right
+            # half it first passes under C0R4's own incoming link.
+            out = [(4.85, -4.33), (4.85, -9.5)] if side == "left" else [(4.85, -4.33), (4.85, -9.8), (-5.5, -9.8)]
+            track([o, *at(ka, out), *at(kb, thumb_in), i], net)
+        elif ca == cb and rb > ra:
+            path(net, (BK, [o, (ka, 4.85, -4.33), (ka, 4.85, -8.3)]),
+                 (F, [(kb, 4.85, 2.75), (kb, 3.05, 1.45), (kb, 3.05, -8.5), (kb, 3.2, -9.15)]),
+                 (BK, [(kb, -4.1, -9.15), *enter]))
+        elif ca == cb:
+            path(net, (BK, [o, (ka, 4.75, -4.33)]),
+                 (F, [(ka, 3.05, -2.6), (ka, 3.05, 1.3), (ka, 4.7, 2.9), (kb, 4.7, -8.3)]),
+                 (BK, [(kb, -4.1, -8.3), *enter]))
+        elif side == "left" and ra == "R1":
+            # Over the top: F.Cu above both keys' pin 2, down the far left of the next key.
+            path(net, (BK, [o, (ka, 4.75, -4.33)]),
+                 (F, [(ka, 3.05, -2.6), (ka, 3.05, 1.3), (ka, 4.7, 2.9), (ka, 4.7, 8.6), (kb, -6.5, 8.6), (kb, -6.5, -5.83)]),
+                 (BK, [i]))
+        elif side == "left":
+            # Under the bottom: below this key's own incoming link and the next key's cell.
+            track([o, (ka, 4.85, -4.33), (ka, 4.85, -10.2), (ka, -5.5, -10.2), (kb, 11.0, -10.2), (kb, -4.1, -10.2), *enter], net)
+        elif ra == "R1":
+            track([o, (ka, 4.85, -4.33), (ka, 4.85, -7.0), (kb, -4.1, -8.3), *enter], net)
+        else:
+            # Where there is a gap between the columns (C2 to C1), stay left of the row's jog.
+            gap = math.hypot(frames[ka][0] - frames[kb][0], frames[ka][1] - frames[kb][1]) > 21.0
+            track([o, (ka, 4.85, -4.33), (ka, 4.85, -8.3), *([(kb, -12.0, -8.3)] if gap else []), (kb, -4.1, -8.3), *enter], net)
+
+    # LED data: from its pad down F.Cu beside the controller (x = 41.0, clear of the antenna
+    # keep-out), under C5R4 to a via, then B.Cu into the first LED's DIN.
+    first = chain[0]
+    din, dpad = pad_of(first[3], "4"), upads[str(pins["led_data"])]
+    path(din.GetNet(), (F, [dpad.GetPosition(), (41.0 * sx, plan(dpad.GetPosition())[1]), (41.0 * sx, -24.5), (first[2], -4.1, -8.3)]),
+         (BK, [(first[2], -4.1, -5.83), din.GetPosition()]))
+
+    # Thumb column: an F.Cu trunk through key-local (2.54, 7.6) of each thumb, above the switch
+    # pins, with a drop to each pin 2. A straight pin-to-pin track would pass 0.17 mm from the
+    # next thumb's pin 1.
+    tkeys = sorted(thumb_pin2, key=lambda k: frames[k][0] * sx)
+    tnet = thumb_pin2[tkeys[0]].GetNet()
+    track([(k, 2.54, 7.6) for k in tkeys], tnet, F)
+    for k in tkeys:
+        track([thumb_pin2[k].GetPosition(), (k, 2.54, 7.6)], tnet, F)
+
+    # Thumb rows: every thumb is on a different row, so rows must cross the board to them.
+    # Thumb cathodes are reached down key-local x = 8.6, right of the switch's pin 2 tabs (to
+    # 7.365) and the diode (to 7.6). A row tap is a via on the row's own track.
+    def into_thumb(kid):
+        return [(kid, 8.6, 8.5), (kid, 8.6, -2.35), pad_of(parts_by_key[kid][1], "1").GetPosition()]
+
+    rnet = {r: B.net(f"ROW_{r}") for r in ("R1", "R2", "R3", "R4")}
+    # R1 to T0 and R2 to T1: a via on the row in the gap between two columns, F.Cu down the gap
+    # (clear of both columns' holes), a via above the thumb, then B.Cu into its cathode. The
+    # gaps differ by half because the cathodes, hence the row tracks, sit on each key's right.
+    taps = ((("R1", 1.5, 41.65, -24.0, "T0"), ("R2", 20.8, 20.6, -25.5, "T1")) if side == "left" else
+            (("R1", -1.5, 45.65, -24.0, "T0"), ("R2", -20.6, 22.6, -24.5, "T1")))
+    for row, x_, y_top, y_bot, kid in taps:
+        via_at((x_, y_top), rnet[row])
+        path(rnet[row], (F, [(x_, y_top), (x_, y_bot)]), (BK, into_thumb(kid)))
+    # R3 to T2: from pad 12 along F.Cu beside the antenna keep-out (x = 42.1, 1.1 mm from the
+    # LED data line), to a via above T2, then B.Cu into its cathode.
+    # R4 to T3: B.Cu from R4's existing track, around the load switch, to T3.
+    p12 = upads[str(pins["rows"]["R3"])].GetPosition()
+    if side == "left":
+        path(rnet["R3"], (F, [p12, (42.1, plan(p12)[1]), (42.1, -26.5), (59.5, -26.5)]), (BK, into_thumb("T2")))
+        track([(40.3, -17.5), (40.3, -25.0), (64.0, -25.0), *into_thumb("T3")], rnet["R4"])
+    else:
+        path(rnet["R3"], (F, [p12, (-42.1, plan(p12)[1]), (-42.1, -23.2)]), (BK, into_thumb("T2")))
+        track([(-62.5, -1.6), (-68.5, -7.6), (-68.5, -27.0), *into_thumb("T3")], rnet["R4"])
 
     # Battery connector, power switch, reset, and placeholder pads.
     j = B.place(load(STOCK / "Connector_JST.pretty", "JST_PH_S2B-PH-K_1x02_P2.00mm_Horizontal"), "J1",
