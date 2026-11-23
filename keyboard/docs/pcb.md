@@ -3,7 +3,8 @@
 Status: design started 2026-11-23. **v3 (4-layer): both boards fully routed by script, DRC clean.**
 Generate and route with `python tools/pcb_generate.py` (no autorouter; about 15 s); the boards
 are written to `pcb/left/left.kicad_pcb` and `pcb/right/right.kicad_pcb`. Nothing is checked for
-fabrication, or ordered: no schematic or ERC yet, and the footprints are unverified against parts. Results are in [v3](#v3-scripted-routing-2026-11-23).
+fabrication, or ordered: no schematic or ERC yet, and the footprints are unverified against parts. Results are in [v3](#v3-scripted-routing-2026-11-23); the method, every template and the findings are in
+[pcb-routing.md](pcb-routing.md). Check a generated board with `python tools/pcb_check.py`.
 This brief collects
 the owner's decisions, the proposed electrical design, and how the boards will be generated
 and checked. Decisions are marked **Decided**; everything else is a proposal until reviewed.
@@ -296,6 +297,8 @@ the controller to Freerouting; route VLED at signal width, since LED current per
 
 ## v3: Scripted Routing (2026-11-23)
 
+The full method, with every template's coordinates, is in [pcb-routing.md](pcb-routing.md).
+
 **Why.** Research on 2026-11-23:
 
 - Freerouting 2.5.0 is not repeatable, even on one thread: its list of open connections is a
@@ -521,8 +524,10 @@ Nix store are read-only there.
   Python 3.14 PyYAML `site-packages`. On the laptop, a bare Python with the same
   `PYTHONPATH` worked; the devenv Python failed with a libprotobuf symbol error.
 - `KICAD10_FOOTPRINT_DIR`: `share/kicad/footprints` of the `kicad-footprints` package.
-- Routing is part of the generator since v3. `tools/pcb_route.py` (Freerouting) is unused; if run,
-  Freerouting ignores `$HOME`, and the script redirects `user.home` and the XDG variables.
+- Routing is part of the generator since v3. The Freerouting script, `tools/pcb_route.py`, was
+  removed on 2026-11-23 (it is in the git history up to commit `9cf459a`).
+- Check: `python tools/pcb_check.py` runs DRC on both boards, tests that KiCad read the whole
+  custom rules file, and prints a fingerprint of the routing. Exit 1 on any error.
   Pass one side per process to route both in parallel.
 - DRC: `kicad-cli pcb drc --format json -o <out>.json pcb/left/left.kicad_pcb`. Do not pass
   `--schematic-parity=false`: this kicad-cli rejects it and writes no report.
@@ -533,7 +538,6 @@ Nix store are read-only there.
 
 ## Open Items
 
-- `tools/pcb_route.py` (Freerouting) is no longer part of the flow. Keep or delete: owner's call.
 - Review the scripted routes in KiCad before fabrication: DRC passes, but they have had no
   electrical review (LED data beside column tracks, VLED current, return paths).
 - Verify the Kailh CPG151101S11 socket footprint and the low-profile socket pin holes against

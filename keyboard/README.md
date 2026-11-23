@@ -2,7 +2,7 @@
 
 A personal keyboard project based on an accepted left-hand switch-position prototype. The goal is two mirrored, rechargeable keyboard halves communicating over Bluetooth Low Energy (BLE) with a separate desk controller connected to the PC by USB. The owner intends to print the cases on a Bambu Labs X2D.
 
-**Status:** planning and research only. No PCB, firmware, final case, bill of materials, or completed keyboard has been designed or verified in this repository yet.
+**Status (2026-11-23):** design in progress. Both PCB halves are generated and fully routed by script, and pass KiCad's design rule check; nothing has been fabricated, and there is no schematic, firmware or final case yet. Nothing here is verified on hardware.
 
 ## Prototype
 
@@ -21,9 +21,11 @@ The geometry, switch count, dimensions, and relationships between the source and
 - [Architecture](docs/architecture.md): proposed mechanical, electrical, and firmware approach and research links.
 - [Decisions](docs/decisions.md): open questions and their design implications.
 - [Development plan](docs/development-plan.md): staged work and deliverables for the future agent.
+- [PCB design](docs/pcb.md): decisions, electrical design, fab rules, parts list and results.
+- [PCB routing](docs/pcb-routing.md): how the boards are routed by script, and what was learned.
 - [Verification plan](docs/verification.md): digital checks and physical tests to plan and record.
 - [AGENTS.md](AGENTS.md): shared instructions for agents; [CLAUDE.md](CLAUDE.md) imports them for Claude Code.
 
 ## Starting With Claude
 
-Open this directory as the project and select the desired available model in your Claude-enabled client. In Claude Code, the root `CLAUDE.md` imports the shared instructions. Ask the agent to start with the prototype inspection and decision review in the development plan. No build or test commands are defined yet. Claude's instruction-file loading can be checked with `/context all` where supported.
+Open this directory as the project and select the desired available model in your Claude-enabled client. In Claude Code, the root `CLAUDE.md` imports the shared instructions. Ask the agent to start with the prototype inspection and decision review in the development plan. The PCB commands are `python tools/pcb_generate.py` and `python tools/pcb_check.py` (see [PCB design](docs/pcb.md#running-the-tools)). Claude's instruction-file loading can be checked with `/context all` where supported.
