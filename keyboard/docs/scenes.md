@@ -79,8 +79,9 @@ named `<keyboard>-<scene>-<camera>.png`.
 (`devenv.nix`, since 2026-11-24), and the script renders on every card that Blender finds,
 together: here the RTX 5070 Ti and the RTX 5060 Ti (owner, 2026-11-24). With none it falls
 back to the CPU. Measured here: the 20 stills at 4k took 10 minutes on the 5060 Ti alone and
-8 minutes 35 seconds on both cards. The second card helps little because most of each
-still's time is spent preparing the scene and saving the picture, not tracing it. On the CPU (a Ryzen 9 3900X) the 1080p set took 24
+8 minutes 35 seconds on both cards. The second card helps little. Keeping the scene
+loaded between stills (`use_persistent_data`) was tried and made no difference: about 22
+seconds a still either way. What the rest of that time goes on has not been measured. On the CPU (a Ryzen 9 3900X) the 1080p set took 24
 minutes and one 4k still 4 minutes, about eight times slower. The 1080p stills in the
 repository are the CPU ones; the 2k set has not been rendered.
 
