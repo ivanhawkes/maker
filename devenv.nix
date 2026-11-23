@@ -56,7 +56,17 @@
     # (CVE-2026-119716). kicad-cli covers Gerber/drill/BOM/position exports.
     # gerbv is omitted: it depends on gtk2, which this nixpkgs marks broken.
     # Use KiCad's own Gerber viewer (gerbview) for Gerber/drill review.
-    blender       # 5.2.3; renders and visual fit checks.
+    # Blender 5.2.3 for the showcase renders, built with CUDA and OptiX so that Cycles can
+    # render on the graphics cards with no display (the plain nixpkgs build has no GPU
+    # kernels, and does not look in /run/opengl-driver for the driver's libraries). Not in
+    # the binary cache: the first shell after this change compiles Blender, OpenUSD and
+    # OpenImageDenoise, which takes a long time once. Only the kernels for the RTX 50 series
+    # (sm_120) are built: both cards here are that, and each further one adds to the build.
+    # Unfree (NVIDIA's CUDA licence); the packages are permitted by name in devenv.yaml.
+    (blender.override {
+      cudaSupport = true;
+      cudaArches = [ "sm_120" ];
+    })
     bambu-studio  # 02.08.00.50; slicer for the Bambu Lab printer (X2D support still to verify).
                   # Unfree in nixpkgs; permitted individually in devenv.yaml.
 

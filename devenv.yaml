@@ -3,3 +3,11 @@ nixpkgs:
   # Allow only these unfree packages, not unfree software in general.
   permitted_unfree_packages:
     - bambu-studio
+    # Blender with CUDA and OptiX, and the parts of NVIDIA's CUDA toolkit it is built with.
+    - blender
+    - cccl
+    - cuda_compat
+    - cuda_crt
+    - cuda_cudart
+    - cuda_nvcc
+    - libnvvm
