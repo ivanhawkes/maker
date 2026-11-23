@@ -1,9 +1,9 @@
 # PCB Design Brief
 
-Status: design started 2026-11-23. **v2.4 (4-layer) generated and routed except 2 (left) and 3 (right) links.**
-Generate with `python tools/pcb_generate.py` and route with `python tools/pcb_route.py`; the boards
-are written to `pcb/left/left.kicad_pcb` and `pcb/right/right.kicad_pcb`. Nothing is fully routed,
-checked for fabrication, or ordered. Results are in [v2.4](#v24-nearly-routed-2026-11-23).
+Status: design started 2026-11-23. **v3 (4-layer): both boards fully routed by script, DRC clean.**
+Generate and route with `python tools/pcb_generate.py` (no autorouter; about 15 s); the boards
+are written to `pcb/left/left.kicad_pcb` and `pcb/right/right.kicad_pcb`. Nothing is checked for
+fabrication, or ordered: no schematic or ERC yet, and the footprints are unverified against parts. Results are in [v3](#v3-scripted-routing-2026-11-23).
 This brief collects
 the owner's decisions, the proposed electrical design, and how the boards will be generated
 and checked. Decisions are marked **Decided**; everything else is a proposal until reviewed.
@@ -12,6 +12,11 @@ and checked. Decisions are marked **Decided**; everything else is a proposal unt
 
 - **Decided (2026-11-23):** four layers: signals outside, a GND plane (In1.Cu) and a VLED
   plane (In2.Cu) inside. Two layers left 48 and 58 connections unrouted.
+- **Decided (2026-11-23):** on the right half the nice!nano mounts upside down (components
+  towards the PCB), so its pins mirror and both halves route alike. To check at assembly: the
+  parts on its underside clear the board on low-profile sockets.
+- **Decided (2026-11-23):** routing is scripted and deterministic, not auto-routed
+  ([v3](#v3-scripted-routing-2026-11-23)).
 - **Decided (2026-11-23):** parts from Mouser (default) or DigiKey, except what neither sells
   (see [provisional parts list](#provisional-parts-list-2026-11-23)).
 - **Decided:** two separate PCBs, one per half, mirrored and generated from
@@ -45,30 +50,30 @@ and checked. Decisions are marked **Decided**; everything else is a proposal unt
 From the nRF52840 Product Specification aQFN73 table ("Low frequency I/O is a signal with a
 frequency up to 10 kHz") and ZMK's Pro Micro pin map:
 
-| Pro Micro pin | GPIO | Restriction | Proposed use |
-| --- | --- | --- | --- |
-| D0 | P0.08 | — | Spare |
-| D1 | P0.06 | — | Matrix (C4; was LED data until 2026-11-23) |
-| D2 | P0.17 | — | Spare |
-| D3 | P0.20 | — | Spare |
-| D4 | P0.22 | — | Spare |
-| D5 | P0.24 | — | Spare |
-| D6 | P1.00 | — | Spare |
-| D7 | P0.11 | — | **LED data** (about 800 kHz needs an unrestricted pin; pad 10, at the thumb end) |
-| D8 | P1.04 | ≤ 10 kHz | Matrix |
-| D9 | P1.06 | ≤ 10 kHz | Matrix |
-| D10 | P0.09 | ≤ 10 kHz, NFC1 | Avoid (see above) |
-| D16 | P0.10 | ≤ 10 kHz, NFC2 | Avoid (see above) |
-| D14 | P1.11 | ≤ 10 kHz | Matrix |
-| D15 | P1.13 | ≤ 10 kHz | Matrix |
-| D18/A0 | P1.15 | ≤ 10 kHz | Matrix |
-| D19/A1 | P0.02 | ≤ 10 kHz | Matrix |
-| D20/A2 | P0.29 | ≤ 10 kHz | Matrix |
-| D21/A3 | P0.31 | ≤ 10 kHz | Matrix |
+| Pro Micro pin | Pad | GPIO | Restriction | Use (v3, `pcb/pins.yaml`) |
+| --- | --- | --- | --- | --- |
+| D1 | 1 | P0.06 | — | Row R1 |
+| D0 | 2 | P0.08 | — | Column C2 |
+| D2 | 5 | P0.17 | — | Column C1 |
+| D3 | 6 | P0.20 | — | Column C0 |
+| D4 | 7 | P0.22 | — | Row R2 |
+| D5 | 8 | P0.24 | — | Column C4 |
+| D6 | 9 | P1.00 | — | Column C3 |
+| D7 | 10 | P0.11 | — | **LED data** (about 800 kHz needs an unrestricted pin) |
+| D8 | 11 | P1.04 | ≤ 10 kHz | Column C5 |
+| D9 | 12 | P1.06 | ≤ 10 kHz | Row R3 |
+| D21/A3 | 17 | P0.31 | ≤ 10 kHz | LED supply enable (static level) |
+| D20/A2 | 18 | P0.29 | ≤ 10 kHz | Spare |
+| D19/A1 | 19 | P0.02 | ≤ 10 kHz | Spare |
+| D18/A0 | 20 | P1.15 | ≤ 10 kHz | Spare |
+| D15 | 21 | P1.13 | ≤ 10 kHz | Thumb column T |
+| D14 | 22 | P1.11 | ≤ 10 kHz | Row R4 |
+| D16 | 23 | P0.10 | ≤ 10 kHz, NFC2 | Avoid (see above) |
+| D10 | 24 | P0.09 | ≤ 10 kHz, NFC1 | Avoid (see above) |
 
-That gives 8 restricted pins plus D7 and up to 2 unrestricted spares for the 11 matrix lines.
-The final mapping goes in a pin table that the PCB generator and the ZMK shield both read, so
-CAD, PCB and firmware cannot diverge.
+The inner pads (1–12) are assigned top to bottom in the order the scripted tracks arrive beside
+the controller, so no fan-in crosses another. `pcb/pins.yaml` is the single source: the PCB
+generator reads it, and the ZMK shield will, so CAD, PCB and firmware cannot diverge.
 
 ### Power
 
@@ -167,8 +172,8 @@ file, so the design is reproducible.
    mirror-image, so the parts remain real parts.
 3. The schematic and netlist come from the same generator, so ERC and the
    schematic-to-PCB consistency check work.
-4. Routing is first done with Freerouting (to add to the devenv) or scripted. It is then
-   checked with `kicad-cli pcb drc` against the chosen fab house's rules, and reviewed.
+4. Routing is scripted in the generator ([v3](#v3-scripted-routing-2026-11-23)), then checked
+   with `kicad-cli pcb drc` against both fab houses' rules, and reviewed.
 5. Fabrication outputs (Gerbers, drill files and a BOM for hand assembly) come from
    `kicad-cli`, plus a 3D STEP of the assembled board for case design.
 
@@ -289,6 +294,65 @@ plan-local x = 2.54 through each column, the LED chain and VLED) and leave only 
 the controller to Freerouting; route VLED at signal width, since LED current per key is small
 (to check against the LED supply design).
 
+## v3: Scripted Routing (2026-11-23)
+
+**Why.** Research on 2026-11-23:
+
+- Freerouting 2.5.0 is not repeatable, even on one thread: its list of open connections is a
+  hash set ordered by object identity ([issue 1172](https://github.com/freerouting/freerouting/issues/1172),
+  fixed after 2.5.0), and it has no seed option. It also has known bugs for what these boards
+  hit: SMD pads are not joined to power-layer planes ([1080](https://github.com/freerouting/freerouting/issues/1080))
+  and it stops with short links open ([1031](https://github.com/freerouting/freerouting/issues/1031)).
+- No existing tool routes LED chains or the controller. [kicad-kbplacer](https://github.com/adamws/kicad-kbplacer)
+  (GPL-3.0) replicates a switch-to-diode template and joins rows and columns pad to pad;
+  [ergogen](https://docs.ergogen.xyz/pcbs) footprints can carry per-key stubs. Both are the
+  method used here: a per-key template plus scripted joins. KiCad's own router is not callable
+  from Python or the IPC API.
+
+**What.** `tools/pcb_generate.py` places every track by rule, locked; nothing is auto-routed.
+Points are key-local, so one template serves every key at any rotation.
+
+| Part | How |
+| --- | --- |
+| Columns | One straight F.Cu track through each finger column's pin 2 holes |
+| Rows | B.Cu at key-local y = −2.35, with a jog between columns |
+| Row ends | From C5's cathode to the row's pad; R4 under the antenna keep-out to pad 22 |
+| Key-to-diode links | Fingers: F.Cu from pin 1 to a via under the row, then B.Cu between the row and the LED keep-out. Thumbs: B.Cu only |
+| LED chain | Four templates: down a column and up a column (F.Cu in the 1 mm corridor right of the column track, a via each end), over the top and under the bottom between columns. Top and bottom differ by half, because the next column is to the left on one and the right on the other |
+| LED data, thumb chain, thumb column trunk, thumb rows | Fixed paths, per half where they differ |
+| Column bus | Each column runs to the controller along a B.Cu lane between two key rows (C0–C2 above the R2 keys, C3–C4 above the R3 keys), starting at a via on its column track. Lanes jog between columns in an order set by the stagger, so they never cross. C5 connects directly |
+| Controller pads | Reassigned in the order the tracks arrive (see the pin table), so the fan-in has no crossings |
+| Power nets and the thumb column's run to the controller | `tools/pcb_maze.py`: a small grid router (A*, 0.1 mm grid, fixed net order and tie-breaking, no rip-up) over the controller side of the board, with every clearance grown by a grid margin |
+
+**Result** (KiCad 10.0.8; generation about 15 s for both boards, DRC about 25 s):
+
+| Check | Left | Right |
+| --- | --- | --- |
+| Tracks / vias | 837 / 145 | 850 / 142 |
+| DRC: unconnected | **0** | **0** |
+| DRC: errors | **0** | **0** |
+| DRC: warnings | silkscreen only | silkscreen only |
+| Two runs compared (hash of every track, via and placement) | identical | identical |
+
+**Found on the way.**
+
+- **The custom rules file had been half ignored.** The `min_resolved_spokes` rule used a
+  constraint KiCad 10.0.8 does not accept; KiCad stopped reading `.kicad_dru` there without
+  failing the run, so the two PTH rules after it never applied. That rule is removed. Check
+  `kicad-cli`'s output after any edit to the rules.
+- With the PTH rules active, the hot-swap socket's plated pads (3.3 mm on a 3.0 mm hole, a
+  0.15 mm ring) and the JST-PH pads (0.225 mm) failed the 0.254 mm ring. The generator widens
+  them to 0.26 mm (`pth_ring`). The socket's widened pads sit 0.205 mm from its own peg holes,
+  inside the 0.2 mm floor for non-plated holes.
+- The keep-out between the controller's pin rows now covers the outer layers only (it is for
+  parts on the module's underside). The inner planes run under the module, so every GND pin gets
+  its thermal spokes; the antenna strip stays clear on all layers.
+- The right half's controller had not been mirrored: see the decision above.
+
+**Limits.** The templates assume this layout's key spacing (19.05 mm) and part offsets; a layout
+change needs the DRC run again, and may need a template adjusted. The grid router has no rip-up:
+its net order is fixed in the generator, longest first.
+
 ## v2.4: Nearly Routed (2026-11-23)
 
 Scripted since v2.1, all locked tracks in `tools/pcb_generate.py`:
@@ -301,7 +365,7 @@ Scripted since v2.1, all locked tracks in `tools/pcb_generate.py`:
 - **Row ends** from C5's cathode to the controller: inner-row pads directly; R4 (outer row, pad
   22) under the antenna keep-out at y = −1.6 and up beside the outer row at x = 62.5.
 - **Left LED data** from pad 10 down F.Cu at x = 41.9, under C5R4, by via into its DIN.
-- **Right controller mirrored (PROVISIONAL, owner to confirm):** on the right half the
+- **Right controller mirrored (decided by the owner later that day):** on the right half the
   nice!nano mounts upside down (components towards the PCB), the usual practice on split
   boards. The footprint is flipped, so pads 1–12 (the matrix and LED data) face the keys and
   RAW/RST face the power switch and reset, as on the left. Before this the right half's matrix
@@ -457,8 +521,8 @@ Nix store are read-only there.
   Python 3.14 PyYAML `site-packages`. On the laptop, a bare Python with the same
   `PYTHONPATH` worked; the devenv Python failed with a libprotobuf symbol error.
 - `KICAD10_FOOTPRINT_DIR`: `share/kicad/footprints` of the `kicad-footprints` package.
-- Routing: `FREEROUTING_PASSES=30 FREEROUTING_HOME=<scratch dir> python tools/pcb_route.py left right`.
-  Freerouting ignores `$HOME`; the script redirects `user.home` and the XDG variables.
+- Routing is part of the generator since v3. `tools/pcb_route.py` (Freerouting) is unused; if run,
+  Freerouting ignores `$HOME`, and the script redirects `user.home` and the XDG variables.
   Pass one side per process to route both in parallel.
 - DRC: `kicad-cli pcb drc --format json -o <out>.json pcb/left/left.kicad_pcb`. Do not pass
   `--schematic-parity=false`: this kicad-cli rejects it and writes no report.
@@ -469,8 +533,9 @@ Nix store are read-only there.
 
 ## Open Items
 
-- One controller GND pad per board has a single thermal spoke (`starved_thermal`); the custom
-  rule meant to fix it does not.
+- `tools/pcb_route.py` (Freerouting) is no longer part of the flow. Keep or delete: owner's call.
+- Review the scripted routes in KiCad before fabrication: DRC passes, but they have had no
+  electrical review (LED data beside column tracks, VLED current, return paths).
 - Verify the Kailh CPG151101S11 socket footprint and the low-profile socket pin holes against
   their datasheets.
 - Add the real KLP Lamé keycap outlines to `tools/layout.py check` (the prototype shows they fit,

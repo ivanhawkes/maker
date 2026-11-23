@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate the left and right keyboard PCBs (placement and nets, no routing yet).
+"""Generate the left and right keyboard PCBs: placement, nets and routing.
 
     python tools/pcb_generate.py            # writes pcb/left/left.kicad_pcb, pcb/right/right.kicad_pcb
 
@@ -10,8 +10,9 @@ kicad-base's site-packages) and PyYAML. Inputs:
     pcb/lib/marbastlib/...                   pinned third-party footprints
     $KICAD10_FOOTPRINT_DIR                   KiCad stock footprints
 
-Stage: v2, ready for tools/pcb_route.py. The finger columns (F.Cu) and finger rows (B.Cu) are
-pre-routed as locked tracks; everything else is left to Freerouting.
+Stage: v3. The boards are fully routed here, by rule: per-key templates for the regular parts
+and tools/pcb_maze.py for the few irregular links. No autorouter; the result is the same on every
+run. Run kicad-cli DRC afterwards.
 
 LED supply (option B, owner 2026-11-23): VLED is RAW (the battery, 3.0-4.2 V) through a
 high-side P-MOSFET, Q1, driven by a small N-MOSFET, Q2, from the LED_EN pin (pins.yaml).
