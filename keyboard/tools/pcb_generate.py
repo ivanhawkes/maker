@@ -74,9 +74,23 @@ JST_AT = (52.0, -6.0)
 POWER_SWITCH_AT = (66.0, 30.0)
 # The power switch sits on the board edge with its actuator overhanging (owner, 2026-11-23).
 # Centre to edge: the mount pads end 1.83 mm from the centre and copper keeps 0.3 mm from the
-# edge. The actuator reaches 3.15 mm, so it overhangs by 1.0 mm.
+# edge. The actuator reaches 3.15 mm, so it overhangs that edge by 1.0 mm, and by 1.85 mm where
+# POWER_SWITCH_NOTCH (below) cuts the edge back.
 POWER_SWITCH_TO_EDGE = 2.15
 RESET_AT = (64.0, 12.0)
+# Changes asked for by the case design (owner, 2026-11-23; docs/case.md), left-half plan
+# coordinates, the right half mirroring x.
+# Mounting holes: M3 clearance, not plated, in the four key-free places where neither half has
+# fixed copper within 4 mm or a part within 6 mm. The grid router goes round the last one.
+MOUNT_AT = ((-43.5, 42.5), (-12.0, -31.5), (43.0, 43.0), (73.0, -22.0))
+# A notch under the USB plug, so its overmould has no board beneath it: half-width, and where it
+# stops, measured from the controller's centre. The module ends at about 16.6 and its pads at 14.9.
+USB_NOTCH = (6.5, 16.0)
+# A notch in the edge at the power switch, so the slider overhangs by 1.85 mm, not 1.0: half-width
+# (the outer mount pads start 3.15 from the centre, less the 0.3 mm copper-to-edge rule), and
+# where it stops, measured from the switch's centre. No deeper: the locating pegs' holes reach
+# 0.78 mm, which leaves 0.52 mm of board.
+POWER_SWITCH_NOTCH = (2.85, 1.3)
 # Copper keep-outs around the controller, as (x0, y0, x1, y1) relative to its centre in plan
 # coordinates. The pin pads (x = +/-7.62, y = +/-13.97, 1.8 mm) stay outside, so tracks can
 # reach them. v0 covered the pads too, which left every controller pin unroutable.
@@ -429,6 +443,19 @@ def outline_points(pts: list[tuple[float, float]]) -> list[tuple[float, float]]:
             upper.pop()
         upper.append(p)
     return lower[:-1] + upper[:-1]
+
+
+def notched(outline: list[tuple[float, float]], a, b, inner) -> list[tuple[float, float]]:
+    """The outline with the stretch a..b of one of its edges replaced by a, the inner points, b."""
+    def off(p, s, e):  # distance from p to the segment s..e
+        k = max(0.0, min(1.0, ((p[0] - s[0]) * (e[0] - s[0]) + (p[1] - s[1]) * (e[1] - s[1])) / ((e[0] - s[0]) ** 2 + (e[1] - s[1]) ** 2)))
+        return math.hypot(p[0] - s[0] - k * (e[0] - s[0]), p[1] - s[1] - k * (e[1] - s[1]))
+    for i, (s, e) in enumerate(zip(outline, outline[1:] + outline[:1])):
+        if off(a, s, e) < 1e-3 and off(b, s, e) < 1e-3:
+            if math.dist(s, a) > math.dist(s, b):
+                a, b, inner = b, a, inner[::-1]
+            return outline[:i + 1] + [(round(x, 4), round(y, 4)) for x, y in (a, *inner, b)] + outline[i + 1:]
+    raise SystemExit(f"notch {a}..{b}: its ends are not on one edge of the outline")
 
 
 def edge_pose(at: tuple[float, float], d: float, pts: list[tuple[float, float]]):
@@ -784,7 +811,7 @@ def build(side: str) -> Board:
                 JST_AT[0] * sx, JST_AT[1], 0.0, False, "JST-PH battery (check polarity)")
     B.connect(j, "1", "BAT_IN")
     B.connect(j, "2", "GND")
-    # Provisional outline: convex hull of key cells, the controller and edge parts. Collected
+    # Outline: the convex hull of key cells, the controller and edge parts, then notched. Collected
     # here because the power switch is turned to lie along the edge it makes.
     pts = []
     for k in keys:
@@ -855,6 +882,31 @@ def build(side: str) -> Board:
 
     hull = outline_points([(round(a, 4), round(b, 4)) for a, b in pts] + switch_edge)
     assert switch_edge[0] in hull, "the power switch is not on the board edge"
+    # The outline is the hull with two notches (see USB_NOTCH and POWER_SWITCH_NOTCH).
+    ux = sorted(((CONTROLLER_AT[0] - USB_NOTCH[0]) * sx, (CONTROLLER_AT[0] + USB_NOTCH[0]) * sx))
+    uy = CONTROLLER_AT[1] + USB_NOTCH[1]
+
+    def far_edge(x):  # the point of the hull above the controller at this x
+        for (ax, ay), (bx, by) in zip(hull, hull[1:] + hull[:1]):
+            if min(ax, bx) <= x <= max(ax, bx) and ax != bx:
+                y = ay + (x - ax) * (by - ay) / (bx - ax)
+                if y > uy:
+                    return x, y
+        raise SystemExit("no board edge beyond the USB end")
+    outline = notched(hull, far_edge(ux[0]), far_edge(ux[1]), [(ux[0], uy), (ux[1], uy)])
+    (ax, ay), (bx, by) = switch_edge   # 5 mm either side of the switch, along the edge
+    mx, my, ex, ey = (ax + bx) / 2, (ay + by) / 2, (bx - ax) / 10.0, (by - ay) / 10.0
+    half, stop = POWER_SWITCH_NOTCH
+    inx, iny = (POWER_SWITCH_AT[0] * sx - mx) / POWER_SWITCH_TO_EDGE, (POWER_SWITCH_AT[1] - my) / POWER_SWITCH_TO_EDGE
+    deep = POWER_SWITCH_TO_EDGE - stop
+    na, nb = (mx - half * ex, my - half * ey), (mx + half * ex, my + half * ey)
+    outline = notched(outline, na, nb, [(na[0] + deep * inx, na[1] + deep * iny), (nb[0] + deep * inx, nb[1] + deep * iny)])
+
+    for n, (hx, hy) in enumerate(MOUNT_AT, start=1):
+        hole = B.place(load(STOCK / "MountingHole.pretty", "MountingHole_3.2mm_M3"), f"H{n}", hx * sx, hy, 0.0, False,
+                       "M3 mounting hole")
+        # Not an electrical part: kept out of the schematic (and its parity check), the BOM and the placement file.
+        hole.SetAttributes(hole.GetAttributes() | pcbnew.FP_BOARD_ONLY | pcbnew.FP_EXCLUDE_FROM_BOM | pcbnew.FP_EXCLUDE_FROM_POS_FILES)
 
     # Four layers (owner, 2026-11-23): signals on F.Cu and B.Cu, solid planes inside, GND on
     # In1.Cu and VLED on In2.Cu. The planes are "power" layers, which the DSN export passes on,
@@ -872,10 +924,10 @@ def build(side: str) -> Board:
         zone.SetZoneName(f"{net}-plane")
         poly = zone.Outline()
         poly.NewOutline()
-        for a, b in hull:
+        for a, b in outline:
             poly.Append(to_board(a, b))
         B.b.Add(zone)
-    for a, b in zip(hull, hull[1:] + hull[:1]):
+    for a, b in zip(outline, outline[1:] + outline[:1]):
         seg = pcbnew.PCB_SHAPE(B.b)
         seg.SetShape(pcbnew.SHAPE_T_SEGMENT)
         seg.SetStart(to_board(*a))
@@ -900,7 +952,7 @@ def build(side: str) -> Board:
 
     xa, xb = sorted((36.0 * sx, 86.0 * sx))
     maze = Maze(B.b, (ORIGIN[0] + xa, ORIGIN[1] - 40.0, ORIGIN[0] + xb, ORIGIN[1] + 52.0),
-                [(ORIGIN[0] + a, ORIGIN[1] - b) for a, b in hull], RULES["clearance"], RULES["copper_edge"])
+                [(ORIGIN[0] + a, ORIGIN[1] - b) for a, b in outline], RULES["clearance"], RULES["copper_edge"])
     trunk_end = pt((tkeys[-1], 2.54, 7.6))  # the thumb nearest the controller's outer side
     trunk = (pcbnew.ToMM(trunk_end.x), pcbnew.ToMM(trunk_end.y), (0,))
     # Longest first: the router has no rip-up, so a later net must find its way round earlier ones.
@@ -921,7 +973,7 @@ def build(side: str) -> Board:
     fill_zones(B.b)
 
     note = pcbnew.PCB_TEXT(B.b)
-    note.SetText(f"{side.upper()} v3 - NOT FOR FAB")
+    note.SetText(f"{side.upper()} v4 - NOT FOR FAB")
     note.SetPosition(to_board(0.0, 70.0))
     note.SetLayer(pcbnew.Cmts_User)
     B.b.Add(note)

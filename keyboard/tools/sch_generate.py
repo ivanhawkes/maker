@@ -269,6 +269,8 @@ def components(side: str) -> dict[str, dict]:
     board = pcbnew.LoadBoard(str(ROOT / "pcb" / side / f"{side}.kicad_pcb"))
     out = {}
     for fp in board.GetFootprints():
+        if fp.GetAttributes() & pcbnew.FP_BOARD_ONLY:   # mounting holes: not in the schematic
+            continue
         nets: dict[str, str] = {}
         for p in fp.Pads():
             if p.GetNumber():

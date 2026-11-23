@@ -5,6 +5,7 @@
   (lib (name "Connector_JST")(type "KiCad")(uri "${KIPRJMOD}/../../parts/footprints/kicad/Connector_JST.pretty")(options "")(descr ""))
   (lib (name "Diode_SMD")(type "KiCad")(uri "${KIPRJMOD}/../../parts/footprints/kicad/Diode_SMD.pretty")(options "")(descr ""))
   (lib (name "LED_SMD")(type "KiCad")(uri "${KIPRJMOD}/../../parts/footprints/kicad/LED_SMD.pretty")(options "")(descr ""))
+  (lib (name "MountingHole")(type "KiCad")(uri "${KIPRJMOD}/../../parts/footprints/kicad/MountingHole.pretty")(options "")(descr ""))
   (lib (name "Package_TO_SOT_SMD")(type "KiCad")(uri "${KIPRJMOD}/../../parts/footprints/kicad/Package_TO_SOT_SMD.pretty")(options "")(descr ""))
   (lib (name "Resistor_SMD")(type "KiCad")(uri "${KIPRJMOD}/../../parts/footprints/kicad/Resistor_SMD.pretty")(options "")(descr ""))
   (lib (name "marbastlib-mx")(type "KiCad")(uri "${KIPRJMOD}/../../parts/footprints/marbastlib/marbastlib-mx.pretty")(options "")(descr ""))

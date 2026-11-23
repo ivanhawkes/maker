@@ -8,8 +8,11 @@ Three printed parts a half (docs/case.md has the drawing and the reasons):
 
     tray   floor, walls, board supports, battery bay; the board drops in from above
     plate  1.6 mm switch plate, inlaid flush in the tray; its outer edge hooks under a dovetail
-    lid    raised cover over the controller, connector and battery; three M3 screws from below
-           clamp it to the tray, and its skirt clamps the plate's inner edge
+    lid    raised cover over the controller, connector and battery; four M3 screws from below
+           hold it, and its skirt clamps the plate's inner edge
+
+Six screws a half, all from below: two through the board's holes H1 and H2 into bosses under
+the plate, two through H3 and H4 into bosses under the lid, two in the battery lobe.
 
 Everything is built for the left half in the layout's plan coordinates (layout/README.md) with
 z = 0 at the board's top face, then mirrored for the right half. The right board is checked to
@@ -70,19 +73,26 @@ WIRE_S = (48.0, 53.0)                         # slot for the battery lead throug
 WIRE_Z = 0.5
 RIB_S = (58.0, 76.0)                          # lid ribs that keep the cell in the bay
 
-# Lid screws: M3 x 10, head recessed in the tray, thread cut by the screw in the lid.
-SCREW_L = 10.0
+# Screws: M3, from below, the head recessed in the tray, the thread cut by the screw itself.
+#   lid:   M3 x 12, two in the lobe and two through the board's holes H3 and H4;
+#   plate: M3 x 8, through the board's holes H1 and H2 into bosses under the plate.
+SCREW_LID, SCREW_PLATE = 12.0, 8.0
 HEAD_R, CLEAR_R, PILOT_R, BOSS_R = 3.25, 1.7, 1.3, 3.5
-SCREWS_SD = ((-7.0, 0.6), (31.0, 8.0), (90.0, 12.0))   # (s, d) on the inner edge
-SEAT_Z = LID_TOP - 0.6 - SCREW_L                       # the tip stops 0.6 under the lid's top
+HOLE_POST_R = 4.0                                      # tray post under a board hole: 0.75 mm round the head
+LOBE_SCREWS_SD = ((31.0, 8.0), (90.0, 12.0))           # (s, d) on the inner edge
+PLATE_HOLES, LID_HOLES = ("H1", "H2"), ("H3", "H4")
+TIP = 0.8                                              # a screw's tip stops this far under the visible face
+SEAT_LID = LID_TOP - TIP - SCREW_LID                   # where the head sits
+SEAT_PLATE = PLATE_TOP - TIP - SCREW_PLATE
 SKIN = 0.2                                             # printed over the head recess; drill it out
 
 # Openings.
 USB_W = 13.0          # tunnel for the USB-C plug's overmould
 USB_FROM = 10.0       # the tunnel starts this far from the controller's centre, towards USB
+USB_Z0 = -2.0         # its floor: the board is notched under the plug, so the plug can hang below the board's top
 SLOT = 9.0            # power switch slot, along the edge
 SCALLOP = 16.0        # recess outside it, for a fingernail
-SCALLOP_D = GAP + 1.4
+SCALLOP_D = GAP + 1.0  # the slider overhangs the board by 1.85: its tip is level with the recess's floor
 RESET_R = 1.6         # hole over the reset button, for a pen
 FOOT_R, FOOT_Z = 5.1, 0.6
 FEET = ((-70.0, 26.0), (-64.0, -36.0), (-10.0, 50.0), (60.0, -50.0), (95.0, -25.0))
@@ -94,7 +104,8 @@ POST_MARGIN = 0.4     # least distance from a post to a part's courtyard
 
 # Keycaps (KLP Lame, layout/README.md): 18 x 18, and 18 x 27 fitted lengthways on T2 and T3.
 CAP, CAP_LONG, LONG_CAPS = 18.0, 27.0, ("T2", "T3")
-CAP_GAP = 2.0         # lid to keycap, in plan
+CAP_GAP = 2.0         # lid to the long thumb caps, in plan
+SPLIT_GAP = 1.3       # lid to the inner column's caps: less, to leave a wall beside H3's screw
 BED = 256.0           # Bambu X2D profile found in the prototype's 3MF (docs/decisions.md)
 
 
@@ -306,7 +317,7 @@ def check_mirror(left, right):
     def key(board, flip):
         pts = sorted((round(-x if flip else x, 2), round(y, 2)) for x, y in board["outline"])
         tops = {p["ref"]: (round(-p["at"][0] if flip else p["at"][0], 2), round(p["at"][1], 2))
-                for p in board["parts"] if p["ref"] in ("U1", "J1", "SW_PWR", "SW_RST")}
+                for p in board["parts"] if p["ref"] in ("U1", "J1", "SW_PWR", "SW_RST") + PLATE_HOLES + LID_HOLES}
         return pts, tops
     assert key(left, True) == key(right, False), "the right board is not the left one mirrored"
 
@@ -321,6 +332,8 @@ def envelopes(keys, board, inner):
                                    (at[0] + 9.1, at[1] + 18.0), (at[0] - 9.1, at[1] + 18.0)]), 0, 6.5)
             env["U1 tails"] = prism(poly(rect(at, 9.0, 15.3, 0)), -PCB_T - 2.0, -PCB_T)
             continue
+        if ref in PLATE_HOLES + LID_HOLES:
+            continue
         face = poly([(box[0], box[1]), (box[2], box[1]), (box[2], box[3]), (box[0], box[3])])
         if p["back"]:
             env[ref] = prism(face, -PCB_T - 2.0, -PCB_T)   # sockets 1.8; the rest is lower
@@ -328,9 +341,9 @@ def envelopes(keys, board, inner):
             env[ref] = prism(face, 0, {"J1": 5.2, "SW_RST": 2.2, "SW_PWR": 1.8}[ref])
             if ref == "J1":
                 env["J1 tails"] = prism(face, -PCB_T - 2.0, -PCB_T)
-            if ref == "SW_PWR":  # the slider overhangs the edge by 1.0 and travels along it
+            if ref == "SW_PWR":  # the slider overhangs the edge by 1.85 and travels along it
                 s = inner.of(at)[0]
-                env["SW_PWR slider"] = prism(inner.box(s - 2.6, s + 2.6, -0.5, 1.05), 0.2, 1.5)
+                env["SW_PWR slider"] = prism(inner.box(s - 2.6, s + 2.6, -0.5, 1.9), 0.2, 1.5)
     for k in keys:
         c = (k["x"], k["y"])
         env["MX " + k["id"]] = prism(poly(rect(c, 6.95, 6.95, k["rot"])), 0, PLATE_TOP).fuse(
@@ -348,8 +361,10 @@ def build(keys, board, other):
 
     other is the right board: the posts must also be clear of its underside, mirrored.
     """
-    out = [tuple(p) for p in board["outline"]]
+    real = [tuple(p) for p in board["outline"]]
+    out = hull(real)   # the outline without its two notches: the walls, the plate and the frames follow this
     parts = {p["ref"]: p for p in board["parts"]}
+    holes = {r: tuple(parts[r]["at"]) for r in PLATE_HOLES + LID_HOLES}
     by_id = {k["id"]: k for k in keys}
     pcb = poly(out)
     inside = (pcb.CenterOfMass.x, pcb.CenterOfMass.y)
@@ -366,15 +381,11 @@ def build(keys, board, other):
     left = Frame(top_left, bottom_left, inside)
     assert all(abs(left.of(p)[1]) < 0.01 for p in out if p[0] < -70), "the outer edge is not straight"
 
-    # Outline: the board, a lobe on the inner edge for the battery, a boss at the far inner corner.
-    screws = [inner.at(s, d) for s, d in SCREWS_SD]
+    # Outline: the board, and a lobe on the inner edge for the battery.
+    screws = [inner.at(s, d) for s, d in LOBE_SCREWS_SD]
     lobe = poly([inner.at(LOBE_S0, -0.5), inner.at(LOBE_S0 + LOBE_RAMP, LOBE_D), inner.at(LOBE_S1, LOBE_D),
                  inner.at(LOBE_S2, LOBE_D2), corner, inner.at(inner.length - 0.5, -0.5)])
-    # The far boss stands clear of the board: a shoulder joins it to the corner it sits beside.
-    far = next(p for p in (out[out.index(g) - 1], out[(out.index(g) + 1) % n]) if p != h)
-    ring = [(screws[0][0] + (BOSS_R + 0.1) * math.cos(math.radians(a)), screws[0][1] + (BOSS_R + 0.1) * math.sin(math.radians(a)))
-            for a in range(0, 360, 10)]
-    core = one(pcb.fuse([lobe, poly(hull(ring + [far, g]))]))
+    core = one(pcb.fuse([lobe]))
     outer = one(grow(one(grow(core, WALL + R_IN)), -R_IN))
 
     # The plate's side of the top: the finger columns, and the long thumb caps with their gap.
@@ -384,7 +395,7 @@ def build(keys, board, other):
     t2, t3 = by_id["T2"], by_id["T3"]
     tl2, tr2, tl3, tr3, br3 = cap_corner(t2, -1, 1), cap_corner(t2, 1, 1), cap_corner(t3, -1, 1), \
         cap_corner(t3, 1, 1), cap_corner(t3, 1, -1)
-    x_split = max(k["x"] for k in keys if k["id"].startswith("C5")) + CAP / 2 + 1.7
+    x_split = max(k["x"] for k in keys if k["id"].startswith("C5")) + CAP / 2 + SPLIT_GAP
     y_split = tl2[1] + (x_split - tl2[0]) * (tr2[1] - tl2[1]) / (tr2[0] - tl2[0])
     down = ((br3[0] - tr3[0]) / math.dist(br3, tr3), (br3[1] - tr3[1]) / math.dist(br3, tr3))
     keyside = poly([(-300, 300), (x_split, 300), (x_split, y_split), tr2, tl3, tr3, br3,
@@ -393,9 +404,13 @@ def build(keys, board, other):
 
     # Plate.
     plate_face = one(grow(pcb, GAP + LEDGE - FIT).common(grow(keyside, RIM - FIT)))
-    plate = prism(plate_face, Z_PLATE, PLATE_TOP)
+    # The lid's bosses on the board's holes stay within the lid's own outline.
+    lid_bosses = {r: one(disc(holes[r], BOSS_R).common(lid_face)) for r in LID_HOLES}
+    plate = add(prism(plate_face, Z_PLATE, PLATE_TOP), [cyl(holes[r], BOSS_R - 0.25, 0.0, Z_PLATE + 0.1) for r in PLATE_HOLES])
     edge = GAP + LEDGE
-    plate = carve(plate, [prism(poly(rect((k["x"], k["y"]), k["cut"] / 2, k["cut"] / 2, k["rot"])), Z_PLATE - 1, PLATE_TOP + 1)
+    under_lid = [prism(grow(lid_bosses[r], FIT), Z_PLATE - 1, PLATE_TOP + 1) for r in LID_HOLES]
+    plate = carve(plate, [t for t in under_lid if t.common(plate).Volume > 1e-6]   # where a lid boss passes the plate's edge
+                  + [cyl(holes[r], PILOT_R, -0.1, SEAT_PLATE + SCREW_PLATE + 0.2) for r in PLATE_HOLES] + [prism(poly(rect((k["x"], k["y"]), k["cut"] / 2, k["cut"] / 2, k["rot"])), Z_PLATE - 1, PLATE_TOP + 1)
                           for k in keys]
                   + [left.strip(DOVE_END, left.length - DOVE_END, [
                       (edge - FIT - DOVE, PLATE_TOP + 0.01), (edge + 1, PLATE_TOP + 0.01), (edge + 1, Z_PLATE - 0.01),
@@ -413,7 +428,7 @@ def build(keys, board, other):
     tray = carve(tray, [
         prism(cavity, Z_FLOOR, top), prism(recess, Z_PLATE, top), prism(bay, Z_FLOOR, top),
         prism(inner.box(WIRE_S[0], WIRE_S[1], -1, BAY_D0 + 1), WIRE_Z, top),
-        prism(tunnel, 0, top),
+        prism(tunnel, USB_Z0, top),
         prism(inner.box(sw - SLOT / 2, sw + SLOT / 2, -0.5, WALL + 1), -0.3, top),
         prism(inner.box(sw - SCALLOP / 2, sw + SCALLOP / 2, SCALLOP_D, WALL + 1), -1.5, top),
     ])
@@ -425,19 +440,22 @@ def build(keys, board, other):
     keep.append([u1[0] - 9.0, u1[1] - 15.3, u1[0] + 9.0, u1[1] + 15.3])   # socket tails
     posts, post_gap = [], 99.0
     for k in keys:
-        gap, spot = post_spot(k, keys, out, keep)
+        gap, spot = post_spot(k, keys, real, keep)
         assert spot and gap >= POST_R + POST_MARGIN, "no clear spot for a post under %s (%.2f)" % (k["id"], gap)
         if all(math.dist(spot, p) > 2 * POST_R + 1 for p in posts):   # neighbours may share one
             posts.append(spot)
             post_gap = min(post_gap, gap - POST_R)
-    tray = add(tray, [cyl(p, POST_R, Z_FLOOR - 0.1, -PCB_T) for p in posts])
+    tray = add(tray, [cyl(p, POST_R, Z_FLOOR - 0.1, -PCB_T) for p in posts]
+               + [cyl(p, HOLE_POST_R, Z_FLOOR - 0.1, -PCB_T) for p in holes.values()])   # a wider post under each board hole
 
     # Screws and feet. The screw sites must be solid tray from the floor to the lid.
     solid = outer.cut([cavity, bay, recess])
     for p in screws:
         assert disc(p, HEAD_R + 1.2).cut(solid).Area < 1e-6, "screw site %s is not in solid tray" % (p,)
-    tray = carve(tray, [cyl(p, HEAD_R, Z_BOT - 0.1, SEAT_Z) for p in screws]
-                 + [cyl(p, CLEAR_R, SEAT_Z + SKIN, top) for p in screws]
+    seats = [(p, SEAT_LID, top) for p in screws] + [(holes[r], SEAT_LID, -PCB_T + 0.1) for r in LID_HOLES] \
+        + [(holes[r], SEAT_PLATE, -PCB_T + 0.1) for r in PLATE_HOLES]
+    tray = carve(tray, [cyl(p, HEAD_R, Z_BOT - 0.1, seat) for p, seat, _ in seats]
+                 + [cyl(p, CLEAR_R, seat + SKIN, to) for p, seat, to in seats]
                  + [cyl(p, FOOT_R, Z_BOT - 0.1, Z_BOT + FOOT_Z) for p in FEET])
 
     # Lid.
@@ -445,15 +463,17 @@ def build(keys, board, other):
     lid = carve(lid, [prism(grow(lid_face, -RIM), PLATE_TOP - 1, LID_CEIL)])
     rib_z = Z_FLOOR + CELL[2] + CELL_SWELL
     lid = add(lid, [cyl(p, BOSS_R, PLATE_TOP, LID_CEIL + 0.1) for p in screws]
+              + [prism(lid_bosses[r], 0.0, LID_CEIL + 0.1) for r in LID_HOLES]   # these stand on the board
               + [prism(inner.box(s - 0.6, s + 0.6, BAY_D0 + 0.5, BAY_D0 + BAY_W - 0.5), rib_z, LID_CEIL + 0.1) for s in RIB_S])
-    lid = carve(lid, [cyl(p, PILOT_R, PLATE_TOP - 0.1, SEAT_Z + SCREW_L + 0.2) for p in screws]
-                + [cyl(rst, RESET_R, LID_CEIL - 1, LID_TOP + 1), prism(tunnel, PLATE_TOP - 1, LID_CEIL)])
+    tip = SEAT_LID + SCREW_LID + 0.2
+    lid = carve(lid, [cyl(p, PILOT_R, PLATE_TOP - 0.1, tip) for p in screws] + [cyl(holes[r], PILOT_R, -0.1, tip) for r in LID_HOLES]
+                + [cyl(rst, RESET_R, LID_CEIL - 1, LID_TOP + 1), prism(tunnel, -1, LID_CEIL)])
 
     figures = {
         "inner": inner, "posts": len(posts), "post gap": post_gap,
         "bay wall": bay.distToShape(outer.OuterWire)[0],
         "cell to antenna": prism(bay, 0, 1).distToShape(prism(poly(rect((u1[0], u1[1] - 14.0), 9.0, 3.0, 0)), 0, 1))[0],
-        "screws": screws, "outer": outer,
+        "screws": screws + list(holes.values()), "outer": outer,
     }
     return {"tray": tray, "plate": plate, "lid": lid}, figures
 
@@ -479,7 +499,7 @@ def report(side, parts, env, caps):
         hits = [ref for ref, e in env.items() if s.common(e).Volume > 1e-6]
         check(not hits, "%s clears the board and its %d parts%s" % (name, len(env) - 1, ": hits " + ", ".join(hits) if hits else ""))
     gap = min(parts["lid"].distToShape(c)[0] for c in caps)
-    check(gap >= CAP_GAP - 0.3, "lid to nearest keycap %.2f mm" % gap)
+    check(gap >= SPLIT_GAP - 0.05, "lid to nearest keycap %.2f mm" % gap)
     cuts = [f for f in parts["plate"].Faces if abs(f.BoundBox.ZMax - PLATE_TOP) < 1e-6 and abs(f.BoundBox.ZMin - PLATE_TOP) < 1e-6]
     holes = sum(len(f.Wires) - 1 for f in cuts)
     check(holes == 28, "plate has %d switch cutouts" % holes)
@@ -506,8 +526,8 @@ def main():
         b.XLength, b.YLength, PLATE_TOP - Z_BOT, PLATE_TOP - Z_BOT, LID_TOP - Z_BOT))
     say("CASE bay %.1f x %.1f x %.1f for a %.0f x %.0f x %.0f cell; outside wall at least %.2f; cell to the antenna end %.1f" % (
         BAY_L, BAY_W, Z_FLOOR + CELL[2] + CELL_SWELL - Z_FLOOR, CELL[0], CELL[1], CELL[2], fig["bay wall"], fig["cell to antenna"]))
-    say("CASE %d board posts, at least %.2f from any part; screws at %s; seat z %.1f" % (
-        fig["posts"], fig["post gap"], ", ".join("(%.1f, %.1f)" % p for p in fig["screws"]), SEAT_Z))
+    say("CASE %d board posts, at least %.2f from any part; screws at %s; head seats at z %.1f (lid) and %.1f (plate)" % (
+        fig["posts"], fig["post gap"], ", ".join("(%.1f, %.1f)" % p for p in fig["screws"]), SEAT_LID, SEAT_PLATE))
 
     # Exports: STEP in assembly coordinates; 3MF meshes turned as they print (plate and lid top down).
     os.makedirs(OUT + "/print", exist_ok=True)

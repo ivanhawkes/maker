@@ -26,7 +26,7 @@ LAYERS = (pcbnew.F_Cu, pcbnew.B_Cu)
 class Maze:
     def __init__(self, board: pcbnew.BOARD, window: tuple[float, float, float, float],
                  outline: list[tuple[float, float]], clearance: float, edge: float):
-        """window is (x0, y0, x1, y1) and outline a convex polygon, both in board mm."""
+        """window is (x0, y0, x1, y1) and outline a polygon (notches allowed), both in board mm."""
         self.b = board
         self.x0, self.y0 = window[0], window[1]
         self.w = int(round((window[2] - window[0]) / RES)) + 1
@@ -125,15 +125,16 @@ class Maze:
             for a, b in zip(pts, pts[1:] + pts[:1]):
                 if (a[1] <= py < b[1]) or (b[1] <= py < a[1]):
                     xs.append(a[0] + (py - a[1]) * (b[0] - a[0]) / (b[1] - a[1]))
-            lo, hi = (min(xs), max(xs)) if xs else (1e9, -1e9)
-            i_lo = max(0, int(math.ceil((lo - self.x0) / RES)))
-            i_hi = min(self.w - 1, int(math.floor((hi - self.x0) / RES)))
+            # Even-odd: the row is inside the board between each pair of crossings, and blocked
+            # elsewhere (the outline has notches, so a row can cross it more than twice).
+            xs.sort()
             row = j * self.w
-            for li in (0, 1):
-                g = grids[li]
-                g[row:row + max(0, min(i_lo, self.w))] = b"\x01" * max(0, min(i_lo, self.w))
-                if i_hi + 1 < self.w:
-                    g[row + max(0, i_hi + 1):row + self.w] = b"\x01" * (self.w - max(0, i_hi + 1))
+            start = 0   # first cell of the next blocked stretch
+            for lo, hi in list(zip(xs[::2], xs[1::2])) + [(1e9, 1e9)]:
+                end = max(start, min(self.w, int(math.ceil((lo - self.x0) / RES))))
+                for li in (0, 1):
+                    grids[li][row + start:row + end] = b"\x01" * (end - start)
+                start = max(end, min(self.w, int(math.floor((hi - self.x0) / RES)) + 1))
         return grids
 
     def _cell(self, x: float, y: float) -> tuple[int, int]:

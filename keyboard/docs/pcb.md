@@ -1,12 +1,12 @@
 # PCB Design Brief
 
-Status: design started 2026-11-23. **v3 (4-layer): both boards fully routed by script, DRC clean.**
+Status: design started 2026-11-23. **v4 (4-layer, with the case's notches and mounting holes): both boards fully routed by script, DRC clean.**
 Generate and route with `python tools/pcb_generate.py` (no autorouter; about 15 s); the boards
 are written to `pcb/left/left.kicad_pcb` and `pcb/right/right.kicad_pcb`. Nothing is checked for
 fabrication, or ordered, and the footprints are unverified against parts. Each half has a
 [schematic](#schematic-2026-11-23) drawn from its board: ERC is clean and it matches the board.
 The [electrical review](#electrical-review-2026-11-23) found no routing fault; its six proposals
-were accepted and the board changes [applied](#applied-2026-11-23) the same day. Results are in [v3](#v3-scripted-routing-2026-11-23); the method, every template and the findings are in
+were accepted and the board changes [applied](#applied-2026-11-23) the same day. Results are in [v3](#v3-scripted-routing-2026-11-23) and [v4](#v4-notches-and-mounting-holes-2026-11-23); the method, every template and the findings are in
 [pcb-routing.md](pcb-routing.md). Check a generated board with `python tools/pcb_check.py`.
 This brief collects
 the owner's decisions, the proposed electrical design, and how the boards will be generated
@@ -14,6 +14,9 @@ and checked. Decisions are marked **Decided**; everything else is a proposal unt
 
 ## Decisions (Owner, 2026-11-23)
 
+- **Decided (2026-11-23):** the three board changes the case design asked for: a notch under
+  the USB plug, four M3 mounting holes, and more overhang for the power switch's slider
+  ([v4](#v4-notches-and-mounting-holes-2026-11-23)).
 - **Decided (2026-11-23):** four layers: signals outside, a GND plane (In1.Cu) and a VLED
   plane (In2.Cu) inside. Two layers left 48 and 58 connections unrouted.
 - **Decided (2026-11-23):** on the right half the nice!nano mounts upside down (components
@@ -804,20 +807,54 @@ it makes the assembly rule critical: **an LED fitted with its cut corner away fr
 connected backwards across the supply.** Check one real LED with a meter against the board
 before fitting the rest.
 
+## v4: Notches And Mounting Holes (2026-11-23)
+
+The owner asked for the three changes that the [case design](case.md) suggested. All are in
+`tools/pcb_generate.py`; the right half mirrors the left.
+
+| Change | What | Why it is that size |
+| --- | --- | --- |
+| USB notch (`USB_NOTCH`) | 13 mm wide, from the far edge back to 16.0 mm from the controller's centre | A USB-C plug's overmould is up to about 12.4 mm wide. The module ends at about 16.6 mm and its pads at 14.9 mm |
+| Mounting holes H1 to H4 (`MOUNT_AT`) | ø3.2 mm, not plated, KiCad's `MountingHole_3.2mm_M3`, at plan (−43.5, 42.5), (−12, −31.5), (43, 43) and (73, −22) | The four key-free places where neither half has fixed copper within 4 mm or a part within 6 mm (4.2 mm for H3), measured on both v3 boards. The grid router takes the thumb column round H4. H3 is 0.9 mm from the USB notch |
+| Power switch notch (`POWER_SWITCH_NOTCH`) | 5.7 mm wide and 0.85 mm deep in the edge, between the switch's outer mount pads | The slider now overhangs by 1.85 mm, not 1.0. **Not the 2.5 mm proposed:** the locating pegs' holes reach 0.78 mm from the switch's centre, and the notch stops at 1.3 mm, leaving 0.52 mm of board |
+
+- The outline is no longer convex, so `tools/pcb_maze.py` now fills each grid row between
+  every pair of outline crossings, not between the first and last.
+- The holes are board-only footprints: they are not in the schematic, the parity check, the
+  bill of materials or the placement file. `tools/sch_generate.py` skips them.
+- A fab's router leaves a radius of about 0.5 to 1 mm in the notches' inside corners. The
+  switch's slider needs 2.8 mm of the 5.7 mm; the USB plug's shell is narrower than its
+  overmould, so neither is affected. Not confirmed with a fab house.
+- Nothing else moved: no net, pin or part position changed, and the firmware shield is still
+  up to date (`tools/zmk_generate.py --check`).
+
+| Check (KiCad 10.0.8) | Left | Right |
+| --- | --- | --- |
+| Generator | 100 footprints, 76 nets | 100 footprints, 76 nets |
+| Unconnected / DRC errors | 0 / 0 | 0 / 0 |
+| Schematic parity differences / ERC | 0 / clean | 0 / clean |
+| DRC warnings | As v3, but 9 `silk_edge_clearance` (was 2): silkscreen at the notches | As v3, but 9 |
+| Tracks / vias | 839 / 148 | 858 / 144 |
+| Fingerprint, the same on two runs | `6baa8230127f6a1d` | `2f7fbd9eff4a3a65` |
+| `tools/pcb_review.py` | Passes; figures as before | Passes |
+
+The 1:1 prints in `pcb/print/` and the case in `cad/case/` are regenerated from these boards.
+
 ## Open Items
 
 - Done 2026-11-23: the electrical review, and its accepted changes
   ([applied](#applied-2026-11-23)), and the ZMK shield ([firmware](../firmware/README.md)),
-  compile only, and the [schematic](#schematic-2026-11-23). **Next:** before any order, measure
-  the bought parts against a 1:1 print of the board, and settle the outline with the case.
+  compile only, and the [schematic](#schematic-2026-11-23), and the outline settled with the
+  case ([v4](#v4-notches-and-mounting-holes-2026-11-23)). **Next:** before any order, measure
+  the bought parts against a 1:1 print of the board.
 - To verify: the BQ24075's charge-termination behaviour against TI's datasheet (not in
   `parts/datasheets/`), and the antenna's extent on the bought module.
 - Bench: the soft-start values (R3, C2), with a scope on RAW.
 - Controller height, unread: the Mill-Max catalogue figure is ambiguous about the socket's
-  seated height (0.071 in or 0.095 in). It decides two things. The left board runs 1 to 12 mm
-  past the module's USB end, so a USB-C plug's overmould may hit the board. On the right half
-  the module is face down, so its parts need that gap. Measure a socket, then trim or notch the
-  outline if needed.
+  seated height (0.071 in or 0.095 in). On the right half the module is face down, so its
+  parts need that gap: measure a socket. The other consequence, the board under the USB plug,
+  is settled: the outline is notched there
+  ([v4](#v4-notches-and-mounting-holes-2026-11-23)).
 - Done on paper 2026-11-23: every footprint is checked against its datasheet
   ([parts/README.md](../parts/README.md#footprint-check-against-datasheets-2026-11-23)). Two
   faults found and fixed in the generator the same day: the power switch now sits on the board

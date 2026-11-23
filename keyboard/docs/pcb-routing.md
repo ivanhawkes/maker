@@ -237,6 +237,10 @@ the power switch moved to the board edge: `27ca349965833f2f`, `575f199c05a9dda2`
 | Fingerprint | `9eb48eb700d3ef4d` | `b266d5be79ed4f4b` |
 | Custom rules all read | yes | (same file) |
 
+- **v4 (2026-11-23):** the outline's two notches and the four mounting holes
+  ([pcb.md](pcb.md#v4-notches-and-mounting-holes-2026-11-23)) give left `6baa8230127f6a1d`,
+  right `2f7fbd9eff4a3a65`, with the same track and via counts and 9 `silk_edge_clearance`
+  warnings a board. No template changed; the grid router took the thumb column round one hole.
 - The **fingerprint** is a hash of every track, via and footprint placement. Three generator runs
   gave the same fingerprints. It does not cover the plane fills. KiCad writes fresh UUIDs each time, so the files themselves differ.
 - The **working loop** was: change a template, generate, run DRC, read the violations (each

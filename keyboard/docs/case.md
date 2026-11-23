@@ -1,6 +1,6 @@
 # Case Design: Keyboard 1
 
-Status: **v1 generated 2026-11-23, digital checks only.** Nothing is printed, no part has been
+Status: **v2 generated 2026-11-23 for the v4 boards, digital checks only.** Nothing is printed, no part has been
 measured, and no fit is proven. Every dimension comes from a datasheet or a product page, with
 slack added, because the parts are not here yet (owner, 2026-11-23). This is the modern black
 case of [decisions.md](decisions.md); the retro case and the tenting wedges are not started.
@@ -14,9 +14,9 @@ Three printed parts a half, and no fasteners on show:
 
 | Part | What it does |
 | --- | --- |
-| **Tray** | Floor, walls, 26 posts under the board, the battery bay. The board drops in from above |
-| **Plate** | 1.6 mm switch plate, inlaid flush with the tray's rim. Its outer edge hooks under a dovetail in the rim |
-| **Lid** | Raised cover over the controller, battery connector and battery. Three M3 × 10 screws from below hold it, and its skirt clamps the plate's inner edge |
+| **Tray** | Floor, walls, 26 posts under the board and a wider one under each of its four mounting holes, the battery bay. The board drops in from above |
+| **Plate** | 1.6 mm switch plate, inlaid flush with the tray's rim. Two M3 × 8 screws come up through the board's holes H1 and H2 into bosses under it, and its outer edge hooks under a dovetail in the rim |
+| **Lid** | Raised cover over the controller, battery connector and battery. Four M3 × 12 screws from below hold it: two in the battery lobe, and two through the board's holes H3 and H4 into bosses that stand on the board. Its skirt clamps the plate's inner edge |
 
 In plan the case is the board's outline plus 4 mm, with a lobe on the inner edge that holds the
 battery beside the board. It is 203.7 × 124.8 mm. The key deck is flat and the keys stand
@@ -63,12 +63,14 @@ proud of it; the lid is a step 3.6 mm above the deck along the inner edge.
   antenna end of the controller.
 - **The plate and lid print top face down**, so the visible faces take the bed's texture.
   Nothing can then stand above a part's top face, which is why the raised cover is its own part.
-- **The board has no mounting holes**, so nothing screws through it. The board is held between
-  the posts below and the switches above, and the plate by the dovetail on its outer edge and
-  the lid on its inner edge. The three screws are all in the lobe and one corner, outside the
-  board. See [limits](#limits-and-open-items).
-- **Screws cut their own thread** in a 2.6 mm hole in the lid (3.0 mm of engagement). Nothing
-  but M3 × 10 screws is needed. For heat-set inserts, change `PILOT_R` and the boss.
+- **Four screws go through the board** (its mounting holes, added in board v4 for this case).
+  Each clamps the board between a post in the tray and a boss above: under the plate at H1 (top
+  left) and H2 (bottom middle), under the lid at H3 (beside the USB notch) and H4 (above the
+  outer thumb key). The dovetail on the plate's outer edge stays, because no hole fits at the
+  board's bottom left corner, where the keys reach the edge.
+- **Screws cut their own thread** in 2.6 mm holes: 4.2 mm of engagement under the plate, 7.8 mm
+  in the lid's bosses on the board, 2.8 mm in its two lobe bosses. Every tip stops 0.8 mm under
+  the visible face. For heat-set inserts, change `PILOT_R` and the bosses.
 - **Slicer profile as the design constraint** (owner, 2026-11-23): the one found in the
   prototype file, Bambu X2D, 0.4 mm nozzle, PETG Basic, 0.2 mm layers, 256 mm bed.
 
@@ -76,8 +78,8 @@ proud of it; the lid is a step 3.6 mm above the deck along the inner edge.
 
 | Opening | Where | Size and assumption |
 | --- | --- | --- |
-| USB-C | Far wall and lid, in line with the controller | 13 mm wide, from the board's top to 7.0 mm above it |
-| Power switch | Inner wall, below the far corner | 9 mm slot, in a 16 mm recess for a fingernail. The slider's tip is about 1.2 mm inside the recess |
+| USB-C | Far wall and lid, in line with the controller | 13 mm wide, from 2.0 mm below the board's top to 7.0 mm above it. The board is notched under the plug |
+| Power switch | Inner wall, below the far corner | 9 mm slot, in a 16 mm recess. The slider overhangs the board by 1.85 mm, which puts its tip level with the recess's floor |
 | Reset | Lid, over the button | ø3.2 mm hole, for a pen |
 | Battery lead | Wall between board and bay | 5 mm slot, from 0.5 mm above the board |
 
@@ -94,8 +96,9 @@ vertical, and the rest is vertical walls and open-topped slots.
   generator. Printed at 0.2 mm they are the same as arcs and 45° chamfers.
 - A plain mesh has no print settings. Open it in Bambu Studio and choose the profile there.
 
-Hardware a half: three M3 × 10 screws with heads up to 6 mm across, five stick-on feet up to
-10 mm across.
+Hardware a half: four M3 × 12 and two M3 × 8 screws, with heads up to 6 mm across and 2.4 mm
+high (button or pan heads; a socket cap head stands proud), and five stick-on feet up to 10 mm
+across.
 
 ## Assembly (Proposed, Untested)
 
@@ -104,7 +107,8 @@ Hardware a half: three M3 × 10 screws with heads up to 6 mm across, five stick-
 3. Lower the plate and board into the tray outer edge first, at a tilt, so the plate's bevelled
    edge goes under the dovetail; then lay it flat. The power switch's slider drops into its slot.
 4. Plug in the battery, after checking its polarity with a meter ([pcb.md](pcb.md)).
-5. Fit the lid and the three screws from below.
+5. Fit the lid, then the six screws from below: the two short ones at H1 and H2, under the
+   plate's top left and bottom middle.
 
 ## Generating And Checking
 
@@ -135,9 +139,10 @@ both halves:
   of the left's.
 - The right board's outline and the positions of its controller, connector and switches are
   the left's mirrored, so one mirrored case serves.
-- 28 switch cutouts. The lid is 1.70 mm from the nearest keycap (T3, taken as 18 × 27 mm).
+- 28 switch cutouts. The lid is 1.30 mm from the nearest keycap (the inner column's; 1.7 mm
+  from the long thumb caps, taken as 18 × 27 mm).
 - Every post is at least 0.85 mm from any part's courtyard on either board.
-- Each mesh is closed and has its solid's volume: tray 62.9, plate 13.3, lid 9.4 cm³.
+- Each mesh is closed and has its solid's volume: tray 61.9, plate 13.4, lid 9.6 cm³.
 
 ## Limits And Open Items
 
@@ -145,14 +150,15 @@ Found while designing; none is tested.
 
 - **Fits are guesses**: 0.2 mm around the plate, 0.8 mm around the board, the dovetail. Print
   one half and adjust before printing the other.
-- **The plate is held along two edges only.** The far and near edges rely on the plate, the
-  switches and the board being stiff together. Pulling a switch near those edges may lift the
-  plate. If it does, the board needs mounting holes (below).
-- **USB plug.** The board runs 2 to 12 mm past the connector, under the plug. With the
-  connector's centre 2.6 to 3.2 mm above the board (the socket height is still unread), a plug
-  thicker than about 5 to 6.5 mm rubs the board. The tunnel is 13 mm wide.
-- **Power switch.** Reachable with a fingernail or a pen, not a fingertip, because the slider
-  overhangs the board by only 1.0 mm.
+- **The plate's bottom left corner** is the furthest from a screw (about 64 mm from H2); only
+  the dovetail holds that edge.
+- **Thin sections at H3.** The lid has 1.3 mm of wall between the screw and its face towards
+  the keys, and the board 0.9 mm between the hole and the USB notch. To leave that wall the
+  lid stands 1.3 mm from the inner column's keycaps, not 1.7.
+- **USB plug.** The tunnel is 13 mm wide and the notch gives the plug 2 mm below the board's
+  top. A plug wider than 13 mm does not fit.
+- **Power switch.** The slider's tip is level with the floor of a 16 mm recess: a fingertip
+  should move it, but that is untested.
 - **Battery connector.** About 6.5 mm between the header and the lid's skirt for the plug and
   the bend in the lead. Check with a real cell.
 - **Battery safety is not reviewed.** No cell datasheet is published, only the protection
@@ -160,16 +166,17 @@ Found while designing; none is tested.
   against the controller's 100 mA, the fit in the bay, pinching of the lead under the lid, and
   temperature while charging in a closed PETG bay are all to check before use.
 - **Radio.** The cell is 17.9 mm from the controller's antenna end; the effect is unknown.
-- **The far inner corner has a round shoulder** for the lid's third screw. It is the least
-  clean part of the outline and exists only because the board has no mounting holes.
 - **Not designed:** tenting wedges (a cradle the case sits in needs nothing from the tray), the
   retro case for keyboard 2, the dongle's case.
 
-## Board Changes To Consider
+## Board Changes Made For The Case (2026-11-23)
 
-None is made. Each needs the boards regenerated and re-routed, and the owner's decision:
+The owner asked for all three changes that v1 of this case suggested. They are in board v4
+([pcb.md](pcb.md#v4-notches-and-mounting-holes-2026-11-23)), and this case is built on them:
 
-1. **Notch the outline under the USB plug**, already an open item in [pcb.md](pcb.md#open-items).
-2. **Three or four mounting holes** in key-free corners. The plate and board could then be
-   screwed down, and the shoulder and perhaps the dovetail go.
-3. **More overhang for the power switch's slider**, about 2.5 mm, for a fingertip.
+1. **A notch under the USB plug**, 13 mm wide, back to 16.0 mm from the controller's centre.
+2. **Four mounting holes**, M3, not plated. The round shoulder that v1 had at the far inner
+   corner is gone. The dovetail stays (above).
+3. **More overhang for the power switch's slider: 1.85 mm, not the 2.5 mm proposed.** The
+   switch's two locating pegs sit in holes that reach 0.78 mm from its centre, and the notch
+   that gives the overhang must leave board beside them.

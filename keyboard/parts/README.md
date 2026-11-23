@@ -12,7 +12,7 @@ the bought parts, and the 3D models have not been opened or checked for scale an
 
 | Folder | Contents |
 | --- | --- |
-| `footprints/kicad/` | The eight KiCad stock footprints the generator uses, with `SOURCE.txt`, `LICENSE.md` and checksums |
+| `footprints/kicad/` | The nine KiCad stock footprints the generator uses, with `SOURCE.txt`, `LICENSE.md` and checksums |
 | `footprints/marbastlib/` | The hot-swap socket and Pro Micro footprints, pinned to marbastlib commit `6b0a9a7` |
 | `3d/kicad/` | STEP models for the KiCad footprints |
 | `3d/third-party/` | STEP models from other open repositories, with `SOURCES.tsv` |
@@ -32,6 +32,7 @@ installed KiCad libraries.
 | U1 | nice!nano v2 (nRF52840) | `marbastlib/marbastlib-xp-promicroish.pretty/ProMicro_Reversible_Single` | `third-party/Nice_Nano_V2.step` | `nice-nano_v2_pinout.png`, `nice-nano_v2_schematic.png`, `Nordic_nRF52840_Product_Specification_v1.11.pdf` |
 | (U1 sockets) | Mill-Max 315-43-112-41-003000 strip, 3320-0-00-15-00-00-03-0 pins | U1's holes | — | `MillMax_310_311_315_series_socket_catalog_page.pdf`, `MillMax_3320-0-00-15-00-00-03-0_pin_DigiKey.pdf` |
 | J1 | JST S2B-PH-K-S | `kicad/Connector_JST.pretty/JST_PH_S2B-PH-K_1x02_P2.00mm_Horizontal` | `kicad/JST_PH_S2B-PH-K_1x02_P2.00mm_Horizontal.step` | `JST_PH_connector_series.pdf` |
+| H1–4 | Mounting hole, M3 (no part) | `kicad/MountingHole.pretty/MountingHole_3.2mm_M3` | — | — |
 | SW_PWR | C&K PCM12SMTR | `kicad/Button_Switch_SMD.pretty/SW_SPDT_PCM12` | `kicad/SW_SPDT_PCM12.step` | `CK_PCM_series_slide_switch_PCM12.pdf` |
 | SW_RST | E-Switch TL3342F160QG | `kicad/Button_Switch_SMD.pretty/SW_SPST_TL3342` | `kicad/SW_SPST_TL3342.step` | `E-Switch_TL3342_series_tactile_switch.pdf`, `E-Switch_TL3342F160QG_drawing.pdf` |
 | Q1 | Diodes DMG2305UX-7 (P-MOSFET) | `kicad/Package_TO_SOT_SMD.pretty/SOT-23_Handsoldering` | `kicad/SOT-23.step` | `Diodes_DMG2305UX_P-channel_MOSFET_SOT-23.pdf` |
@@ -108,9 +109,13 @@ measured against a bought part.**
 - The socket holes are plated at ø3.0, and Kailh draws ø3.00 for a single-sided board. A plated
   hole at the bottom of its tolerance (2.92) is smaller than the largest barrel (2.95). marbastlib
   boards are made this way; noted, not changed.
-- The left board runs past the controller's USB end by about 1 mm at one corner and 12 mm at
-  the other (from the footprint's outline). Whether a USB-C plug clears the board
-  there depends on the socket height: check it when the outline is settled.
+- The board ran past the controller's USB end by about 1 mm at one corner and 12 mm at
+  the other, under the plug. **Settled 2026-11-23:** the outline is notched there, 13 mm wide
+  ([pcb.md](../docs/pcb.md#v4-notches-and-mounting-holes-2026-11-23)).
+- **Power switch overhang, 2026-11-23.** The edge is now notched between the switch's outer
+  mount pads, so the slider overhangs by 1.85 mm. The notch stops 0.52 mm from the holes of the
+  switch's two locating pegs (ø0.9 at ±1.5, 0.33 in the footprint), which is why it is not
+  deeper. The body overhangs the notch by 0.3 mm.
 
 ## Symbols
 
