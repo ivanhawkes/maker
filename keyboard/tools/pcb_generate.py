@@ -402,6 +402,7 @@ def build(side: str) -> Board:
     col_pins: dict[str, list] = {}  # finger column -> pin 2 plated holes, by row
     row_cells: dict[str, dict] = {}  # finger row -> {column: (x, y, r, cathode pad)}
     thumb_links: list = []  # thumb keys: (x, y, r, switch pin 1 hole, diode anode)
+    frames: dict[str, tuple[float, float, float]] = {}  # key id -> (x, y, rotation)
     for i, k in enumerate(keys, start=1):
         x, y, r = float(k["x_mm"]), float(k["y_mm"]), float(k["rotation_deg"])
         kid = k["id"]
@@ -427,8 +428,12 @@ def build(side: str) -> Board:
             thumb_links.append((x, y, r, next(p for p in sw.Pads() if p.GetNumber() == "1" and p.GetAttribute() == pcbnew.PAD_ATTRIB_PTH),
                                 next(p for p in d.Pads() if p.GetNumber() == "2")))
         lx, ly = rot(*LED_OFFSET, r)
-        led = B.place(load_led(), f"LED{i}", x + lx, y + ly, r, True, "SK6812MINI-E (optional)")
+        # The right half's chain crosses the thumbs the other way, so its thumb LEDs turn 180
+        # degrees: DOUT then faces the next thumb, as on the left (see the thumb chain below).
+        flip = 180.0 if col == "T" and side == "right" else 0.0
+        led = B.place(load_led(), f"LED{i}", x + lx, y + ly, r + flip, True, "SK6812MINI-E (optional)")
         led_order.append((col, row, kid, led))
+        frames[kid] = (x, y, r)
         # Freerouting does not treat a footprint's cut-out as board edge, so keep tracks and
         # vias out of the cut-out plus the 0.3 mm edge rule (cut-out reaches 1.80 x 1.60 mm
         # from the centre, arcs included). The pads start at 2.11 mm and stay reachable.
@@ -512,6 +517,34 @@ def build(side: str) -> Board:
         B.connect(led, "1", "VLED")             # VDD
         B.connect(led, "3", "GND")              # VSS
         prev = nxt
+
+    # Thumb LED chain, which Freerouting leaves open: B.Cu, below the LEDs. Key-local, left
+    # half: DOUT right to x = 4.85 (between the VLED via and the thumb key-to-diode link), down
+    # to y = -8.3, across to the next thumb's x = -4.1, up to DIN's height and in. The right
+    # half runs the other way with its thumb LEDs turned, so the same path mirrored in x.
+    thumbs = [(kid, led) for col, _, kid, led in chain if col == "T"]
+    out_pts, in_pts = ((4.85, -4.33), (4.85, -8.3)), ((-4.1, -8.3), (-4.1, -5.83))
+    if side == "right":
+        out_pts, in_pts = ((-4.1, -5.83), (-4.1, -8.3)), ((4.85, -8.3), (4.85, -4.33))
+    for (ka, la), (kb, lb) in zip(thumbs, thumbs[1:]):
+        dout = next(p for p in la.Pads() if p.GetNumber() == "2")
+        din = next(p for p in lb.Pads() if p.GetNumber() == "4")
+        pts = [dout.GetPosition()]
+        for kid, local in ((ka, out_pts), (kb, in_pts)):
+            kx, ky, kr = frames[kid]
+            for px_, py_ in local:
+                ox, oy = rot(px_, py_, kr)
+                pts.append(to_board(kx + ox, ky + oy))
+        pts.append(din.GetPosition())
+        for s, e in zip(pts, pts[1:]):
+            t = pcbnew.PCB_TRACK(B.b)
+            t.SetStart(s)
+            t.SetEnd(e)
+            t.SetWidth(mm(RULES["track"]))
+            t.SetLayer(pcbnew.B_Cu)
+            t.SetNet(dout.GetNet())
+            t.SetLocked(True)
+            B.b.Add(t)
 
     # Controller (top side, USB towards the far edge).
     cx, cy = CONTROLLER_AT[0] * sx, CONTROLLER_AT[1]
