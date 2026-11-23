@@ -70,6 +70,19 @@ def route(side: str) -> int:
     # generator's locked plane vias) from the saved board, reloaded: in the process that
     # imported the session, the connectivity check misses them.
     board = pcbnew.LoadBoard(str(board_path))
+    # Freerouting necks tracks down into small pads below the fab minimum (0.125 mm) and
+    # sometimes picks a 0.6/0.4 mm via the DSN offers (0.1 mm ring). Bring both back to the
+    # board minimums; DRC checks the result.
+    ds = board.GetDesignSettings()
+    fixed = 0
+    for t in board.GetTracks():
+        if t.GetClass() == "PCB_TRACK" and t.GetWidth() < ds.m_TrackMinWidth:
+            t.SetWidth(ds.m_TrackMinWidth)
+            fixed += 1
+        elif t.GetClass() == "PCB_VIA" and (t.GetWidth(pcbnew.F_Cu) - t.GetDrillValue()) / 2 < ds.m_ViasMinAnnularWidth:
+            t.SetDrill(t.GetWidth(pcbnew.F_Cu) - 2 * ds.m_ViasMinAnnularWidth - pcbnew.FromMM(0.02))
+            fixed += 1
+    print(f"{side}: widened or re-drilled {fixed} items")
     board.BuildConnectivity()
     conn = board.GetConnectivity()
     dangling = [t for t in board.GetTracks()

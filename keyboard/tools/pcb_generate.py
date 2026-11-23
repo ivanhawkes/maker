@@ -403,6 +403,7 @@ def build(side: str) -> Board:
     row_cells: dict[str, dict] = {}  # finger row -> {column: (x, y, r, cathode pad)}
     thumb_links: list = []  # thumb keys: (x, y, r, switch pin 1 hole, diode anode)
     frames: dict[str, tuple[float, float, float]] = {}  # key id -> (x, y, rotation)
+    thumb_pin2: dict[str, pcbnew.PAD] = {}  # thumb key id -> pin 2 plated hole
     for i, k in enumerate(keys, start=1):
         x, y, r = float(k["x_mm"]), float(k["y_mm"]), float(k["rotation_deg"])
         kid = k["id"]
@@ -413,7 +414,9 @@ def build(side: str) -> Board:
         else:
             col, row = k["group"], k["row"]
         B.connect(sw, "2", f"COL_{col}")
-        if col != "T":
+        if col == "T":
+            thumb_pin2[kid] = next(p for p in sw.Pads() if p.GetNumber() == "2" and p.GetAttribute() == pcbnew.PAD_ATTRIB_PTH)
+        else:
             col_pins.setdefault(col, []).append(
                 (row, next(p for p in sw.Pads() if p.GetNumber() == "2" and p.GetAttribute() == pcbnew.PAD_ATTRIB_PTH)))
         B.connect(sw, "1", f"K_{kid}")
@@ -518,6 +521,32 @@ def build(side: str) -> Board:
         B.connect(led, "3", "GND")              # VSS
         prev = nxt
 
+    # Thumb column: a locked F.Cu trunk through key-local (2.54, 7.6) of each thumb, above the
+    # switch pins, with a drop to each pin 2. A straight pin-to-pin track would pass 0.17 mm from
+    # the next thumb's pin 1.
+    tpins = sorted(((frames[k], p) for k, p in thumb_pin2.items()), key=lambda t: t[0][0] * sx)
+    trunk = []
+    for (kx, ky, kr), pin in tpins:
+        ox, oy = rot(2.54, 7.6, kr)
+        trunk.append(to_board(kx + ox, ky + oy))
+        t = pcbnew.PCB_TRACK(B.b)
+        t.SetStart(pin.GetPosition())
+        t.SetEnd(trunk[-1])
+        t.SetWidth(mm(RULES["track"]))
+        t.SetLayer(pcbnew.F_Cu)
+        t.SetNet(pin.GetNet())
+        t.SetLocked(True)
+        B.b.Add(t)
+    for s, e in zip(trunk, trunk[1:]):
+        t = pcbnew.PCB_TRACK(B.b)
+        t.SetStart(s)
+        t.SetEnd(e)
+        t.SetWidth(mm(RULES["track"]))
+        t.SetLayer(pcbnew.F_Cu)
+        t.SetNet(tpins[0][1].GetNet())
+        t.SetLocked(True)
+        B.b.Add(t)
+
     # Thumb LED chain, which Freerouting leaves open: B.Cu, below the LEDs. Key-local, left
     # half: DOUT right to x = 4.85 (between the VLED via and the thumb key-to-diode link), down
     # to y = -8.3, across to the next thumb's x = -4.1, up to DIN's height and in. The right
@@ -550,8 +579,43 @@ def build(side: str) -> Board:
     cx, cy = CONTROLLER_AT[0] * sx, CONTROLLER_AT[1]
     u = B.place(load(MARB / "marbastlib-xp-promicroish.pretty", "ProMicro_Reversible_Single"), "U1", cx, cy, 0.0, False,
                 "nice!nano v2 (socketed)")
+    if side == "right":
+        # PROVISIONAL (2026-11-23, owner to confirm): on the right half the nice!nano mounts
+        # upside down (components towards the PCB), the usual practice on split boards, which
+        # mirrors its pins: the matrix pins (pads 1-12) then face the keys and RAW/RST face the
+        # power switch and reset, as on the left. In KiCad that is the footprint flipped in x.
+        u.Flip(u.GetPosition(), pcbnew.FLIP_DIRECTION_LEFT_RIGHT)  # checked: pad 1 at (-44.38, 33.97)
     for pad, net in pad_net.items():
         B.connect(u, str(pad), net)
+
+    # Row ends: from the last finger column's cathode (C5, next to the controller) to the row's
+    # controller pad, locked B.Cu. Freerouting runs the column fan-ins up the gap between C5 and
+    # the controller and then cannot get the rows across them. A row on the inner pin row leaves
+    # the cathode outward past C5's cell edge (x = 40.3) and angles to 2 mm short of its pad; a
+    # row on the outer pin row passes under the antenna keep-out (y = -1.6) and comes up beside
+    # the outer row (x = 62.5).
+    def track(pts, net, layer=pcbnew.B_Cu):
+        for s, e in zip(pts, pts[1:]):
+            t = pcbnew.PCB_TRACK(B.b)
+            t.SetStart(s)
+            t.SetEnd(e)
+            t.SetWidth(mm(RULES["track"]))
+            t.SetLayer(layer)
+            t.SetNet(net)
+            t.SetLocked(True)
+            B.b.Add(t)
+    upads = {p.GetNumber(): p for p in u.Pads()}
+    for row, cells in row_cells.items():
+        cpad = cells["C5"][3]
+        upad = upads[str(pins["rows"][row])]
+        cy_ = -(pcbnew.ToMM(cpad.GetPosition().y) - ORIGIN[1])
+        ux = pcbnew.ToMM(upad.GetPosition().x) - ORIGIN[0]
+        uy = -(pcbnew.ToMM(upad.GetPosition().y) - ORIGIN[1])
+        if (ux - cx) * sx < 0:  # inner pin row, facing the keys
+            mid = [to_board(40.3 * sx, cy_), to_board(ux - 2.0 * sx, uy)]
+        else:
+            mid = [to_board(40.3 * sx, cy_), to_board(40.3 * sx, -1.6), to_board(62.5 * sx, -1.6), to_board(62.5 * sx, uy)]
+        track([cpad.GetPosition(), *mid, upad.GetPosition()], cpad.GetNet())
 
     # Battery connector, power switch, reset, and placeholder pads.
     j = B.place(load(STOCK / "Connector_JST.pretty", "JST_PH_S2B-PH-K_1x02_P2.00mm_Horizontal"), "J1",
