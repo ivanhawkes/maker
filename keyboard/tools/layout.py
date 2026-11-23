@@ -3,7 +3,7 @@
 
     python tools/layout.py build       # write layout/generated/*
     python tools/layout.py check       # geometry, mirror and freshness checks
-    python tools/layout.py check-cad   # compare the left half with the FreeCAD sketch
+    python tools/layout.py check-cad   # check cad/left-hand/plate.fcstd against the layout
 
 Run from the keyboard/ directory (or anywhere; paths are resolved relative to
 this file). Requires PyYAML. check-cad also needs FreeCADCmd on PATH.
@@ -27,8 +27,7 @@ import yaml
 ROOT = Path(__file__).resolve().parent.parent
 SOURCE = ROOT / "layout" / "layout.yaml"
 GENERATED = ROOT / "layout" / "generated"
-DEFAULT_FCSTD = ROOT / "cad" / "left-hand" / "plate.fcstd"  # corrected working CAD
-PROTOTYPE_FCSTD = ROOT / "prototype" / "left-hand" / "test-pad.fcstd"  # preserved print
+WORKING_FCSTD = ROOT / "cad" / "left-hand" / "plate.fcstd"  # the working CAD, checked against layout.yaml
 EXTRACTOR = ROOT / "tools" / "freecad_extract.py"
 
 # Comparison tolerances against the CAD.
@@ -67,36 +66,15 @@ def load_source(path: Path = SOURCE) -> dict:
         return yaml.safe_load(f)
 
 
-def column_shifts(src: dict) -> dict[str, tuple[float, float]]:
-    """Plan-view (dx, dy) per column from the `adjustments` section."""
-    rot = {c["id"]: math.radians(c["rotation"]) for c in src["columns"]}
-    shifts: dict[str, tuple[float, float]] = {}
-    for adj in src.get("adjustments") or []:
-        along = float(adj.get("along_column", 0.0))
-        ox, oy = map(float, adj.get("offset", (0.0, 0.0)))
-        for cid in adj["columns"]:
-            if cid not in rot:
-                raise SystemExit(f"adjustment {adj.get('id')!r} names unknown column {cid!r}")
-            a = rot[cid]
-            # "Up the column" is the column's +y axis rotated by its angle.
-            dx = -along * math.sin(a) + ox
-            dy = along * math.cos(a) + oy
-            px, py = shifts.get(cid, (0.0, 0.0))
-            shifts[cid] = (px + dx, py + dy)
-    return shifts
-
-
-def left_keys(src: dict, adjusted: bool = True) -> list[Key]:
-    """Expand the left half. With adjusted=False, return the prototype geometry."""
+def left_keys(src: dict) -> list[Key]:
+    """Expand the left half. Every switch cutout is the same size."""
     defaults = src["defaults"]
     pitch = float(defaults["row_pitch"])
-    shifts = column_shifts(src) if adjusted else {}
+    cutout = float(defaults["cutout"])
     keys: list[Key] = []
     for col in src["columns"]:
         a = math.radians(col["rotation"])
-        sx, sy = shifts.get(col["id"], (0.0, 0.0))
-        x0, y0 = float(col["top"][0]) + sx, float(col["top"][1]) + sy
-        overrides = col.get("cutout_overrides", {}) or {}
+        x0, y0 = map(float, col["top"])
         for i in range(int(col["rows"])):
             row = f"R{i + 1}"
             keys.append(
@@ -110,7 +88,7 @@ def left_keys(src: dict, adjusted: bool = True) -> list[Key]:
                     x=x0 + i * pitch * math.sin(a),
                     y=y0 - i * pitch * math.cos(a),
                     rotation=float(col["rotation"]),
-                    cutout=float(overrides.get(row, defaults["cutout"])),
+                    cutout=cutout,
                 )
             )
     arc = src["thumb_arc"]
@@ -131,25 +109,10 @@ def left_keys(src: dict, adjusted: bool = True) -> list[Key]:
                 x=cx - r * math.sin(a),
                 y=cy + r * math.cos(a),
                 rotation=float(t["rotation"]),
-                cutout=float(t.get("cutout", defaults["cutout"])),
+                cutout=cutout,
             )
         )
     return keys
-
-
-def cad_known_defects(src: dict) -> dict[str, dict]:
-    """Known prototype-CAD defects by left key id.
-
-    Each value has ``cutout`` (as-found size, mm, or None) and ``offset``
-    (prototype centre minus layout centre, plan coordinates, mm).
-    """
-    out = {}
-    for kid, d in ((src.get("prototype_cad") or {}).get("known_defects") or {}).items():
-        out[kid] = {
-            "cutout": float(d["cutout"]) if "cutout" in d else None,
-            "offset": tuple(map(float, d.get("offset", (0.0, 0.0)))),
-        }
-    return out
 
 
 def mirror(keys: list[Key]) -> list[Key]:
@@ -358,27 +321,17 @@ def extract_cad(fcstd: Path, sketch: str) -> dict:
 
 
 def cmd_check_cad(args) -> int:
-    src = load_source()
-    left = left_keys(src, adjusted=False)  # the prototype geometry
-    current = {k.id: k for k in left_keys(src)}
-    cad = extract_cad(Path(args.fcstd), args.sketch)
+    left = left_keys(load_source())
+    cad = extract_cad(WORKING_FCSTD, args.sketch)
     cutouts = cad["cutouts"]
     print(f"FreeCAD {cad['freecad_version']}, {cad['file']} / {cad['sketch']}: "
           f"{len(cutouts)} cutouts, {cad['outline_count']} outline loop(s), "
           f"bound box {[round(v, 3) for v in cad['bound_box']]}")
 
-    # The recorded defects describe the preserved prototype only; any other
-    # CAD file (e.g. the corrected cad/left-hand/plate.fcstd) must match exactly.
-    is_prototype = Path(args.fcstd).resolve() == PROTOTYPE_FCSTD.resolve()
-    known = cad_known_defects(src) if is_prototype else {}
     failures = 0
     unmatched = list(range(len(cutouts)))
     for k in left:
-        defect = known.get(k.id)
-        ox, oy = defect["offset"] if defect else (0.0, 0.0)
-        size = defect["cutout"] if defect and defect["cutout"] is not None else k.cutout
-        ex, ey = k.x + ox, k.y + oy  # where the CAD is expected to put the centre
-        j = min(unmatched, key=lambda j: math.hypot(cutouts[j]["x"] - ex, cutouts[j]["y"] - ey),
+        j = min(unmatched, key=lambda j: math.hypot(cutouts[j]["x"] - k.x, cutouts[j]["y"] - k.y),
                 default=None)
         if j is None:
             print(f"FAIL {k.id}: no CAD cutout left to match")
@@ -386,19 +339,14 @@ def cmd_check_cad(args) -> int:
             continue
         c = cutouts[j]
         unmatched.remove(j)
-        dpos = math.hypot(c["x"] - ex, c["y"] - ey)
+        dpos = math.hypot(c["x"] - k.x, c["y"] - k.y)
         drot = abs(((c["rotation_deg"] - k.rotation) + 45) % 90 - 45)
-        dsize = max(abs(e - size) for e in c["edge_lengths"])
+        dsize = max(abs(e - k.cutout) for e in c["edge_lengths"])
         ok = dpos <= POS_TOL and drot <= ROT_TOL and dsize <= SIZE_TOL and c["edge_count"] == 4 and c["closed"]
         failures += 0 if ok else 1
-        label = "FAIL" if not ok else ("KNOWN" if defect else "PASS")
-        if not ok or args.verbose or label == "KNOWN":
-            extra = ""
-            if defect:
-                extra = (f", known prototype defect: cutout {size} mm (intended {k.cutout} mm), "
-                         f"centre {math.hypot(ox, oy):.5f} mm from the layout")
-            print(f"{label} {k.id}: dpos {dpos:.5f} mm, drot {drot:.5f} deg, "
-                  f"dsize {dsize:.5f} mm, edges {c['edge_count']}, closed {c['closed']}{extra}")
+        if not ok or args.verbose:
+            print(f"{'PASS' if ok else 'FAIL'} {k.id}: dpos {dpos:.5f} mm, drot {drot:.5f} deg, "
+                  f"dsize {dsize:.5f} mm, edges {c['edge_count']}, closed {c['closed']}")
     for j in unmatched:
         print(f"FAIL CAD cutout at ({cutouts[j]['x']:.3f}, {cutouts[j]['y']:.3f}) has no layout key")
         failures += 1
@@ -406,18 +354,8 @@ def cmd_check_cad(args) -> int:
         print(f"FAIL expected 1 outline loop, found {cad['outline_count']}")
         failures += 1
 
-    changed = 0
-    for k in left:
-        n = current[k.id]
-        d = math.hypot(n.x - k.x, n.y - k.y)
-        if d > 1e-9 or n.rotation != k.rotation or n.cutout != k.cutout:
-            changed += 1
-            print(f"CHANGED {k.id}: moved ({n.x - k.x:+.3f}, {n.y - k.y:+.3f}) mm from the CAD "
-                  f"by adjustments in layout.yaml")
-
     print(f"\n{len(left)} layout keys vs {len(cutouts)} CAD cutouts; "
-          f"tolerances {POS_TOL} mm / {ROT_TOL} deg / {SIZE_TOL} mm; {failures} failure(s); "
-          f"{changed} key(s) deliberately changed from the CAD by adjustments")
+          f"tolerances {POS_TOL} mm / {ROT_TOL} deg / {SIZE_TOL} mm; {failures} failure(s)")
     return 1 if failures else 0
 
 
@@ -429,7 +367,6 @@ def main(argv=None) -> int:
     sub.add_parser("build").set_defaults(func=cmd_build)
     sub.add_parser("check").set_defaults(func=cmd_check)
     c = sub.add_parser("check-cad")
-    c.add_argument("--fcstd", default=str(DEFAULT_FCSTD))
     c.add_argument("--sketch", default="Sketch")
     c.add_argument("-v", "--verbose", action="store_true")
     c.set_defaults(func=cmd_check_cad)

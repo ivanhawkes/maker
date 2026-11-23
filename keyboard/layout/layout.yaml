@@ -11,9 +11,14 @@
 # Provenance: values were read from Sketch in the corrected working CAD,
 # cad/left-hand/plate.fcstd, with FreeCAD 1.1.4 on 2026-11-22. That file is a
 # copy of the preserved prototype (prototype/left-hand/test-pad.fcstd, sha256
-# 112a3d75...3622767) with the two oversized C1 cutouts fixed; see
-# `prototype_cad` below. `python tools/layout.py check-cad` compares this file
-# with the working CAD (exactly) or, with --fcstd, with the prototype.
+# 112a3d75...3622767) with the two oversized C1 cutouts fixed.
+#
+# Pinned (owner, 2026-11-23): the values below are the reference. This is the
+# intended layout: every cutout the same size, every column a straight run at
+# one pitch, the thumbs evenly spaced on an arc. The working CAD and everything
+# generated are checked against this file (`python tools/layout.py check` and
+# `check-cad`); nothing is checked against the printed prototype, which
+# differs by up to 0.11 mm from rounding when it was laid out by hand.
 #
 # Conventions (left half):
 #   - Units are millimetres.
@@ -85,47 +90,6 @@ thumb_arc:
     - id: T3
       rotation: -28.0
       note: outermost
-
-# Known defects of the preserved, printed prototype CAD relative to the
-# geometry above. check-cad applies these only when checking the prototype
-# file, reporting each key as KNOWN; any other difference still fails.
-#
-# In the prototype sketch, C1R3 and C1R4 were sized with DistanceX/DistanceY
-# (projected) constraints instead of Distance, so on the 6-degree column their
-# edges were 14 / cos(6 deg) = 14.07712 mm. The pinky cluster is anchored to
-# C2R4 through a corner of C1R3 (DistanceX 8.0, DistanceY 7.0) and C0 is tied
-# to C1R4 (collinear edge, gridSpacing), so the oversized squares also shifted
-# both pinky columns slightly. The corrected CAD keeps those constraints and
-# their round values; the prototype offsets below are the side effect.
-#   offset: prototype CAD centre minus the centre above, plan view, mm
-#   cutout: prototype cutout edge length, mm (when not the default)
-prototype_cad:
-  file: prototype/left-hand/test-pad.fcstd
-  known_defects:
-    C0R1: {offset: [-0.08460, 0.06865]}
-    C0R2: {offset: [-0.08460, 0.06865]}
-    C0R3: {offset: [-0.08460, 0.06865]}
-    C0R4: {offset: [-0.08460, 0.06865]}
-    C1R1: {offset: [-0.07668, -0.00822]}
-    C1R2: {offset: [-0.07668, -0.00822]}
-    C1R3: {offset: [-0.04238, 0.03432], cutout: 14.07712}
-    C1R4: {offset: [-0.04238, 0.03432], cutout: 14.07712}
-
-# Deliberate changes from the CAD, applied on top of the geometry above. The
-# geometry above stays a faithful reading of the working CAD (check-cad
-# verifies it); adjusted keys are reported by check-cad as CHANGED.
-#   along_column: mm to slide each listed column along its own axis
-#                 (+ = up the column, away from the user; - = towards the user)
-#   offset:       [dx, dy] mm plan-view shift of each listed column
-adjustments:
-  - id: pinky-vertical
-    columns: [C0, C1]
-    along_column: 0.0
-    offset: [0.0, 0.0]
-    # Owner, 2026-11-22: the 6 degree fan-out feels right, but the vertical
-    # position of the pinky columns is provisional and may change after a
-    # printed prototype. Keep both columns moving together unless a test
-    # shows otherwise.
 
 # The right half is the left half mirrored about the y axis (x -> -x,
 # rotation -> -rotation). Key ids keep their meaning (C0 is the outer pinky

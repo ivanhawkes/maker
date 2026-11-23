@@ -7,7 +7,7 @@ be generated from it or checked against it, never edited by hand to diverge.
 
 | File | Role |
 | --- | --- |
-| `layout.yaml` | Hand-edited source: columns (top key, angle, 19.05 mm pitch), the thumb arc, deliberate adjustments, and the prototype's known defects |
+| `layout.yaml` | Hand-edited source: columns (top key, angle, 19.05 mm pitch), and the thumb arc. One cutout size for every key |
 | `generated/left-hand.csv`, `generated/right-hand.csv` | Per-key centre, rotation and cutout size. Generated; do not edit |
 | `generated/layout.svg` | Plan view of both halves with cutouts and assumed 18 mm keycaps. Generated |
 | [`../tools/layout.py`](../tools/layout.py) | Builds and checks the above |
@@ -22,23 +22,26 @@ Run these inside the devenv shell (it provides PyYAML and FreeCAD), from `keyboa
 ```sh
 python tools/layout.py build       # regenerate layout/generated/*
 python tools/layout.py check       # 28 keys per half, no overlaps, exact mirror, outputs fresh
-python tools/layout.py check-cad   # compare with cad/left-hand/plate.fcstd (must match exactly)
-python tools/layout.py check-cad --fcstd prototype/left-hand/test-pad.fcstd   # the printed prototype
+python tools/layout.py check-cad   # cad/left-hand/plate.fcstd must match the layout exactly
 ```
 
 `check-cad` opens the file read-only and matches every cutout to a layout key within
-0.001 mm, 0.001° and 0.001 mm cutout size. Known defects are allowed only for the prototype
-file and are reported as `KNOWN`; keys moved on purpose through `adjustments` are reported
-as `CHANGED`.
+0.001 mm, 0.001° and 0.001 mm cutout size. The prototype is not checked: it is kept as the
+printed original only.
 
 ## Changing The Layout
 
-- **Pinky columns:** use the `pinky-vertical` adjustment in `layout.yaml`. `along_column`
-  slides C0 and C1 together along their 6° axis, keeping the fan-out. The owner considers the
-  fan-out right and the vertical position provisional until a printed test (2026-11-22).
-- **Other small moves:** add an adjustment, or edit a column's `top` or the thumb arc. Then run
-  `build` and `check`. Until the CAD is regenerated or updated to match, `check-cad` will list
-  the moved keys as `CHANGED`.
+The values in `layout.yaml` are pinned as the reference (owner, 2026-11-23). They are the
+intended layout, not a copy of the printed prototype:
+
+- Every switch cutout is the same size (`defaults.cutout`). There are no per-key sizes.
+- Every column is four keys at one pitch along its own axis. The pinky columns C0 and C1 are
+  turned 6° and are otherwise like the others: together they form a 19.05 mm grid turned 6°.
+- The thumb keys are evenly spaced, 14° apart, on one arc.
+
+To move something, edit a column's `top` or the thumb arc in `layout.yaml`, then run `build`
+and `check`. Move C0 and C1 together to keep the pinky grid. `check-cad` fails for the moved
+keys until the CAD is updated to match.
 
 ## Conventions
 
@@ -79,7 +82,7 @@ Digital checks only; nothing was printed or test-fitted.
 - **Knock-on shift:** the pinky cluster is anchored to C2R4 through a corner of C1R3
   (`DistanceX` 8.0, `DistanceY` 7.0), and C0 is tied to C1R4 (collinear edge plus
   `gridSpacing`). As a result the oversized squares also moved C0 by 0.109 mm and C1 by
-  0.077 mm. These offsets are recorded in `prototype_cad.known_defects`.
+  0.077 mm.
 
 ### Corrected CAD
 
@@ -120,6 +123,21 @@ Digital checks only; nothing was printed or test-fitted.
   real-outline figures.
 - `check-cad` (corrected CAD): 28 of 28 cutouts match exactly, 0 failures.
 - `check-cad --fcstd prototype/...`: 0 failures; 20 exact, 8 `KNOWN` (C0R1–R4, C1R1–R4).
+
+**2026-11-23**, FreeCAD 1.1.4. The owner settled that the prototype's differences are rounding
+from laying it out by hand, not intent. The list of known prototype defects, the per-key cutout
+sizes and the `adjustments` section (it held one entry, of zero) were removed from
+`layout.yaml` and `tools/layout.py`. No position changed:
+
+- `check`: 0 failures, and the generated files are unchanged, so the PCBs are unaffected.
+- `check-cad` (corrected CAD): 28 of 28 cutouts match exactly, 0 failures.
+- `check-cad --fcstd prototype/...`: now 8 failures, as expected, since the prototype is no
+  longer a reference: C0 is 0.109 mm off, C1R1–R2 0.077 mm, and C1R3–R4 0.055 mm with
+  14.077 mm cutouts. The other 20 match exactly.
+- The option to check the prototype file was then removed (owner, 2026-11-23): `check-cad`
+  checks only the working CAD, against the pinned values.
+- Pinky grid, from the `top` values: C0 to C1 is 19.050 mm at 6.00°, with 0.000 mm
+  of offset along the columns.
 
 ### Thumb Caps (2026-11-22)
 

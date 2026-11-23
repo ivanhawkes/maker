@@ -17,7 +17,7 @@ No parts, firmware versions, manufacturing orders, or geometry changes are appro
 
 ## Decision Record
 
-- **Confirmed:** The existing prototype is for the left hand and its layout is accepted, with possible small changes later.
+- **Confirmed:** The existing prototype is for the left hand and its layout is accepted, with possible small changes later. **Pinned (owner, 2026-11-23):** the reference is now [`layout/layout.yaml`](../layout/layout.yaml) as it stands, not the prototype file; designs are checked against it.
 - **Confirmed:** Two mirrored, independently rechargeable, BLE-connected halves with Cherry MX-compatible switches, under-key RGB, and optional tenting; a separate BLE desk controller connects to the PC by USB; firmware is open source.
 - **Confirmed:** The owner intends to print the case designs on a Bambu Labs X2D; model specifications, material, and settings remain to be verified.
 - **Confirmed:** PCBs are intended to be manufactured by PCBWay or JLCPCB. The keyboard must work without any RGB LEDs populated.
