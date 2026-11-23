@@ -10,10 +10,11 @@
   (constraint min_resolved_spokes (min 1))
   (condition "A.memberOfFootprint('U1') || B.memberOfFootprint('U1')"))
 
-# Plated-through pads: JLCPCB wants 0.28 mm from the hole to other copper (vias and NPTH 0.2 mm,
-# the board floor), and PCBWay's 10 mil component-hole ring is stricter than JLCPCB's 0.18 mm.
+# Plated-through pads: JLCPCB wants 0.3 mm from the hole to inner-layer copper (0.28 mm on the
+# outer layers; vias and NPTH 0.2 mm, the board floor), and PCBWay's 10 mil component-hole ring
+# is stricter than JLCPCB's 0.18 mm.
 (rule "PTH hole to copper"
-  (constraint hole_clearance (min 0.28mm))
+  (constraint hole_clearance (min 0.3mm))
   (condition "A.Type == 'Pad' && A.Pad_Type == 'Through-hole'"))
 
 (rule "PTH pad annular ring"

@@ -1,15 +1,19 @@
 # PCB Design Brief
 
-Status: design started 2026-11-23. **v1 placement generated and auto-routed; routing incomplete.**
+Status: design started 2026-11-23. **v2 (4-layer) generated and auto-routed; routing incomplete.**
 Generate with `python tools/pcb_generate.py` and route with `python tools/pcb_route.py`; the boards
 are written to `pcb/left/left.kicad_pcb` and `pcb/right/right.kicad_pcb`. Nothing is fully routed,
-checked for fabrication, or ordered. Results are in [v1 routing results](#v1-routing-results-2026-11-23).
+checked for fabrication, or ordered. Results are in [v2: four layers](#v2-four-layers-2026-11-23).
 This brief collects
 the owner's decisions, the proposed electrical design, and how the boards will be generated
 and checked. Decisions are marked **Decided**; everything else is a proposal until reviewed.
 
 ## Decisions (Owner, 2026-11-23)
 
+- **Decided (2026-11-23):** four layers: signals outside, a GND plane (In1.Cu) and a VLED
+  plane (In2.Cu) inside. Two layers left 48 and 58 connections unrouted.
+- **Decided (2026-11-23):** parts from Mouser (default) or DigiKey, except what neither sells
+  (see [provisional parts list](#provisional-parts-list-2026-11-23)).
 - **Decided:** two separate PCBs, one per half, mirrored and generated from
   [`layout/layout.yaml`](../layout/layout.yaml). Not one reversible PCB.
 - **Decided:** bare boards from JLCPCB or PCBWay (fab house still to be chosen), hand-soldered
@@ -114,7 +118,7 @@ LiPo (protected cell) ── JST-PH ── slide switch ── nice!nano RAW (= 
 
   ```text
   RAW ──┬───────────── Q1 source      Q1 AO3401A (P-MOSFET, SOT-23)
-        R1 100k        Q1 drain ──┬── VLED ── LED VDD pins, TP_VLED
+        R1 100k        Q1 drain ──┬── VLED ── LED VDD pins
         │                         C1 10 µF ── GND
   LED_GATE ─────────── Q1 gate
         └───────────── Q2 drain     Q2 2N7002 (N-MOSFET, SOT-23), source to GND
@@ -167,6 +171,57 @@ file, so the design is reproducible.
    checked with `kicad-cli pcb drc` against the chosen fab house's rules, and reviewed.
 5. Fabrication outputs (Gerbers, drill files and a BOM for hand assembly) come from
    `kicad-cli`, plus a 3D STEP of the assembled board for case design.
+
+## Provisional Parts List (2026-11-23)
+
+Provisional decisions, for the owner to review before ordering. Quantities are for both halves,
+with spares. Distributor numbers are from a search on 2026-11-23 (not live stock or price);
+"unverified" ones need checking on the distributor's site. Mouser is the default, DigiKey the
+fallback.
+
+| Part | Qty | MPN | Mouser | DigiKey | Notes |
+| --- | --- | --- | --- | --- | --- |
+| Diode, SOD-123 | 100 | Diodes 1N4148W-7-F | 621-1N4148W-F | 1N4148W-FDICT-ND | 56 used |
+| Hot-swap socket, Kailh MX | — | Kailh CPG151101S11 | — | — | **Ordered by the owner from AliExpress** ("quick connects", read as these sockets; to confirm). Fallback: Adafruit 4958 (DigiKey 1528-4958-ND) |
+| LED, SK6812MINI-E (optional) | 6 × 10 | Adafruit 4960 | unverified (485-4960?) | 1528-4960-ND | 56 used. Adafruit's forum reports a pin-label mismatch: check the pinout against the footprint before ordering boards |
+| P-MOSFET, SOT-23 (Q1) | 5 | Diodes DMG2305UX-7 | 621-DMG2305UX-7 | DMG2305UX-7DICT-ND | −20 V, −4.2 A, Vgs(th) −0.5 to −0.9 V, Vgs ±8 V. Chosen over AO3401A, which Mouser does not list. Pinout G-S-D to confirm from the datasheet drawing |
+| N-MOSFET, SOT-23 (Q2) | 5 | onsemi BSS138 | unverified (512-BSS138?) | unverified | Logic-level threshold (to verify, about 1.5 V max). Chosen over 2N7002, whose 2.5 V maximum threshold is marginal from a 3.3 V pin |
+| Resistor 100 kΩ 1 % 1206 (R1, R2) | 10 | Yageo RC1206FR-07100KL | 603-RC1206FR-07100KL (unverified) | 311-100KFRTR-ND (reel) | |
+| Capacitor 10 µF 25 V X5R 1206 (C1) | 10 | Samsung CL31A106KAHNNNE | 187-CL31A106KAHNNNE | unverified | |
+| JST-PH 2-pin side entry (J1) | 4 | JST S2B-PH-K-S(LF)(SN) | 306-S2BPHKSLFSNPP | 455-1719-ND | |
+| Slide switch SPDT (SW_PWR) | 4 | C&K PCM12SMTR | 611-PCM12SMTR | Obsolete there | Buy at Mouser. DigiKey's suggested replacement does not fit the footprint |
+| Tactile switch (SW_RST) | 4 | E-Switch TL3342F160QG | 612-TL3342F160 | EG2531CT-ND | |
+| Low-profile socket, 12 pin | 5 | Mill-Max 315-43-112-41-003000 | 575-3154311241003000 | No longer carried | Two per controller |
+| Low-profile pins | 60 | Mill-Max 3320-0-00-15-00-00-03-0 | 575-3320000150000030 | ED1134-ND | 24 per controller |
+| Controller | — | nice!nano v2 | Not sold | Not sold | **Ordered by the owner from AliExpress.** Check it is a genuine v2 (pinout, RAW as BATTERY+) before fitting |
+| Key switches | — | Kailh Speed Bronze | Not sold | Not sold | **Ordered by the owner from AliExpress** |
+| Battery | 2 | 1S LiPo with protection circuit and JST-PH lead | See below | See below | Battery design still deferred |
+
+**Batteries.** The owner is in Australia. Lithium cells are hard to post, and DigiKey (and
+probably Mouser) ships lithium by ground only, so not to Australia. Options, sources read
+2026-11-23:
+
+1. **Buy locally (recommended).** Australia Post carries loose lithium cells by road only
+   ("Road Transport Only"), so Australian shops can send them domestically.
+   - [Little Bird Electronics](https://littlebirdelectronics.com.au/products/lithium-ion-polymer-battery-3-7v-600mah)
+     LB-00237: 3.7 V, 600 mAh, JST-PH, overcharge, over-discharge and short-circuit
+     protection, in stock in Sydney. Provisional choice.
+   - [Core Electronics](https://core-electronics.com.au/power-batteries/liion-lipoly/2-pin.html)
+     CE04375 400 mAh and CE04377 1100 mAh, JST-PH, 30–40 day lead time. The owner's usual
+     shop, but its battery stock has been poor lately: check it first.
+   - [Altronics](https://www.altronics.com.au/power-supplies/battery-batteries/?type_1=lithium-batteries)
+     S4723 400 mAh, S4724A 1200 mAh, road only; connector to check.
+   - [element14 Australia](https://au.element14.com/): the owner buys there sometimes; prices
+     and shipping tend to be high. Battery range not checked.
+2. **Fit a JST-PH lead** to a protected cell bought locally with another connector. Polarity
+   is not standard between vendors: check with a meter.
+3. **Avoid RC/FPV packs:** they usually have no protection circuit.
+4. **Overseas:** only cells installed in equipment may travel by air mail, so loose cells from
+   overseas sellers are impractical.
+
+Whatever the source: check the cell has a protection circuit, check its polarity against J1's
+silkscreen before connecting, and check its charge rating against the nice!nano's charger
+(about 100 mA, or about 500 mA with the boost jumper). The cell size must also fit the case.
 
 ## Ordering Checklist
 
@@ -234,6 +289,29 @@ plan-local x = 2.54 through each column, the LED chain and VLED) and leave only 
 the controller to Freerouting; route VLED at signal width, since LED current per key is small
 (to check against the LED supply design).
 
+## v2: Four Layers (2026-11-23)
+
+Changes from the option B run: four layers, GND plane on In1.Cu, VLED plane on In2.Cu (both
+"power" layers, which the DSN export passes on, so Freerouting keeps signals off them), no outer
+pours, and a locked stub and via from every SMD pad on GND or VLED to its plane
+(`Board.plane_vias`): Freerouting does not connect SMD pads to planes, and left all 63 such
+links open on its own. TP_VLED is removed (C1's pads carry VLED); the PTH hole-to-copper rule is
+0.3 mm (JLCPCB's inner-layer value).
+
+Run: KiCad 10.0.8, Freerouting 2.5.0, `FREEROUTING_PASSES=8`, both boards in parallel, 8.0 min.
+
+| Check | Left | Right |
+| --- | --- | --- |
+| Unconnected before routing | 104 (all signal) | 104 |
+| DRC after routing: unconnected | **22** | **19** |
+| DRC after routing: errors | 1 `starved_thermal` | 1 `starved_thermal`, 1 `annular_width` (a RAW via with a 0.1 mm ring) |
+| DRC after routing: warnings | 47 `via_dangling`, silkscreen | 39 `via_dangling`, silkscreen |
+
+- **Still unrouted, left:** ROW_R4 7 and ROW_R3 4 (one row does not reach across), COL_T 2, the
+  last LED chain links (D24–D27, the thumb end), thumb key-to-diode links (T0, T2) and K_C0R1.
+  Right: ROW_R1 7, the same thumb items, COL_C0 and RST.
+- The dangling vias are Freerouting's leftovers; they need removing after import.
+
 ## v1 Routing With Option B (2026-11-23)
 
 Changes: the option B LED load switch (Q1, Q2, R1, R2, C1 at `LOAD_SWITCH_AT`, LED_EN on pad 17);
@@ -281,7 +359,12 @@ so either house can make it. The values live in `FAB_MIN` and `CUSTOM_RULES` in
 | Min via diameter | 0.25 mm; hole + 0.1 mm (0.15 mm preferred) | Not stated | **0.45 mm** |
 | Via annular ring | (via diameter − hole) ≥ 0.1 mm | 5 mil normal | **0.13 mm** |
 | PTH annular ring | 0.18 mm minimum, 0.25 mm recommended | 10 mil normal | **0.254 mm** (custom rule) |
-| Hole to other copper | Via 0.2 mm, NPTH 0.2 mm, PTH 0.28 mm (0.35 mm recommended) | 4-layer only | **0.2 mm** floor; PTH **0.28 mm** (custom rule) |
+| Hole to other copper | Via 0.2 mm, NPTH 0.2 mm, PTH 0.28 mm (0.35 mm recommended) | 4-layer only | **0.2 mm** floor; PTH **0.3 mm** (custom rule) |
+| 4-layer: hole to inner copper | Via 0.2 mm, PTH 0.3 mm | Isolation ring 7 mil (0.178 mm) normal | Via 0.2 mm, PTH 0.3 mm (above) |
+| 4-layer: inner track / space | 0.09 mm | 4/5 mil at 1 oz | No inner tracks: planes only |
+| 4-layer: inner copper to edge | Not stated | Not stated | Planes keep the 0.3 mm edge rule |
+| 4-layer: PTH annular ring | 0.15 mm minimum, 0.20 mm recommended | Outer only | 0.254 mm (unchanged) |
+| 4-layer: default stackup, 1.6 mm | 0.5 oz inner, 7628 prepreg about 0.21 mm | 1 oz inner, 7628 prepreg about 0.19 mm | No impedance control needed |
 | Hole to hole | Via 0.2 mm, pad 0.45 mm | Component hole 16 mil, via 11 mil | **0.45 mm** |
 | NPTH min | 0.5 mm | Not stated | Not a KiCad rule. All NPTH here are larger |
 | Slot width | Plated 0.5 mm, non-plated 1.0 mm | Plated 0.5 mm, non-plated 0.8 mm | Not a KiCad rule. No slots yet |

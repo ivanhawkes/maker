@@ -22,7 +22,8 @@ Battery path: JST-PH -> power switch -> nice!nano RAW pin. The official nice!nan
 pinout labels RAW "BATTERY+" (as well as the extra B+ pad, which is not socketed).
 Copper keep-outs cover the area between the controller's pin rows and a strip beyond its
 antenna end (see CONTROLLER_KEEPOUTS); the antenna position on the module is unverified.
-GND is poured on both layers.
+Four layers: signals on F.Cu and B.Cu, a GND plane on In1.Cu and a VLED plane on In2.Cu.
+Every SMD pad on a plane net gets a locked stub and via to its plane (Board.plane_vias).
 """
 
 from __future__ import annotations
@@ -66,7 +67,6 @@ CONTROLLER_AT = (52.0, 20.0)
 JST_AT = (52.0, -6.0)
 POWER_SWITCH_AT = (64.0, 30.0)
 RESET_AT = (64.0, 12.0)
-VLED_PAD_AT = (59.0, -1.0)
 # Copper keep-outs around the controller, as (x0, y0, x1, y1) relative to its centre in plan
 # coordinates. The pin pads (x = +/-7.62, y = +/-13.97, 1.8 mm) stay outside, so tracks can
 # reach them. v0 covered the pads too, which left every controller pin unroutable.
@@ -77,6 +77,10 @@ CONTROLLER_KEEPOUTS = (
     (-6.3, -15.3, 6.3, 16.6),
     (-9.5, -21.0, 9.5, -15.3),
 )
+
+
+COPPER = (pcbnew.F_Cu, pcbnew.In1_Cu, pcbnew.In2_Cu, pcbnew.B_Cu)
+PLANES = ((pcbnew.In1_Cu, "GND"), (pcbnew.In2_Cu, "VLED"))
 
 
 def mm(v: float) -> int:
@@ -150,10 +154,11 @@ CUSTOM_RULES = """(version 1)
   (constraint min_resolved_spokes (min 1))
   (condition "A.memberOfFootprint('U1') || B.memberOfFootprint('U1')"))
 
-# Plated-through pads: JLCPCB wants 0.28 mm from the hole to other copper (vias and NPTH 0.2 mm,
-# the board floor), and PCBWay's 10 mil component-hole ring is stricter than JLCPCB's 0.18 mm.
+# Plated-through pads: JLCPCB wants 0.3 mm from the hole to inner-layer copper (0.28 mm on the
+# outer layers; vias and NPTH 0.2 mm, the board floor), and PCBWay's 10 mil component-hole ring
+# is stricter than JLCPCB's 0.18 mm.
 (rule "PTH hole to copper"
-  (constraint hole_clearance (min 0.28mm))
+  (constraint hole_clearance (min 0.3mm))
   (condition "A.Type == 'Pad' && A.Pad_Type == 'Through-hole'"))
 
 (rule "PTH pad annular ring"
@@ -208,6 +213,9 @@ def load(lib: Path, name: str) -> pcbnew.FOOTPRINT:
 class Board:
     def __init__(self):
         self.b = pcbnew.BOARD()
+        self.b.SetCopperLayerCount(4)
+        for layer, _ in PLANES:
+            self.b.SetLayerType(layer, pcbnew.LT_POWER)
         self.nets: dict[str, pcbnew.NETINFO_ITEM] = {}
 
     def net(self, name: str) -> pcbnew.NETINFO_ITEM:
@@ -253,7 +261,7 @@ class Board:
                 self.b.Add(t)
 
     def keepout(self, pts: list[tuple[float, float]], name: str):
-        """A rule area on both copper layers with no tracks, vias or fills (pads allowed)."""
+        """A rule area on every copper layer with no tracks, vias or fills (pads allowed)."""
         zone = pcbnew.ZONE(self.b)
         zone.SetIsRuleArea(True)
         zone.SetDoNotAllowTracks(True)
@@ -262,8 +270,8 @@ class Board:
         zone.SetDoNotAllowPads(False)
         zone.SetDoNotAllowFootprints(False)
         layers = pcbnew.LSET()
-        layers.AddLayer(pcbnew.F_Cu)
-        layers.AddLayer(pcbnew.B_Cu)
+        for layer in COPPER:
+            layers.AddLayer(layer)
         zone.SetLayerSet(layers)
         poly = zone.Outline()
         poly.NewOutline()
@@ -271,6 +279,51 @@ class Board:
             poly.Append(to_board(px, py))
         zone.SetZoneName(name)
         self.b.Add(zone)
+
+    def plane_vias(self):
+        """Join each SMD pad on a plane net to its plane with a short, locked stub and via.
+
+        Freerouting does not connect SMD pads to the inner planes. The via sits beyond the pad,
+        away from the footprint centre, clear of the pad by the net's clearance.
+        """
+        planes = {net for _, net in PLANES}
+        placed: list[tuple[str, pcbnew.VECTOR2I]] = []
+        for fp in self.b.GetFootprints():
+            centre = fp.GetPosition()
+            for p in fp.Pads():
+                if p.GetAttribute() != pcbnew.PAD_ATTRIB_SMD or p.GetNetname() not in planes:
+                    continue
+                power = p.GetNetname() in POWER_NETS  # same values as apply_rules gives the classes
+                via_d = mm(RULES["power_via_diameter" if power else "via_diameter"])
+                drill = mm(RULES["power_via_drill" if power else "via_drill"])
+                track_w = mm(RULES["power_track" if power else "track"])
+                pos = p.GetPosition()
+                dx, dy = pos.x - centre.x, pos.y - centre.y
+                n = math.hypot(dx, dy) or 1.0
+                reach = max(p.GetSize().x, p.GetSize().y) / 2 + via_d / 2 + mm(RULES["clearance"])
+                at = pcbnew.VECTOR2I(int(pos.x + dx / n * reach), int(pos.y + dy / n * reach))
+                # Two pads' vias can land together (left board, Q1 and C1): share the first.
+                near = [v for net, v in placed if net == p.GetNetname()
+                        and math.hypot(v.x - at.x, v.y - at.y) < via_d + mm(FAB_MIN["m_HoleToHoleMin"][0])]
+                if near:
+                    at = near[0]
+                else:
+                    placed.append((p.GetNetname(), at))
+                    via = pcbnew.PCB_VIA(self.b)
+                    via.SetPosition(at)
+                    via.SetWidth(via_d)
+                    via.SetDrill(drill)
+                    via.SetNet(p.GetNet())
+                    via.SetLocked(True)
+                    self.b.Add(via)
+                t = pcbnew.PCB_TRACK(self.b)
+                t.SetStart(pos)
+                t.SetEnd(at)
+                t.SetWidth(track_w)
+                t.SetLayer(pcbnew.F_Cu if p.IsOnLayer(pcbnew.F_Cu) else pcbnew.B_Cu)
+                t.SetNet(p.GetNet())
+                t.SetLocked(True)
+                self.b.Add(t)
 
     def connect(self, fp, pad_number: str, net: str):
         hit = False
@@ -427,18 +480,14 @@ def build(side: str) -> Board:
                   RESET_AT[0] * sx, RESET_AT[1], -90.0 * sx, False, "Reset")
     B.connect(rst, "1", "RST")
     B.connect(rst, "2", "GND")
-    tp = B.place(load(STOCK / "TestPoint.pretty", "TestPoint_Pad_D1.5mm"), "TP_VLED",
-                 VLED_PAD_AT[0] * sx, VLED_PAD_AT[1], 0.0, False, "VLED")
-    B.connect(tp, "1", "VLED")
-
     # LED supply load switch (option B), bottom side, 1206 passives and SOT-23 transistors.
-    # SOT-23 pads: 1 gate, 2 source, 3 drain (AO3401A and 2N7002 alike).
+    # SOT-23 pads: 1 gate, 2 source, 3 drain (DMG2305UX and BSS138: check the bought parts).
     lx0, ly0 = LOAD_SWITCH_AT
     sot = STOCK / "Package_TO_SOT_SMD.pretty"
     parts = (
         # ref, library, footprint, (dx, dy), value, {pad: net}
-        ("Q1", sot, "SOT-23_Handsoldering", (0.0, 0.0), "AO3401A (P-MOSFET)", {"1": "LED_GATE", "2": "RAW", "3": "VLED"}),
-        ("Q2", sot, "SOT-23_Handsoldering", (0.0, -6.0), "2N7002 (N-MOSFET)", {"1": "LED_EN", "2": "GND", "3": "LED_GATE"}),
+        ("Q1", sot, "SOT-23_Handsoldering", (0.0, 0.0), "DMG2305UX-7 (P-MOSFET)", {"1": "LED_GATE", "2": "RAW", "3": "VLED"}),
+        ("Q2", sot, "SOT-23_Handsoldering", (0.0, -6.0), "BSS138 (N-MOSFET)", {"1": "LED_EN", "2": "GND", "3": "LED_GATE"}),
         ("R1", STOCK / "Resistor_SMD.pretty", "R_1206_3216Metric_Pad1.30x1.75mm_HandSolder", (6.0, 0.0),
          "100k (Q1 gate pull-up)", {"1": "RAW", "2": "LED_GATE"}),
         ("R2", STOCK / "Resistor_SMD.pretty", "R_1206_3216Metric_Pad1.30x1.75mm_HandSolder", (6.0, -6.0),
@@ -471,19 +520,20 @@ def build(side: str) -> Board:
         pts.append(((CONTROLLER_AT[0] + ox) * sx, CONTROLLER_AT[1] + oy))
     hull = outline_points([(round(a, 4), round(b, 4)) for a, b in pts])
 
-    # GND pours on both layers, inset from the outline by the copper-to-edge rule (the zone
-    # clearance and the edge rule both apply). Freerouting treats them as planes and connects
-    # GND pads to them with vias; tools/pcb_route.py refills them after routing.
-    for layer in (pcbnew.F_Cu, pcbnew.B_Cu):
+    # Four layers (owner, 2026-11-23): signals on F.Cu and B.Cu, solid planes inside, GND on
+    # In1.Cu and VLED on In2.Cu. The planes are "power" layers, which the DSN export passes on,
+    # so Freerouting routes no signals there and reaches the planes with vias.
+    # tools/pcb_route.py refills them after routing.
+    for layer, net in PLANES:
         zone = pcbnew.ZONE(B.b)
         zone.SetLayer(layer)
-        zone.SetNet(B.net("GND"))
+        zone.SetNet(B.net(net))
         zone.SetLocalClearance(mm(RULES["clearance"]))
         zone.SetMinThickness(mm(0.25))
         zone.SetPadConnection(pcbnew.ZONE_CONNECTION_THERMAL)
         zone.SetThermalReliefGap(mm(0.3))
         zone.SetThermalReliefSpokeWidth(mm(0.4))
-        zone.SetZoneName(f"GND-{'top' if layer == pcbnew.F_Cu else 'bottom'}")
+        zone.SetZoneName(f"{net}-plane")
         poly = zone.Outline()
         poly.NewOutline()
         for a, b in hull:
@@ -498,7 +548,8 @@ def build(side: str) -> Board:
         seg.SetWidth(mm(0.1))
         B.b.Add(seg)
 
-    apply_rules(B.b)
+    apply_rules(B.b)  # before plane_vias, which reads the net classes
+    B.plane_vias()
     fill_zones(B.b)
 
     note = pcbnew.PCB_TEXT(B.b)
