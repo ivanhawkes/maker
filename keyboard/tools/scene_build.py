@@ -326,7 +326,7 @@ def settings(scene):
     scene.cycles.use_denoising = True
     scene.render.image_settings.file_format = "PNG"
     scene.unit_settings.scale_length = 1.0
-    # The GPU, if this Blender can reach one: only the 5060 Ti (owner, 2026-11-23). Otherwise the CPU.
+    # Every graphics card this Blender can reach, together (owner, 2026-11-24). Otherwise the CPU.
     prefs = bpy.context.preferences.addons["cycles"].preferences
     scene.cycles.device = "CPU"
     for kind in ("OPTIX", "CUDA"):
@@ -335,11 +335,12 @@ def settings(scene):
             prefs.refresh_devices()
         except TypeError:
             continue
-        mine = [d for d in prefs.devices if "5060" in d.name]
-        if mine:
+        cards = [d for d in prefs.devices if d.type == kind]
+        if cards:
             for d in prefs.devices:
-                d.use = d in mine
+                d.use = d in cards
             scene.cycles.device = "GPU"
+            print("SCENE renders on %s (%s)" % (" and ".join(d.name for d in cards), kind), flush=True)
             break
 
 
