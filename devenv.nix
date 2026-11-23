@@ -56,7 +56,6 @@
     # (CVE-2026-119716). kicad-cli covers Gerber/drill/BOM/position exports.
     # gerbv is omitted: it depends on gtk2, which this nixpkgs marks broken.
     # Use KiCad's own Gerber viewer (gerbview) for Gerber/drill review.
-    freerouting   # 2.5.0; PCB autorouter, run headless by keyboard/tools/pcb_route.py.
     blender       # 5.2.3; renders and visual fit checks.
     bambu-studio  # 02.08.00.50; slicer for the Bambu Lab printer (X2D support still to verify).
                   # Unfree in nixpkgs; permitted individually in devenv.yaml.

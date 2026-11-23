@@ -291,4 +291,3 @@ Tightest margins in the templates, by hand (DRC enforces the limits, not these f
 - More silkscreen now overlaps copper (the widened pads reach under footprint outlines), and the
   controller footprint's 0.8 mm pin labels are under JLCPCB's 1.0 mm text height. Warnings only.
 - No schematic yet, so no ERC and no schematic-to-board parity check.
-- `freerouting` is still in the devenv shell but nothing uses it.

@@ -513,7 +513,7 @@ DRC with these rules (KiCad 10.0.8, the v1 routed boards, not re-routed):
 ## Running The Tools
 
 All from `keyboard/`, with the devenv shell's tools. When Claude Code is started inside the
-devenv shell, `kicad-cli`, `freerouting` and KiCad's Python are on `PATH` or in the Nix store,
+devenv shell, `kicad-cli` and KiCad's Python are on `PATH` or in the Nix store,
 and the generator (`--finish`) and DRC run inside Claude Code's sandbox (checked 2026-11-23).
 Only starting a new `devenv shell` from inside the sandbox fails, since `~/.cache` and the
 Nix store are read-only there.
