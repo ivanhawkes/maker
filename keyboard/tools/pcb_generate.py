@@ -555,11 +555,17 @@ def build(side: str) -> Board:
     out_pts, in_pts = ((4.85, -4.33), (4.85, -8.3)), ((-4.1, -8.3), (-4.1, -5.83))
     if side == "right":
         out_pts, in_pts = ((-4.1, -5.83), (-4.1, -8.3)), ((4.85, -8.3), (4.85, -4.33))
-    for (ka, la), (kb, lb) in zip(thumbs, thumbs[1:]):
+    # The link into the first thumb starts at the last finger LED (C0R4), whose LED is not
+    # turned, so it leaves the left-half way on both halves: a long run 4 mm inside the
+    # bottom edge.
+    finger_last = next(t for t in reversed(chain) if t[0] != "T")
+    links = [((finger_last[2], finger_last[3]), thumbs[0], ((4.85, -4.33), (4.85, -8.3)))]
+    links += [(a, b, out_pts) for a, b in zip(thumbs, thumbs[1:])]
+    for (ka, la), (kb, lb), outs in links:
         dout = next(p for p in la.Pads() if p.GetNumber() == "2")
         din = next(p for p in lb.Pads() if p.GetNumber() == "4")
         pts = [dout.GetPosition()]
-        for kid, local in ((ka, out_pts), (kb, in_pts)):
+        for kid, local in ((ka, outs), (kb, in_pts)):
             kx, ky, kr = frames[kid]
             for px_, py_ in local:
                 ox, oy = rot(px_, py_, kr)
@@ -588,12 +594,6 @@ def build(side: str) -> Board:
     for pad, net in pad_net.items():
         B.connect(u, str(pad), net)
 
-    # Row ends: from the last finger column's cathode (C5, next to the controller) to the row's
-    # controller pad, locked B.Cu. Freerouting runs the column fan-ins up the gap between C5 and
-    # the controller and then cannot get the rows across them. A row on the inner pin row leaves
-    # the cathode outward past C5's cell edge (x = 40.3) and angles to 2 mm short of its pad; a
-    # row on the outer pin row passes under the antenna keep-out (y = -1.6) and comes up beside
-    # the outer row (x = 62.5).
     def track(pts, net, layer=pcbnew.B_Cu):
         for s, e in zip(pts, pts[1:]):
             t = pcbnew.PCB_TRACK(B.b)
@@ -604,6 +604,35 @@ def build(side: str) -> Board:
             t.SetNet(net)
             t.SetLocked(True)
             B.b.Add(t)
+    # Left half: LED data from pad 10 down F.Cu beside the controller (x = 41.9, clear of the
+    # antenna keep-out), under C5R4 to a via, then B.Cu into the first LED's DIN as the thumb
+    # links do. Freerouting leaves it open; on the right half DIN faces the controller and
+    # Freerouting routes it.
+    if side == "left":
+        first = chain[0]
+        kx, ky, kr = frames[first[2]]
+        din = next(p for p in first[3].Pads() if p.GetNumber() == "4")
+        dpad = {p.GetNumber(): p for p in u.Pads()}[str(pins["led_data"])]
+        dy_ = -(pcbnew.ToMM(dpad.GetPosition().y) - ORIGIN[1])
+        vx, vy = rot(-4.1, -8.3, kr)
+        at = to_board(kx + vx, ky + vy)
+        via = pcbnew.PCB_VIA(B.b)
+        via.SetPosition(at)
+        via.SetWidth(mm(RULES["via_diameter"]))
+        via.SetDrill(mm(RULES["via_drill"]))
+        via.SetNet(din.GetNet())
+        via.SetLocked(True)
+        B.b.Add(via)
+        bx, by = rot(-4.1, -5.83, kr)
+        track([dpad.GetPosition(), to_board(41.9, dy_), to_board(41.9, -24.5), at], din.GetNet(), pcbnew.F_Cu)
+        track([at, to_board(kx + bx, ky + by), din.GetPosition()], din.GetNet())
+
+    # Row ends: from the last finger column's cathode (C5, next to the controller) to the row's
+    # controller pad, locked B.Cu. Freerouting runs the column fan-ins up the gap between C5 and
+    # the controller and then cannot get the rows across them. A row on the inner pin row leaves
+    # the cathode outward past C5's cell edge (x = 40.3) and angles to 2 mm short of its pad; a
+    # row on the outer pin row passes under the antenna keep-out (y = -1.6) and comes up beside
+    # the outer row (x = 62.5).
     upads = {p.GetNumber(): p for p in u.Pads()}
     for row, cells in row_cells.items():
         cpad = cells["C5"][3]
