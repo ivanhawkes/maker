@@ -7,8 +7,8 @@ Needs KiCad 10's `pcbnew` Python module (the devenv shell's KiCad, or PYTHONPATH
 kicad-base's site-packages) and PyYAML. Inputs:
     layout/generated/{left,right}-hand.csv   switch centres and rotations (from layout.yaml)
     pcb/pins.yaml                            controller pin assignment (shared with firmware)
-    pcb/lib/marbastlib/...                   pinned third-party footprints
-    $KICAD10_FOOTPRINT_DIR                   KiCad stock footprints
+    parts/footprints/marbastlib/...          pinned third-party footprints
+    parts/footprints/kicad/...               the KiCad stock footprints used, copied in
 
 Stage: v3. The boards are fully routed here, by rule: per-key templates for the regular parts
 and tools/pcb_maze.py for the few irregular links. No autorouter; the result is the same on every
@@ -31,7 +31,6 @@ from __future__ import annotations
 
 import csv
 import math
-import os
 import subprocess
 import sys
 from pathlib import Path
@@ -44,8 +43,10 @@ from pcb_maze import Maze
 ROOT = Path(__file__).resolve().parent.parent
 LAYOUT = ROOT / "layout" / "generated"
 PINS = ROOT / "pcb" / "pins.yaml"
-MARB = ROOT / "pcb" / "lib" / "marbastlib"
-STOCK = Path(os.environ.get("KICAD10_FOOTPRINT_DIR", ""))
+# Every footprint is loaded from the project's own copies (parts/README.md), so a board does
+# not depend on which KiCad library version is installed.
+MARB = ROOT / "parts" / "footprints" / "marbastlib"
+STOCK = ROOT / "parts" / "footprints" / "kicad"
 
 ORIGIN = (150.0, 100.0)  # KiCad page position (mm) of layout (0, 0)
 
@@ -845,8 +846,6 @@ def build(side: str) -> Board:
 
 
 def main() -> int:
-    if not STOCK.is_dir():
-        raise SystemExit("set KICAD10_FOOTPRINT_DIR to KiCad's stock footprint directory")
     for side in ("left", "right"):
         B = build(side)
         out = ROOT / "pcb" / side / f"{side}.kicad_pcb"

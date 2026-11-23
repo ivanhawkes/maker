@@ -160,8 +160,8 @@ LiPo (protected cell) ── JST-PH ── slide switch ── nice!nano RAW (= 
 | Power switch | Hand-solderable SMD or THT slide switch, edge-mounted | To choose | Rated for the cell's current |
 | Reset button | Small tactile switch, edge-accessible | To choose | |
 
-Third-party footprints will be copied into the project at a pinned commit with their licence
-file, so the design is reproducible.
+Every footprint the generator uses, a 3D model for each part, and the datasheets are kept in the
+project, in [`parts/`](../parts/README.md), with their sources, licences and checksums.
 
 ## How The Boards Are Made (Planned)
 
@@ -190,8 +190,8 @@ fallback.
 | Diode, SOD-123 | 100 | Diodes 1N4148W-7-F | 621-1N4148W-F | 1N4148W-FDICT-ND | 56 used |
 | Hot-swap socket, Kailh MX | — | Kailh CPG151101S11 | — | — | **Ordered by the owner from AliExpress** ("quick connects", read as these sockets; to confirm). Fallback: Adafruit 4958 (DigiKey 1528-4958-ND) |
 | LED, SK6812MINI-E (optional) | 6 × 10 | Adafruit 4960 | unverified (485-4960?) | 1528-4960-ND | 56 used. Adafruit's forum reports a pin-label mismatch: check the pinout against the footprint before ordering boards |
-| P-MOSFET, SOT-23 (Q1) | 5 | Diodes DMG2305UX-7 | 621-DMG2305UX-7 | DMG2305UX-7DICT-ND | −20 V, −4.2 A, Vgs(th) −0.5 to −0.9 V, Vgs ±8 V. Chosen over AO3401A, which Mouser does not list. Pinout G-S-D to confirm from the datasheet drawing |
-| N-MOSFET, SOT-23 (Q2) | 5 | onsemi BSS138 | unverified (512-BSS138?) | unverified | Logic-level threshold (to verify, about 1.5 V max). Chosen over 2N7002, whose 2.5 V maximum threshold is marginal from a 3.3 V pin |
+| P-MOSFET, SOT-23 (Q1) | 5 | Diodes DMG2305UX-7 | 621-DMG2305UX-7 | DMG2305UX-7DICT-ND | −20 V, −4.2 A, Vgs(th) −0.5 to −0.9 V, Vgs ±8 V. Chosen over AO3401A, which Mouser does not list. Pinout G-S-D confirmed from the datasheet (2026-11-23) |
+| N-MOSFET, SOT-23 (Q2) | 5 | onsemi BSS138 | unverified (512-BSS138?) | unverified | Threshold 0.8–1.5 V and pinout G-S-D, both from the datasheet (2026-11-23). Chosen over 2N7002, whose 2.5 V maximum threshold is marginal from a 3.3 V pin |
 | Resistor 100 kΩ 1 % 1206 (R1, R2) | 10 | Yageo RC1206FR-07100KL | 603-RC1206FR-07100KL (unverified) | 311-100KFRTR-ND (reel) | |
 | Capacitor 10 µF 25 V X5R 1206 (C1) | 10 | Samsung CL31A106KAHNNNE | 187-CL31A106KAHNNNE | unverified | |
 | JST-PH 2-pin side entry (J1) | 4 | JST S2B-PH-K-S(LF)(SN) | 306-S2BPHKSLFSNPP | 455-1719-ND | |
@@ -523,7 +523,8 @@ Nix store are read-only there.
   works with `PYTHONPATH` set to `kicad-base-10.0.8/lib/python3.14/site-packages` plus a
   Python 3.14 PyYAML `site-packages`. On the laptop, a bare Python with the same
   `PYTHONPATH` worked; the devenv Python failed with a libprotobuf symbol error.
-- `KICAD10_FOOTPRINT_DIR`: `share/kicad/footprints` of the `kicad-footprints` package.
+- Footprints, 3D models and datasheets are local, in [`parts/`](../parts/README.md); the generator
+  needs no KiCad library path.
 - Routing is part of the generator since v3. The Freerouting script, `tools/pcb_route.py`, was
   removed on 2026-11-23 (it is in the git history up to commit `9cf459a`).
 - Check: `python tools/pcb_check.py` runs DRC on both boards, tests that KiCad read the whole

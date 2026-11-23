@@ -1,0 +1,7 @@
+Source: KiCad footprint library, as packaged for KiCad 10.0.8 in nixpkgs
+Package: kicad-footprints-9969403365
+Upstream: https://gitlab.com/kicad/libraries/kicad-footprints
+Licence: see LICENSE.md (CC-BY-SA 4.0 with the KiCad library exception)
+Copied: 2026-11-23, unmodified. Only the files this project uses.
+The generator changes two of these when it places them: the SK6812MINI-E pads move 0.06 mm
+outward, and plated pads with a ring under 0.26 mm are widened (tools/pcb_generate.py).

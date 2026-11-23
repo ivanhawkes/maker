@@ -1,0 +1,6 @@
+Source: KiCad 3D model library, as packaged for KiCad 10.0.8 in nixpkgs
+Package: kicad-packages3d-52b42dcd8b
+Upstream: https://gitlab.com/kicad/libraries/kicad-packages3D
+Licence: see LICENSE.md (CC-BY-SA 4.0 with the KiCad library exception)
+Copied: 2026-11-23, unmodified. Only the files this project uses.
+KiCad 10 ships each model as <name>.stpZ, a zip of one STEP file; these are the STEP files inside.
