@@ -50,17 +50,20 @@ controller:
 # because the copper keep-outs block the area under the module and beyond its antenna end.
 # That left them unroutable. Unrestricted and low-frequency-only pins are both fine for the
 # matrix (scanned well below 10 kHz).
+# v3 (2026-11-23): the inner pads are assigned top to bottom in the order the scripted tracks
+# arrive beside the controller (R1, the C2/C1/C0 bus, R2, the C4/C3 bus, LED data, C5, R3), so
+# no fan-in crosses another.
 rows:            # R1 (number row) .. R4
-  R1: 2          # D0  P0.08
-  R2: 8          # D5  P0.24
+  R1: 1          # D1  P0.06
+  R2: 7          # D4  P0.22
   R3: 12         # D9  P1.06 (low frequency only)
   R4: 22         # D14 P1.11 (low frequency only)
 columns:         # C0 (outer pinky) .. C5, then T (thumb keys T0..T3 on rows R1..R4)
-  C0: 5          # D2  P0.17
-  C1: 6          # D3  P0.20
-  C2: 7          # D4  P0.22
+  C0: 6          # D3  P0.20
+  C1: 5          # D2  P0.17
+  C2: 2          # D0  P0.08
   C3: 9          # D6  P1.00
-  C4: 1          # D1  P0.06 (swapped with LED data, 2026-11-23)
+  C4: 8          # D5  P0.24
   C5: 11         # D8  P1.04 (low frequency only)
   T:  21         # D15 P1.13 (low frequency only)
 thumb_rows:      # which row each thumb key uses

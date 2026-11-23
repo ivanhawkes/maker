@@ -620,7 +620,10 @@ def build(side: str) -> Board:
             # Under the bottom: below this key's own incoming link and the next key's cell.
             track([o, (ka, 4.85, -4.33), (ka, 4.85, -10.2), (ka, -5.5, -10.2), (kb, 11.0, -10.2), (kb, -4.1, -10.2), *enter], net)
         elif ra == "R1":
-            track([o, (ka, 4.85, -4.33), (ka, 4.85, -7.0), (kb, -4.1, -8.3), *enter], net)
+            # Under the anode to the next key. Where the next column is lower (C3 to C2), stay
+            # above the column bus, which jogs up in the gap below this key.
+            high = [(ka, 8.0, -9.1), (kb, -8.45, -3.1)] if frames[kb][1] < frames[ka][1] - 3.0 else []
+            track([o, (ka, 4.85, -4.33), (ka, 4.85, -7.0), *high, (kb, -4.1, -8.3), *enter], net)
         else:
             # Where there is a gap between the columns (C2 to C1), stay left of the row's jog.
             gap = math.hypot(frames[ka][0] - frames[kb][0], frames[ka][1] - frames[kb][1]) > 21.0
@@ -641,6 +644,35 @@ def build(side: str) -> Board:
     track([(k, 2.54, 7.6) for k in tkeys], tnet, F)
     for k in tkeys:
         track([thumb_pin2[k].GetPosition(), (k, 2.54, 7.6)], tnet, F)
+
+    # Column bus: each column reaches the controller along a B.Cu lane between two key rows,
+    # in the 2.4 mm band above a key's socket (key-local y 7.06..9.45) and below the LED links of
+    # the key above. C0-C2 run above the R2 keys, C3-C4 above the R3 keys; a lane starts at a
+    # via on its column track and ends at its pad. Between two columns the lanes jog in the
+    # 2 mm between one column's diode and the next's socket; the jog order (which lane turns
+    # first) follows the stagger, so lanes never cross. The pads are assigned in arrival order
+    # (pins.yaml), so the last turn beside the controller is crossing-free too.
+    travel = ["C0", "C1", "C2", "C3", "C4", "C5"]
+    lane_y, jog_x, turn_x = (7.3, 8.05, 8.8), (8.2, 8.95, 9.7), (40.5, 41.2, 41.9)
+    for row, cols in (("R2", ("C0", "C1", "C2")), ("R3", ("C3", "C4"))):
+        for i, col in enumerate(cols):
+            net, y = col_pins[col][0][1].GetNet(), lane_y[i]
+            pts = [(col + row, 2.54, y)]
+            seq = travel[travel.index(col):]
+            for c, d in zip(seq, seq[1:]):
+                a, b = sorted((c + row, d + row), key=lambda k: frames[k][0])  # a is left on the board
+                jx = jog_x[i] if frames[b][1] < frames[a][1] else jog_x[len(jog_x) - 1 - i]
+                jog = [(a, jx, y), (b, jx - 19.05, y)]
+                pts += jog if a == c + row else jog[::-1]
+            upad = upads[str(pins["columns"][col])]
+            uy, ly = plan(upad.GetPosition())[1], plan(pt(("C5" + row, 0.0, y)))[1]
+            tx = turn_x[i] if uy < ly else turn_x[len(cols) - 1 - i]
+            via_at(pts[0], net)
+            track([*pts, (tx * sx, ly), (tx * sx, uy), upad.GetPosition()], net)
+    # C5 is beside the controller: straight from its pad to C5R3's pin 2.
+    c5pin = next(p for r_, p in col_pins["C5"] if r_ == "R3")
+    c5pad = upads[str(pins["columns"]["C5"])]
+    track([c5pad.GetPosition(), (40.0 * sx, plan(c5pad.GetPosition())[1]), ("C5R3", 9.0 * sx, 5.08), c5pin.GetPosition()], c5pin.GetNet())
 
     # Thumb rows: every thumb is on a different row, so rows must cross the board to them.
     # Thumb cathodes are reached down key-local x = 8.6, right of the switch's pin 2 tabs (to
