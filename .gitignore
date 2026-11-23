@@ -1,4 +1,4 @@
-# Local secrets loaded by devenv's dotenv support
+# Never all the environment file into a repo.
 .env
 .env.*
 
@@ -8,4 +8,54 @@
 .direnv/
 devenv.local.nix
 
+# CMake / build trees (dependencies are fetched into the build tree by FetchContent)
+/build/
+/cmake-build-*/
+/CMakeFiles/
+/CMakeCache.txt
+/Testing/
+/compile_commands.json
+/compile_flags.txt
+/CMakeUserPresets.json
+
+# Editor / OS
+.idea/
+.vscode/*
+!.vscode/*.example
+*.swp
+.DS_Store
+
+# Claude Code: personal settings (which project MCP servers this machine trusts)
+.claude/settings.local.json
+
+# clangd index
+.cache/
+
+# clang-tidy cache on CI, JETTISON_TIDY_CACHE in .github/workflows/ci.yml
+.tidy-cache/
+
+# python bytecode from the scripts (tidy.py, py_compile)
+__pycache__/
+
+# Claude Code's sandbox masks these paths with /dev/null while a command runs, which leaves
+# placeholders in the tree. A real project skill or command would need git add -f.
+/.bash_profile
+/.bashrc
+/.gitconfig
+/.gitmodules
+/.idea
+/.profile
+/.ripgreprc
+/.zprofile
+/.zshrc
+/.claude/commands
+/.claude/launch.json
+/.claude/loop.md
+/.claude/output-styles
+/.claude/routines
+/.claude/scheduled_tasks.json
+/.claude/skills
+/.claude/workflows
+
+# FreeCAD
 *.FCBak
