@@ -1,9 +1,9 @@
 # PCB Design Brief
 
-Status: design started 2026-11-23. **v2 (4-layer) generated and auto-routed; routing incomplete.**
+Status: design started 2026-11-23. **v2.4 (4-layer) generated and routed except 2 (left) and 3 (right) links.**
 Generate with `python tools/pcb_generate.py` and route with `python tools/pcb_route.py`; the boards
 are written to `pcb/left/left.kicad_pcb` and `pcb/right/right.kicad_pcb`. Nothing is fully routed,
-checked for fabrication, or ordered. Results are in [v2.1](#v21-scripted-rows-and-thumb-links-2026-11-23).
+checked for fabrication, or ordered. Results are in [v2.4](#v24-nearly-routed-2026-11-23).
 This brief collects
 the owner's decisions, the proposed electrical design, and how the boards will be generated
 and checked. Decisions are marked **Decided**; everything else is a proposal until reviewed.
@@ -288,6 +288,39 @@ beyond the USB end now); script the regular parts (straight column tracks on F.C
 plan-local x = 2.54 through each column, the LED chain and VLED) and leave only the fan-in to
 the controller to Freerouting; route VLED at signal width, since LED current per key is small
 (to check against the LED supply design).
+
+## v2.4: Nearly Routed (2026-11-23)
+
+Scripted since v2.1, all locked tracks in `tools/pcb_generate.py`:
+
+- **Thumb LED chain** on B.Cu below the LEDs, including the long C0R4-to-T0 link 4 mm inside the
+  bottom edge. On the right half the thumb LEDs are turned 180° so the chain does not cross
+  itself (LED order differs between halves; effects are whole-board only).
+- **Thumb column** as an F.Cu trunk through key-local (2.54, 7.6) of each thumb, with a drop to
+  each pin 2 (a straight pin-to-pin track passes 0.17 mm from the next pin 1).
+- **Row ends** from C5's cathode to the controller: inner-row pads directly; R4 (outer row, pad
+  22) under the antenna keep-out at y = −1.6 and up beside the outer row at x = 62.5.
+- **Left LED data** from pad 10 down F.Cu at x = 41.9, under C5R4, by via into its DIN.
+- **Right controller mirrored (PROVISIONAL, owner to confirm):** on the right half the
+  nice!nano mounts upside down (components towards the PCB), the usual practice on split
+  boards. The footprint is flipped, so pads 1–12 (the matrix and LED data) face the keys and
+  RAW/RST face the power switch and reset, as on the left. Before this the right half's matrix
+  pins faced away from the keys, which is why it routed worse and RST stayed open. To check:
+  clearance for the parts on the nice!nano's underside on low-profile sockets, and the antenna
+  facing the board (over the keep-out).
+- `tools/pcb_route.py` also widens Freerouting's neck-downs to 0.127 mm and re-drills vias whose
+  ring is under 0.13 mm (the DSN offers a 0.6/0.4 mm via).
+
+| Check | Left | Right |
+| --- | --- | --- |
+| DRC after routing: unconnected | **2** | **3** |
+| DRC after routing: errors | 1 `starved_thermal` (known) | 1 `starved_thermal` (known) |
+
+**Still open:** the thumb rows R3 to T2 and R4 to T3 (left), R1 to T0 and R2 to T1 (right), and
+K_C0R1 (right). Every thumb must reach a different row (`thumb_rows` in `pcb/pins.yaml`), so
+some row has to cross the board to the thumbs. Options: script these links (the paths past the
+load switch and the board's right edge are tight), remap `thumb_rows` per half, or finish the
+few links by hand in KiCad.
 
 ## v2.1: Scripted Rows And Thumb Links (2026-11-23)
 

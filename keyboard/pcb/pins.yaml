@@ -1,7 +1,8 @@
 # Single source for the controller pin assignment. Read by tools/pcb_generate.py
 # and, later, by the ZMK shield generator, so the PCB and firmware cannot diverge.
 #
-# Status: PROPOSAL (2026-11-23). Same mapping on both halves.
+# Status: PROPOSAL (2026-11-23). Same mapping on both halves; on the right half the nice!nano
+# mounts upside down (footprint flipped, provisional), so the same pads face the keys.
 #
 # Sources:
 #   - Footprint pad numbers and silkscreen names: marbastlib
