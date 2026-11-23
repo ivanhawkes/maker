@@ -134,6 +134,46 @@ cameras, and a still for each camera. The brief was:
 - The scenes should be made from the generated case files, so that a regenerated case can be
   shown without rebuilding the scene by hand.
 
+**Work that does not wait on a print or a part (listed 2026-11-24).** Everything else is
+waiting on a fit-test print, or on parts being ordered, measured and tested. Announce each
+before starting it. Claude's suggested order: the keycap outlines, the fabrication outputs,
+then the charging check.
+
+- Software:
+  - Add the real KLP Lamé keycap outlines to `tools/layout.py check`
+    ([pcb.md](pcb.md#open-items)); the models are in `parts/3d/third-party/klp-lame/`. The case
+    generators' keycap clearance check could use them too, in place of plain blocks.
+  - Generate and review the fabrication outputs (Gerbers, drill files, parts list, placement
+    files). None exists yet. Ordering still waits on measured parts; preparing these does not.
+  - The lighting firmware: the fade to black after 60 s and the brightness cap are agreed
+    ([decisions.md](decisions.md)) but not written. Compile-check only.
+  - Retro tenting wedges, deferred by the owner ([case-retro.md](case-retro.md)); a retro
+    dongle case if wanted.
+- Desk research:
+  - The BQ24075's charge termination against TI's datasheet, which is not in
+    `parts/datasheets/` yet.
+  - Match off-white, burnt orange, brown and mustard to Bambu Lab's PETG and PLA ranges
+    ([case-retro.md](case-retro.md)).
+  - The position of the nice!nano's reset button, so the dongle's case can have a pen hole
+    ([dongle-case.md](dongle-case.md)).
+  - The power budget: "weeks per charge" has no number or test conditions yet.
+- For the owner to decide:
+  - The keymap: the thumb keys and the Fn layer are still a first proposal
+    ([firmware/README.md](../firmware/README.md)).
+  - JLCPCB or PCBWay, and whether to ask for non-plated holes for the controller's sockets
+    ([pcb.md](pcb.md#open-items)).
+- Housekeeping:
+  - The open-items list in [pcb.md](pcb.md#open-items) still carries finished items and the old
+    1.0 mm power switch overhang (1.85 mm since v4).
+  - One guide to printing and assembly; it is a listed deliverable, and is spread across the
+    case documents.
+  - The `.FCStd` case files do not go through LFS: the pattern in `.gitattributes` is the
+    lowercase `*.fcstd`.
+  - The Blender change in the owner's NixOS configuration is committed there but not applied:
+    `sudo nixos-rebuild switch --flake .#lythir` compiles Blender, about 45 minutes.
+  - Where the 22 seconds for each 4k still goes has not been measured
+    ([scenes.md](scenes.md)); the 2k set has not been rendered.
+
 Still to verify, from the review: the BQ24075's charge termination against TI's datasheet, the
 antenna's extent on the bought module, the soft-start values on the bench, and one real LED's
 pinout with a meter ([pcb.md](pcb.md#schematic-2026-11-23)). Run `python tools/pcb_check.py`,
