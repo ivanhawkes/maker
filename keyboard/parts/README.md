@@ -38,7 +38,7 @@ installed KiCad libraries.
 | Q2 | onsemi BSS138 (N-MOSFET) | Same | Same | `onsemi_BSS138_N-channel_MOSFET_SOT-23.pdf` |
 | R1, R2 | Yageo RC1206FR-07100KL | `kicad/Resistor_SMD.pretty/R_1206_3216Metric_Pad1.30x1.75mm_HandSolder` | `kicad/R_1206_3216Metric.step` | `Yageo_RC_series_chip_resistors.pdf` |
 | C1 | Samsung CL31A106KAHNNNE | `kicad/Capacitor_SMD.pretty/C_1206_3216Metric_Pad1.33x1.80mm_HandSolder` | `kicad/C_1206_3216Metric.step` | `Samsung_CL31A106KAHNNNE_10uF_25V_X5R_1206_spec.pdf` |
-| (battery) | 1S LiPo with protection and JST-PH lead; cell not chosen | — | — | `Adafruit_1578_LiPo_500mAh_datasheet.pdf`, `Adafruit_258_LiPo_1200mAh_503562.pdf` (examples of the type) |
+| (battery) | Core Electronics CE04375, 400 mAh, 38 × 25 × 6 mm, JST-PH: the cell the case is designed around ([case.md](../docs/case.md)); not ordered | — | — | `CoreElectronics_CE04375_LiPo_400mAh_PCM_datasheet.pdf` (the protection board only; no cell datasheet is published). `Adafruit_1578_LiPo_500mAh_datasheet.pdf`, `Adafruit_258_LiPo_1200mAh_503562.pdf` are examples of the type |
 
 ## Read From These Files (2026-11-23)
 

@@ -8,7 +8,7 @@ No parts, firmware versions, manufacturing orders, or geometry changes are appro
 | Layout and keymap | Row roles are agreed: a number row plus three alpha rows (see [concept.md](concept.md)). Which switch and keycap models, legends, and layers? | Fit, PCB, firmware |
 | Construction | Decided 2026-11-23: two mirrored PCBs, bare boards hand-soldered by the owner, the nice!nano on low-profile sockets, JST-PH battery connector, power switch and reset button (see [pcb.md](pcb.md)). Still open: JLCPCB or PCBWay. | Electrical, case, cost, serviceability |
 | Controllers and firmware | The nice!nano is selected for all three parts; ZMK `main` is pinned to a commit (see the decision record). Confirm the boards are v2 on arrival. | GPIO, charging, BLE, USB, firmware |
-| Batteries and charging | Target runtime is weeks per charge with RGB off, charging through the dev board's USB-C. Cell size, use while charging, and replaceability remain open. The design is deferred to Claude. | Power budget, safety, case |
+| Batteries and charging | Target runtime is weeks per charge with RGB off, charging through the dev board's USB-C. The case is designed around the Core Electronics CE04375 (400 mAh), to be revisited when a cell is in hand (see the record below). Use while charging, replaceability and the safety review remain open. | Power budget, safety, case |
 | RGB | Agreed: one optional LED per key, ambient global effects, off when idle, on while typing, fading to black after 60 s without a key press, LED power switched off in hardware. Still to choose: the LED part, a brightness cap, how to handle the LED supply voltage, and how to implement the fade. | Firmware, LED selection, power |
 | Tenting | Interchangeable printed wedges are approved; determine comfortable angles, attachment method, and stability while preserving flat use. | Case and stability |
 | 3D printing | Confirm the exact X2D model and build volume, material, nozzle, slicer, and desired finish; what tolerances have been calibrated? | Case geometry, strength, fit |
@@ -64,4 +64,9 @@ No parts, firmware versions, manufacturing orders, or geometry changes are appro
   - Print: 0.2 mm layers, 2 walls, 5 top and 3 bottom layers, 15% grid infill, no supports. Elephant-foot compensation 0.15 mm, no XY hole or contour compensation.
   - Build area in the profile: 256 × 256 × 261 mm.
 - **Deferred:** Battery specification and design are for Claude to undertake later, subject to owner approval and safety review.
+- **Decided 2026-11-23 (owner): inputs to the case design.**
+  - Design from specifications, with room to adjust: the owner does not have the parts yet.
+  - Claude picks a cell from Core Electronics and designs around it, with slack for differences between the listing and what can be bought. To be revisited if it does not fit.
+  - The slicer profile found in the prototype's file (above) is the design constraint.
+- **Chosen by Claude 2026-11-23, for the case design only:** Core Electronics CE04375, 400 mAh, 38 × 25 × 6 mm, JST-PH, with a protection board. Not ordered and not safety-reviewed. The reasons, the case built around it and its limits are in [case.md](case.md).
 - **Decided 2026-11-22:** ZMK firmware, with the desk controller as central and both halves as peripherals (see [concept.md](concept.md) and [architecture.md](architecture.md)). The release to pin is still open.

@@ -170,8 +170,7 @@ sizes and the `adjustments` section (it held one entry, of zero) were removed fr
 
 ## Not Yet Generated
 
-Plate and case geometry or exports. Add generators as those designs start, and check every
-output against this source.
-
-Generated elsewhere from this source: the PCB footprint placement (`tools/pcb_generate.py`) and
-the ZMK matrix transform and physical layout (`tools/zmk_generate.py`, with `--check`).
+Nothing. Generated elsewhere from this source: the PCB footprint placement
+(`tools/pcb_generate.py`), the ZMK matrix transform and physical layout
+(`tools/zmk_generate.py`, with `--check`), and the case with its switch plate
+(`tools/case_generate.py`, [docs/case.md](../docs/case.md)).

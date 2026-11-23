@@ -23,6 +23,7 @@ The geometry, switch count, dimensions, and relationships between the source and
 - [Development plan](docs/development-plan.md): staged work and deliverables for the future agent.
 - [PCB design](docs/pcb.md): decisions, electrical design, fab rules, parts list and results.
 - [PCB routing](docs/pcb-routing.md): how the boards are routed by script, and what was learned.
+- [Case design](docs/case.md): the printed case for keyboard 1, how it is generated and checked, and its limits.
 - [Parts](parts/README.md): local footprints, 3D models and datasheets for every part.
 - [Verification plan](docs/verification.md): digital checks and physical tests to plan and record.
 - [AGENTS.md](AGENTS.md): shared instructions for agents; [CLAUDE.md](CLAUDE.md) imports them for Claude Code.

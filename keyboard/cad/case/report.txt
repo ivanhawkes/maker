@@ -1,0 +1,39 @@
+CASE the right outline and top-side part positions are the left's mirrored: one case, mirrored
+CASE left  ok   tray: one valid solid, 62.9 cm3, 203.7 x 124.8 x 11.6 mm
+CASE left  ok   tray fits the 256 mm bed
+CASE left  ok   plate: one valid solid, 13.3 cm3, 169.1 x 117.9 x 1.6 mm
+CASE left  ok   plate fits the 256 mm bed
+CASE left  ok   lid: one valid solid, 9.4 cm3, 75.7 x 118.7 x 6.2 mm
+CASE left  ok   lid fits the 256 mm bed
+CASE left  ok   tray and plate do not overlap
+CASE left  ok   tray and lid do not overlap
+CASE left  ok   plate and lid do not overlap
+CASE left  ok   tray clears the board and its 128 parts
+CASE left  ok   plate clears the board and its 128 parts
+CASE left  ok   lid clears the board and its 128 parts
+CASE left  ok   lid to nearest keycap 1.70 mm
+CASE left  ok   plate has 28 switch cutouts
+CASE right ok   tray: one valid solid, 62.9 cm3, 203.7 x 124.8 x 11.6 mm
+CASE right ok   tray fits the 256 mm bed
+CASE right ok   plate: one valid solid, 13.3 cm3, 169.1 x 117.9 x 1.6 mm
+CASE right ok   plate fits the 256 mm bed
+CASE right ok   lid: one valid solid, 9.4 cm3, 75.7 x 118.7 x 6.2 mm
+CASE right ok   lid fits the 256 mm bed
+CASE right ok   tray and plate do not overlap
+CASE right ok   tray and lid do not overlap
+CASE right ok   plate and lid do not overlap
+CASE right ok   tray clears the board and its 128 parts
+CASE right ok   plate clears the board and its 128 parts
+CASE right ok   lid clears the board and its 128 parts
+CASE right ok   lid to nearest keycap 1.70 mm
+CASE right ok   plate has 28 switch cutouts
+CASE size: 203.7 x 124.8 mm in plan; tray 11.6 high, 11.6 to the plate's top, 15.2 over the lid
+CASE bay 42.5 x 28.5 x 7.0 for a 38 x 25 x 6 cell; outside wall at least 2.40; cell to the antenna end 17.9
+CASE 26 board posts, at least 0.85 from any part; screws at (66.3, 42.3), (81.1, 6.5), (96.8, -50.5); seat z -2.0
+CASE left  ok   cad/case/print/left-tray.3mf: 26772 facets, volume 62.9 cm3
+CASE left  ok   cad/case/print/left-plate.3mf: 792 facets, volume 13.3 cm3
+CASE left  ok   cad/case/print/left-lid.3mf: 8702 facets, volume 9.4 cm3
+CASE right ok   cad/case/print/right-tray.3mf: 26772 facets, volume 62.9 cm3
+CASE right ok   cad/case/print/right-plate.3mf: 792 facets, volume 13.3 cm3
+CASE right ok   cad/case/print/right-lid.3mf: 8702 facets, volume 9.4 cm3
+CASE RESULT: all checks pass

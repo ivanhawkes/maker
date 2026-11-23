@@ -223,10 +223,13 @@ probably Mouser) ships lithium by ground only, so not to Australia. Options, sou
    ("Road Transport Only"), so Australian shops can send them domestically.
    - [Little Bird Electronics](https://littlebirdelectronics.com.au/products/lithium-ion-polymer-battery-3-7v-600mah)
      LB-00237: 3.7 V, 600 mAh, JST-PH, overcharge, over-discharge and short-circuit
-     protection, in stock in Sydney. Provisional choice.
+     protection, in stock in Sydney. Its size is not read: check it against the case's bay
+     before buying it instead.
    - [Core Electronics](https://core-electronics.com.au/power-batteries/liion-lipoly/2-pin.html)
      CE04375 400 mAh and CE04377 1100 mAh, JST-PH, 30–40 day lead time. The owner's usual
-     shop, but its battery stock has been poor lately: check it first.
+     shop, but its battery stock has been poor lately: check it first. **The case is designed
+     around the CE04375** (38 × 25 × 6 mm; owner's instruction, 2026-11-23; [case.md](case.md)).
+     Its bay takes a cell up to 42.5 × 28.5 × 7.0 mm.
    - [Altronics](https://www.altronics.com.au/power-supplies/battery-batteries/?type_1=lithium-batteries)
      S4723 400 mAh, S4724A 1200 mAh, road only; connector to check.
    - [element14 Australia](https://au.element14.com/): the owner buys there sometimes; prices
