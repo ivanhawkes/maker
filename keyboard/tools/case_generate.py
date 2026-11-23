@@ -287,6 +287,20 @@ def seg_dist(p, a, b):
     return math.dist(p, (ax + k * (bx - ax), ay + k * (by - ay)))
 
 
+def thin(pts, tol):
+    """Drop outline points that lie within tol of the chord that replaces them.
+
+    The outlines here have thousands of 0.005 mm facets; cut at an angle they crash OCCT."""
+    keep, i = [pts[0]], 0
+    while i < len(pts) - 1:
+        j = i + 1
+        while j + 1 < len(pts) and all(seg_dist(p, pts[i], pts[j + 1]) < tol for p in pts[i + 1:j + 1]):
+            j += 1
+        keep.append(pts[j])
+        i = j
+    return keep
+
+
 def read_keys(side):
     with open("layout/generated/%s-hand.csv" % side) as f:
         return [{"id": r["id"], "x": float(r["x_mm"]), "y": float(r["y_mm"]), "rot": float(r["rotation_deg"]),
@@ -474,6 +488,9 @@ def build(keys, board, other):
         "bay wall": bay.distToShape(outer.OuterWire)[0],
         "cell to antenna": prism(bay, 0, 1).distToShape(prism(poly(rect((u1[0], u1[1] - 14.0), 9.0, 3.0, 0)), 0, 1))[0],
         "screws": screws + list(holes.values()), "outer": outer,
+        # for tools/case_retro_generate.py, which builds another shell round these parts
+        "core": core, "lid face": lid_face, "keyside": keyside, "tunnel": tunnel, "switch": sw, "reset": rst,
+        "u1": u1, "seats": seats,
     }
     return {"tray": tray, "plate": plate, "lid": lid}, figures
 

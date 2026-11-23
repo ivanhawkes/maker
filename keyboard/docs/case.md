@@ -166,7 +166,7 @@ Found while designing; none is tested.
   against the controller's 100 mA, the fit in the bay, pinching of the lead under the lid, and
   temperature while charging in a closed PETG bay are all to check before use.
 - **Radio.** The cell is 17.9 mm from the controller's antenna end; the effect is unknown.
-- **Not designed:** the retro case for keyboard 2. The dongle's case is in [dongle-case.md](dongle-case.md).
+- **Elsewhere:** the retro case for keyboard 2 is in [case-retro.md](case-retro.md), built round this one's insides; the dongle's case is in [dongle-case.md](dongle-case.md).
 
 ## Tenting Wedges (2026-11-23)
 

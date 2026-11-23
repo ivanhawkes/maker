@@ -24,6 +24,7 @@ The geometry, switch count, dimensions, and relationships between the source and
 - [PCB design](docs/pcb.md): decisions, electrical design, fab rules, parts list and results.
 - [PCB routing](docs/pcb-routing.md): how the boards are routed by script, and what was learned.
 - [Case design](docs/case.md): the printed case for keyboard 1, how it is generated and checked, and its limits.
+- [Retro case](docs/case-retro.md): the 1970s case for keyboard 2, built round the first case's insides.
 - [Dongle case](docs/dongle-case.md): the printed case for the hand-wired dongle, and its wiring.
 - [Parts](parts/README.md): local footprints, 3D models and datasheets for every part.
 - [Verification plan](docs/verification.md): digital checks and physical tests to plan and record.

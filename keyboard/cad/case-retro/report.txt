@@ -1,0 +1,71 @@
+CASE left  ok   tray: one valid solid, 100.2 cm3, 215.6 x 136.8 x 11.6 mm
+CASE left  ok   tray fits the 256 mm bed
+CASE left  ok   plate: one valid solid, 13.4 cm3, 169.1 x 117.9 x 5.0 mm
+CASE left  ok   plate fits the 256 mm bed
+CASE left  ok   lid: one valid solid, 32.2 cm3, 82.1 x 130.8 x 12.0 mm
+CASE left  ok   lid fits the 256 mm bed
+CASE left  ok   plinth: one valid solid, 91.8 cm3, 215.6 x 136.8 x 17.8 mm
+CASE left  ok   plinth fits the 256 mm bed
+CASE left  ok   stripe: one valid solid, 1.3 cm3, 215.6 x 136.8 x 1.8 mm
+CASE left  ok   stripe fits the 256 mm bed
+CASE left  ok   tray and plate do not overlap
+CASE left  ok   tray and lid do not overlap
+CASE left  ok   tray and plinth do not overlap
+CASE left  ok   tray and stripe do not overlap
+CASE left  ok   plate and lid do not overlap
+CASE left  ok   plate and plinth do not overlap
+CASE left  ok   plate and stripe do not overlap
+CASE left  ok   lid and plinth do not overlap
+CASE left  ok   lid and stripe do not overlap
+CASE left  ok   plinth and stripe do not overlap
+CASE left  ok   tray clears the board and its 128 parts
+CASE left  ok   plate clears the board and its 128 parts
+CASE left  ok   lid clears the board and its 128 parts
+CASE left  ok   plinth clears the board and its 128 parts
+CASE left  ok   stripe clears the board and its 128 parts
+CASE left  ok   lid to nearest keycap 1.30 mm
+CASE left  ok   plate has 28 switch cutouts
+CASE right ok   tray: one valid solid, 100.2 cm3, 215.6 x 136.8 x 11.6 mm
+CASE right ok   tray fits the 256 mm bed
+CASE right ok   plate: one valid solid, 13.4 cm3, 169.1 x 117.9 x 5.0 mm
+CASE right ok   plate fits the 256 mm bed
+CASE right ok   lid: one valid solid, 32.2 cm3, 82.1 x 130.8 x 12.0 mm
+CASE right ok   lid fits the 256 mm bed
+CASE right ok   plinth: one valid solid, 91.8 cm3, 215.6 x 136.8 x 17.8 mm
+CASE right ok   plinth fits the 256 mm bed
+CASE right ok   stripe: one valid solid, 1.3 cm3, 215.6 x 136.8 x 1.8 mm
+CASE right ok   stripe fits the 256 mm bed
+CASE right ok   tray and plate do not overlap
+CASE right ok   tray and lid do not overlap
+CASE right ok   tray and plinth do not overlap
+CASE right ok   tray and stripe do not overlap
+CASE right ok   plate and lid do not overlap
+CASE right ok   plate and plinth do not overlap
+CASE right ok   plate and stripe do not overlap
+CASE right ok   lid and plinth do not overlap
+CASE right ok   lid and stripe do not overlap
+CASE right ok   plinth and stripe do not overlap
+CASE right ok   tray clears the board and its 128 parts
+CASE right ok   plate clears the board and its 128 parts
+CASE right ok   lid clears the board and its 128 parts
+CASE right ok   plinth clears the board and its 128 parts
+CASE right ok   stripe clears the board and its 128 parts
+CASE right ok   lid to nearest keycap 1.30 mm
+CASE right ok   plate has 28 switch cutouts
+RETRO size: 215.6 x 136.8 mm in plan; rake 6 degrees; plate's top 15.0 mm above the desk at the near edge, 29.3 at the far edge; hood 36.3
+RETRO ok   the hood has 9 louvre grooves
+RETRO ok   every screw head has at least 3.9 mm of recess in the plinth, on a web of 1.2 or 1.6 mm
+RETRO ok   a press on any key, straight down or along its axis, lands inside the plinth's feet
+RETRO ok   the plinth as printed: 215.6 x 137.6 x 17.7 mm, flat on the desk
+RETRO plinth feet at (-86.0, 33.7), (-77.7, -40.4), (-18.8, 62.8), (102.6, -58.2), (113.4, -28.1), (47.7, 52.9)
+RETRO left  ok   cad/case-retro/print/left-tray.3mf: 29910 facets, volume 100.2 cm3
+RETRO left  ok   cad/case-retro/print/left-plate.3mf: 3192 facets, volume 13.4 cm3
+RETRO left  ok   cad/case-retro/print/left-lid.3mf: 10164 facets, volume 32.2 cm3
+RETRO left  ok   cad/case-retro/print/left-plinth.3mf: 17860 facets, volume 91.8 cm3
+RETRO left  ok   cad/case-retro/print/left-stripe.3mf: 636 facets, volume 1.3 cm3
+RETRO right ok   cad/case-retro/print/right-tray.3mf: 29910 facets, volume 100.2 cm3
+RETRO right ok   cad/case-retro/print/right-plate.3mf: 3192 facets, volume 13.4 cm3
+RETRO right ok   cad/case-retro/print/right-lid.3mf: 10164 facets, volume 32.2 cm3
+RETRO right ok   cad/case-retro/print/right-plinth.3mf: 17860 facets, volume 91.8 cm3
+RETRO right ok   cad/case-retro/print/right-stripe.3mf: 636 facets, volume 1.3 cm3
+RETRO RESULT: all checks pass

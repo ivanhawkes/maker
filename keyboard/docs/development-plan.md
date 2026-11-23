@@ -109,7 +109,9 @@ exact). Step 4 is next and has two parts, neither started:
   fit test. Tenting wedges are generated at 5°, 10° and 15° ([case.md](case.md#tenting-wedges-2026-11-23)),
   digital checks only; print the 10° one first. The dongle's case is generated too
   ([dongle-case.md](dongle-case.md)): hand-wired, no dongle board; measure the display before
-  printing it. Not started: the retro case. The controller's
+  printing it. The retro case for keyboard 2 is generated as well
+  ([case-retro.md](case-retro.md)): keyboard 1's insides in a thicker shell with a hood, on a
+  6° raked plinth; no board change. Not started: retro tenting wedges. The controller's
   height is still unmeasured; the case keeps 6.5 mm clear over it.
 
 Still to verify, from the review: the BQ24075's charge termination against TI's datasheet, the
@@ -117,7 +119,7 @@ antenna's extent on the bought module, the soft-start values on the bench, and o
 pinout with a meter ([pcb.md](pcb.md#schematic-2026-11-23)). Run `python tools/pcb_check.py`,
 `tools/pcb_review.py`, `tools/zmk_generate.py --check` and `tools/layout.py check` after any
 change; all four pass at this commit. After a board change also run `tools/case_board.py`,
-`tools/case_generate.py` and `tools/wedge_generate.py` ([case.md](case.md#generating-and-checking)).
+`tools/case_generate.py`, `tools/wedge_generate.py` and `tools/case_retro_generate.py` ([case.md](case.md#generating-and-checking)).
 
 ## 4. Assemble And Validate
 

@@ -26,7 +26,7 @@ import Part
 FreeCAD.case_as_library = True
 sys.path.insert(0, "tools")
 import case_generate as cg   # noqa: E402
-from case_generate import V, say, poly, disc, grow, one, prism, cyl, carve, add, hull, in_polygon, seg_dist  # noqa: E402
+from case_generate import V, say, poly, disc, grow, one, prism, cyl, carve, add, hull, in_polygon, seg_dist, thin  # noqa: E402
 
 OUT = "cad/case"
 ANGLES = (5, 10, 15)   # trial angles (docs/decisions.md)
@@ -39,20 +39,6 @@ PAD_R = 6.5            # solid pad for each of the wedge's own stick-on feet
 SEEDS = cg.FEET + ((40.0, 40.0),)    # the wedge's feet start under the case's, plus one under the high far corner
 CASE_FOOT_R, CASE_FOOT_Z = 6.5, 3.5   # pocket for a foot left on the case: up to 12 mm across, 3 mm proud
 PRESS_Z = cg.PLATE_TOP + 9.0          # about the top of a keycap
-
-
-def thin(pts, tol):
-    """Drop outline points that lie within tol of the chord that replaces them.
-
-    The tray's outline has thousands of 0.005 mm facets; cut at an angle they crash OCCT."""
-    keep, i = [pts[0]], 0
-    while i < len(pts) - 1:
-        j = i + 1
-        while j + 1 < len(pts) and all(seg_dist(p, pts[i], pts[j + 1]) < tol for p in pts[i + 1:j + 1]):
-            j += 1
-        keep.append(pts[j])
-        i = j
-    return keep
 
 
 def build(outer, keys, angle):
