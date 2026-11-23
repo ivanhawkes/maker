@@ -11,7 +11,7 @@
 - Use a third microcontroller in a small separate desk case. Each keyboard half communicates with it over BLE, and it connects to the PC by wired USB.
 - Use open-source firmware. The keymap is not yet specified.
 - Use a number row plus three alpha rows on each half (see [concept.md](concept.md)).
-- Use nice!nano (nRF52840) boards for both halves and the desk controller, mounted on custom PCBs, with switches in hot-swap sockets.
+- Use nice!nano (nRF52840) boards for both halves and the desk controller. The halves mount theirs on custom PCBs, with switches in hot-swap sockets; the desk controller is hand-wired to its display, with no board (owner, 2026-11-23).
 - Give the desk controller a small status display. Put no encoders, displays, or pointing devices on the halves.
 - Work with Linux and Windows hosts.
 - Have the custom PCBs manufactured by PCBWay or JLCPCB; the manufacturer and assembly approach are not yet selected.

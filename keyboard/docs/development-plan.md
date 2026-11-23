@@ -107,7 +107,9 @@ exact). Step 4 is next and has two parts, neither started:
   errors, ERC clean, parity exact. The case is rebuilt on them (v2: six screws from below, four
   of them through the board) and the 1:1 prints are redone. Next: the owner prints one half as a
   fit test. Tenting wedges are generated at 5°, 10° and 15° ([case.md](case.md#tenting-wedges-2026-11-23)),
-  digital checks only; print the 10° one first. Not started: the retro case, the dongle's case. The controller's
+  digital checks only; print the 10° one first. The dongle's case is generated too
+  ([dongle-case.md](dongle-case.md)): hand-wired, no dongle board; measure the display before
+  printing it. Not started: the retro case. The controller's
   height is still unmeasured; the case keeps 6.5 mm clear over it.
 
 Still to verify, from the review: the BQ24075's charge termination against TI's datasheet, the
