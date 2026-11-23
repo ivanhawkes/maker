@@ -94,8 +94,9 @@ each before starting it:
 board changes, the firmware (compiles; nothing flashed) and the schematics (ERC clean, parity
 exact). Step 4 is next and has two parts, neither started:
 
-- **1:1 prints of both boards** for checking the bought parts, a small job: `kicad-cli pcb export
-  pdf` at scale 1. No such file exists yet.
+- **1:1 prints of both boards** for checking the bought parts. **Done 2026-11-23:** four PDFs in
+  `pcb/print/` (front, and back seen from below, for each half); the PDF scale is checked, a
+  paper print is not ([pcb.md](pcb.md)). The owner prints them and measures the parts.
 - **The case design**, a major piece of work (suggested: the strongest model, high effort; the
   brief is in [decisions.md](decisions.md)). It settles the board outline, the battery's place
   and the controller's height, which are still open in [pcb.md](pcb.md#open-items).

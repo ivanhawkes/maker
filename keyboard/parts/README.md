@@ -147,4 +147,6 @@ round from the Opsco datasheet (KiCad: 1 VSS, 2 DIN, 3 VDD, 4 DOUT; datasheet: 1
   what it includes before using it for the case.
 - No datasheet for the Australian battery candidates (Little Bird LB-00237 and others).
 - The footprint check above is against datasheets only. Still to do: measure the bought parts
-  against a 1:1 print of the board before ordering it.
+  against a 1:1 print of the board before ordering it. The prints are in `pcb/print/` (made
+  2026-11-23; how to print and check the scale is in [pcb.md](../docs/pcb.md)). Nothing is
+  measured yet.

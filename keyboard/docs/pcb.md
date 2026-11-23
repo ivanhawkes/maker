@@ -570,6 +570,24 @@ Nix store are read-only there.
 - Review render: `kicad-cli pcb export svg --layers F.Cu,B.Cu,Edge.Cuts --mode-single
   --fit-page-to-board --exclude-drawing-sheet`, then `magick -density 150 in.svg -background
   white -flatten out.png`.
+- 1:1 prints, for laying the bought parts on: `pcb/print/<side>-front.pdf` and `<side>-back.pdf`,
+  A4 landscape. The back is mirrored, so it is the board seen from below. Regenerate after any
+  board change:
+
+  ```sh
+  for s in left right; do
+    kicad-cli pcb export pdf --mode-single --black-and-white --ev \
+      --layers F.Cu,F.SilkS,F.Fab,Edge.Cuts -o pcb/print/$s-front.pdf pcb/$s/$s.kicad_pcb
+    kicad-cli pcb export pdf --mode-single --black-and-white --ev --mirror \
+      --layers B.Cu,B.SilkS,B.Fab,Edge.Cuts -o pcb/print/$s-back.pdf pcb/$s/$s.kicad_pcb
+  done
+  ```
+
+  Print at actual size (100 %), not "fit to page", then check the paper with a ruler: the
+  controller's two pin rows are 15.24 mm apart and 27.94 mm from first pin to last. The PDF's
+  scale was checked on 2026-11-23 (KiCad 10.0.8): an outline-only export with the same options,
+  rasterised at 508 dpi, measures 165.65 × 114.45 mm on both boards against 165.63 × 114.42
+  (the outline plus its 0.1 mm line), within one 0.05 mm pixel. No paper print is checked yet.
 - FreeCAD: use the system `FreeCADCmd` (1.1.4); the devenv shell does not provide it.
 
 ## Assembly Cautions (From The Datasheets, 2026-11-23)
@@ -803,7 +821,8 @@ before fitting the rest.
   edge with its actuator overhanging by 1.0 mm, and the LED silkscreen mark is at the part's cut
   corner (pin 3, GND). Both boards: 0 unconnected, 0 DRC errors, two runs identical (left 814
   tracks / 146 vias, right 846 / 142). New warnings: the switch's silkscreen is clipped by the
-  board edge, twice a board. Still to do: measure the bought parts against a 1:1 print.
+  board edge, twice a board. Still to do: measure the bought parts against a 1:1 print
+  (the PDFs are in `pcb/print/`, made 2026-11-23).
 - Add the real KLP Lamé keycap outlines to `tools/layout.py check` (the prototype shows they fit,
   about 2 mm apart by eye).
 - After the review, in this order: the ZMK shield from `pcb/pins.yaml`, then the schematic
