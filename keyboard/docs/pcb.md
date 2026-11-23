@@ -523,10 +523,24 @@ Nix store are read-only there.
   works with `PYTHONPATH` set to `kicad-base-10.0.8/lib/python3.14/site-packages` plus a
   Python 3.14 PyYAML `site-packages`. On the laptop, a bare Python with the same
   `PYTHONPATH` worked; the devenv Python failed with a libprotobuf symbol error.
+  Used on 2026-11-23 (the generator's `--finish` step fails without PyYAML on the path):
+
+  ```sh
+  K=$(nix-store -qR "$(dirname "$(dirname "$(readlink -f "$(which kicad-cli)")")")")
+  PY=$(echo "$K" | grep 'python3-3.14.*-env$')/bin/python3
+  YAML=$(dirname "$(dirname "$(python3 -c 'import yaml; print(yaml.__file__)')")")
+  export PYTHONPATH=$(echo "$K" | grep 'kicad-base-10')/lib/python3.14/site-packages:$YAML
+  "$PY" tools/pcb_generate.py && "$PY" tools/pcb_check.py    # about 15 s, then about 40 s
+  ```
+- **Datasheet PDFs.** The shell has no `pdftotext`. `nix shell nixpkgs#poppler-utils -c pdftotext
+  -layout <file> -` works inside the sandbox and is the cheap way to read dimension tables. The
+  BSS138 PDF's text does not extract.
 - Footprints, 3D models and datasheets are local, in [`parts/`](../parts/README.md); the generator
   needs no KiCad library path.
 - Routing is part of the generator since v3. The Freerouting script, `tools/pcb_route.py`, was
   removed on 2026-11-23 (it is in the git history up to commit `9cf459a`).
+- Pads: `python tools/pcb_pads.py pcb/left/left.kicad_pcb SW1 LED1` prints the named footprints'
+  pads as placed, for checking against a datasheet.
 - Check: `python tools/pcb_check.py` runs DRC on both boards, tests that KiCad read the whole
   custom rules file, and prints a fingerprint of the routing. Exit 1 on any error.
   Pass one side per process to route both in parallel.
@@ -537,13 +551,57 @@ Nix store are read-only there.
   white -flatten out.png`.
 - FreeCAD: use the system `FreeCADCmd` (1.1.4); the devenv shell does not provide it.
 
+## Assembly Cautions (From The Datasheets, 2026-11-23)
+
+Read from the datasheets, not tried on parts.
+
+- **LEDs:** fit each with its cut corner at the silkscreen triangle (pin 3, GND). They are
+  moisture-sensitive (MSL 5a: 24 hours out of the bag before reflow; hand soldering is gentler,
+  but keep the bag sealed until needed).
+- **Battery polarity:** J1 pad 1 is battery +. With the board's top side up and the connector's
+  opening facing you, + is the left pin, on both halves. Check the cell's plug with a meter
+  before connecting: vendors differ.
+- **Power switch:** on is the slider towards the user, on both halves. Confirm with a meter that
+  the bought part joins the middle terminal to the end the slider is pushed towards.
+- **Reset switch:** the two terminals of a row should be joined inside the part. If a bought part
+  joins the two of a side instead, RST is shorted to ground: meter one before soldering.
+- **Solder the power switch before the controller sockets:** its terminals face the socket strip,
+  about 2.4 mm away.
+- **Hot-swap sockets:** hand solder at 350 °C for at most 3 s. Kailh rates them for 100 switch
+  insertions.
+- **Controller:** the nice!nano has 13 holes a side. The pair at the USB end (B+, B−) hangs past
+  the 12-way sockets and takes no pin. Do not bridge the BOOST jumper (see the review item below).
+
 ## Open Items
 
-- Review the scripted routes in KiCad before fabrication: DRC passes, but they have had no
-  electrical review (LED data beside column tracks, VLED current, return paths).
-- Verify the Kailh CPG151101S11 socket footprint and the low-profile socket pin holes against
-  their datasheets.
+- **Next:** review the scripted routes before fabrication. DRC passes, but they have had no
+  electrical review. To look at:
+  - LED data beside the column tracks, VLED current and voltage drop, return paths.
+  - The slide switch is rated 0.3 A at 6 V (datasheet). Charging (100 mA; 500 mA with the
+    nice!nano's BOOST jumper) and the whole LED supply pass through it. So the BOOST jumper must
+    stay open, and the firmware's LED cap must keep LED current plus the controller's under
+    0.3 A, or the switch must change.
+  - The LED datasheet asks for a series resistor on the data line and a capacitor at each LED;
+    the board has neither per LED, only C1 (10 µF) on VLED.
+  - The LED's input-high threshold is 0.7 × VDD: 2.9 V at a full battery, against 3.3 V logic.
+- Controller height, unread: the Mill-Max catalogue figure is ambiguous about the socket's
+  seated height (0.071 in or 0.095 in). It decides two things. The left board runs 1 to 12 mm
+  past the module's USB end, so a USB-C plug's overmould may hit the board. On the right half
+  the module is face down, so its parts need that gap. Measure a socket, then trim or notch the
+  outline if needed.
+- Done on paper 2026-11-23: every footprint is checked against its datasheet
+  ([parts/README.md](../parts/README.md#footprint-check-against-datasheets-2026-11-23)). Two
+  faults found and fixed in the generator the same day: the power switch now sits on the board
+  edge with its actuator overhanging by 1.0 mm, and the LED silkscreen mark is at the part's cut
+  corner (pin 3, GND). Both boards: 0 unconnected, 0 DRC errors, two runs identical (left 814
+  tracks / 146 vias, right 846 / 142). New warnings: the switch's silkscreen is clipped by the
+  board edge, twice a board. Still to do: measure the bought parts against a 1:1 print.
 - Add the real KLP Lamé keycap outlines to `tools/layout.py check` (the prototype shows they fit,
   about 2 mm apart by eye).
-- Later: generate the schematic, write the ZMK shield from `pcb/pins.yaml`, and settle the
-  board outline with the case design.
+- After the review, in this order: the ZMK shield from `pcb/pins.yaml`, then the schematic
+  (last: generated from the same script as the board, it can only agree with itself), and the
+  board outline settled with the case design. The power switch follows the outline: the
+  generator turns it to lie along the edge below it (`edge_pose`), 11.5° now.
+- The plated ø3.0 socket holes could come out smaller than the largest socket barrel
+  ([parts/README.md](../parts/README.md#footprint-check-against-datasheets-2026-11-23)). Not
+  changed; decide before ordering whether to ask for non-plated holes or accept it.

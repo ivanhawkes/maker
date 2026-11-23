@@ -218,15 +218,16 @@ python tools/pcb_generate.py     # both boards: placement, nets, routing, planes
 python tools/pcb_check.py        # DRC, the rules-file check and the fingerprint (about 40 s)
 ```
 
-Result on 2026-11-23, KiCad 10.0.8:
+Result on 2026-11-23, KiCad 10.0.8, after the power switch moved to the board edge and the LED
+mark moved to the cut corner (before that: left `27ca349965833f2f`, right `575f199c05a9dda2`):
 
 | Check | Left | Right |
 | --- | --- | --- |
 | Unconnected | 0 | 0 |
 | DRC errors | 0 | 0 |
-| DRC warnings | 56 `silk_over_copper`, 34 `silk_overlap`, 48 `text_height` | 52, 34, 48, and 1 `silk_edge_clearance` |
-| Tracks / vias | 837 / 145 | 850 / 142 |
-| Fingerprint | `27ca349965833f2f` | `575f199c05a9dda2` |
+| DRC warnings | 56 `silk_over_copper`, 29 `silk_overlap`, 48 `text_height`, 2 `silk_edge_clearance` (the power switch) | 52, 29, 48, 2 |
+| Tracks / vias | 814 / 146 | 846 / 142 |
+| Fingerprint | `a8ecd0e7cc062915` | `125e64f16522f208` |
 | Custom rules all read | yes | (same file) |
 
 - The **fingerprint** is a hash of every track, via and footprint placement. Two generator runs

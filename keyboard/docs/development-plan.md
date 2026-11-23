@@ -51,16 +51,35 @@ minimum. Details are in [pcb.md](pcb.md#v1-routing-results-2026-11-23). Next, in
    have 0 unconnected items and 0 DRC errors ([v3](pcb.md#v3-scripted-routing-2026-11-23)). The
    right half's nice!nano mounts upside down (owner's decision). Next: the schematic (for ERC
    and parity), the ZMK shield from `pcb/pins.yaml`, footprint checks against real parts, and a
-   review of the routes before any fabrication output.
+   review of the routes before any fabrication output. Footprints checked against datasheets
+   2026-11-23 ([results](../parts/README.md#footprint-check-against-datasheets-2026-11-23)): the
+   power switch faced the controller and the LED orientation mark was at the wrong corner; both
+   are fixed in the generator and the boards regenerated with 0 DRC errors.
    A provisional parts list is in [pcb.md](pcb.md#provisional-parts-list-2026-11-23).
 2. Done 2026-11-23: the board rules are the stricter of JLCPCB's and PCBWay's limits, so either
    can make it ([fab house design rules](pcb.md#fab-house-design-rules-2026-11-23)). The 0.127 mm
-   track minimum clears all but one neck-down. New: the LED cut-outs fail the 0.25 mm
-   copper-to-edge minimum, and a fix needs choosing.
-3. If routing still fails, move the controller or widen the board around it. There is about
-   2 mm of board beyond the USB end now.
-4. Find out why RST is unrouted on the right board, and fix the controller GND pad that has a
-   single thermal spoke.
+   track minimum clears all but one neck-down. The LED cut-outs failed the 0.25 mm
+   copper-to-edge minimum; fixed in v3 by moving the LED pads 0.06 mm outward (`LED_PAD_SHIFT`).
+3. Superseded 2026-11-23 by v3: nothing is unrouted, RST included, and every controller GND pin
+   has its thermal spokes.
+
+**Where the PCB stands (end of 2026-11-23).** Both boards are generated and routed by
+`tools/pcb_generate.py`: 0 unconnected items, 0 DRC errors, identical on every run (fingerprints
+in [pcb-routing.md](pcb-routing.md)). Every footprint is checked against its datasheet, on paper
+only. The power switch is on the board edge, actuator overhanging 1.0 mm, on towards the user
+on both halves; the LED silkscreen mark is at the part's cut corner. Nothing is ordered and no
+fabrication output exists.
+
+**Next, in this order** (proposed by Claude and accepted by the owner, 2026-11-23). Announce
+each before starting it:
+
+1. Electrical review of the scripted routes (suggested: the strongest model, high effort). The
+   list of what to look at is in [pcb.md](pcb.md#open-items).
+2. The ZMK shield, generated from `pcb/pins.yaml` (a mid-tier model at medium effort is enough).
+3. The schematic, last. One generated from the same script as the board only agrees with
+   itself, so it adds less than the two steps above.
+4. Before any order: measure the bought parts against a 1:1 print of the board, and settle the
+   outline with the case.
 
 ## 4. Assemble And Validate
 

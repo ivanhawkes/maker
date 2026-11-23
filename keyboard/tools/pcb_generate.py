@@ -69,7 +69,11 @@ LOAD_SWITCH_AT = (58.0, -16.0)
 # half mirrors x. Provisional, for review.
 CONTROLLER_AT = (52.0, 20.0)
 JST_AT = (52.0, -6.0)
-POWER_SWITCH_AT = (64.0, 30.0)
+POWER_SWITCH_AT = (66.0, 30.0)
+# The power switch sits on the board edge with its actuator overhanging (owner, 2026-11-23).
+# Centre to edge: the mount pads end 1.83 mm from the centre and copper keeps 0.3 mm from the
+# edge. The actuator reaches 3.15 mm, so it overhangs by 1.0 mm.
+POWER_SWITCH_TO_EDGE = 2.15
 RESET_AT = (64.0, 12.0)
 # Copper keep-outs around the controller, as (x0, y0, x1, y1) relative to its centre in plan
 # coordinates. The pin pads (x = +/-7.62, y = +/-13.97, 1.8 mm) stay outside, so tracks can
@@ -337,8 +341,19 @@ class Board:
 
 
 def load_led() -> pcbnew.FOOTPRINT:
-    """KiCad's SK6812MINI-E reverse-mount footprint with its pads moved LED_PAD_SHIFT outward."""
+    """KiCad's SK6812MINI-E reverse-mount footprint with its pads moved LED_PAD_SHIFT outward.
+
+    KiCad draws the cut corner and triangle at pin 1 (VDD); the part's own cut corner is at
+    pin 3 (GND, datasheet). The drawing is turned half a turn so the board shows the part as it
+    is fitted. Pads and cut-out are the same either way round.
+    """
     fp = load(STOCK / "LED_SMD.pretty", "LED_SK6812MINI-E_3.2x2.8mm_P1.5mm_ReverseMount")
+    for g in fp.GraphicalItems():
+        if g.GetClass() == "PCB_SHAPE" and g.GetLayer() in (pcbnew.F_SilkS, pcbnew.F_Fab):
+            g.Rotate(pcbnew.VECTOR2I(0, 0), pcbnew.EDA_ANGLE(180.0, pcbnew.DEGREES_T))
+    mark = next(g for g in fp.GraphicalItems() if g.GetLayer() == pcbnew.F_SilkS and g.GetShape() == pcbnew.SHAPE_T_POLY)
+    near = min(fp.Pads(), key=lambda p: (p.GetPosition() - mark.GetBoundingBox().GetCenter()).EuclideanNorm())
+    assert near.GetNumber() == "3", f"LED mark is at pad {near.GetNumber()}, not pad 3 (GND)"
     for p in fp.Pads():  # freshly loaded: footprint at the origin, so positions are local
         pos = p.GetPosition()
         p.SetPosition(pcbnew.VECTOR2I(pos.x + mm(math.copysign(LED_PAD_SHIFT, pos.x)), pos.y))
@@ -395,6 +410,21 @@ def outline_points(pts: list[tuple[float, float]]) -> list[tuple[float, float]]:
             upper.pop()
         upper.append(p)
     return lower[:-1] + upper[:-1]
+
+
+def edge_pose(at: tuple[float, float], d: float, pts: list[tuple[float, float]]):
+    """Angle (degrees from square) and outline points for a part whose outer side is the board edge.
+
+    Left-half plan coordinates. The edge runs from the part down to whichever outline point
+    below it sticks out furthest, and passes `d` from the part's centre: the tangent from that
+    point to a circle of radius `d`. Returns the angle and the edge 5 mm either side of the part.
+    """
+    px, py = at
+    phi = max(math.atan2(qx - px, py - qy) - math.asin(d / math.hypot(qx - px, qy - py))
+              for qx, qy in pts if qy < py - d)
+    tx, ty = px + d * math.cos(phi), py + d * math.sin(phi)
+    ex, ey = 5.0 * math.sin(phi), -5.0 * math.cos(phi)
+    return math.degrees(phi), [(tx - ex, ty - ey), (tx + ex, ty + ey)]
 
 
 def build(side: str) -> Board:
@@ -723,10 +753,29 @@ def build(side: str) -> Board:
                 JST_AT[0] * sx, JST_AT[1], 0.0, False, "JST-PH battery (check polarity)")
     B.connect(j, "1", "BAT_IN")
     B.connect(j, "2", "GND")
+    # Provisional outline: convex hull of key cells, the controller and edge parts. Collected
+    # here because the power switch is turned to lie along the edge it makes.
+    pts = []
+    for k in keys:
+        x, y, r = float(k["x_mm"]), float(k["y_mm"]), float(k["rotation_deg"])
+        for cxo, cyo in ((-9.525, -9.525), (9.525, -9.525), (9.525, 9.525), (-9.525, 9.525)):
+            dx, dy = rot(cxo, cyo, r)
+            pts.append((x + dx, y + dy))
+    for (px, py), (hw, hh) in ((RESET_AT, (3.5, 5.0)), (JST_AT, (5.0, 5.0))):
+        for ox, oy in ((-hw, -hh), (hw, -hh), (hw, hh), (-hw, hh)):
+            pts.append(((px + ox) * sx, py + oy))
+    for ox, oy in ((-10.0, -21.5), (10.0, -21.5), (10.0, 18.5), (-10.0, 18.5)):  # controller incl. antenna strip
+        pts.append(((CONTROLLER_AT[0] + ox) * sx, CONTROLLER_AT[1] + oy))
+    tilt, switch_edge = edge_pose(POWER_SWITCH_AT, POWER_SWITCH_TO_EDGE, [(a * sx, b) for a, b in pts])
+    switch_edge = [(round(a * sx, 4), round(b, 4)) for a, b in switch_edge]
+    # The footprint's actuator is at local +y: a quarter turn points it off the board.
     s = B.place(load(STOCK / "Button_Switch_SMD.pretty", "SW_SPDT_PCM12"), "SW_PWR",
-                POWER_SWITCH_AT[0] * sx, POWER_SWITCH_AT[1], -90.0 * sx, False, "Power")
+                POWER_SWITCH_AT[0] * sx, POWER_SWITCH_AT[1], (90.0 + tilt) * sx, False, "Power")
     B.connect(s, "2", "BAT_IN")
-    B.connect(s, "1", "RAW")  # RAW is BATTERY+ on the nice!nano v2
+    # On joins pad 2 to the pad the slider is pushed towards. The right half's switch is turned
+    # the other way, so it uses pad 3: on is towards the user on both halves.
+    on_pad = "1" if side == "left" else "3"
+    B.connect(s, on_pad, "RAW")  # RAW is BATTERY+ on the nice!nano v2
     rst = B.place(load(STOCK / "Button_Switch_SMD.pretty", "SW_SPST_TL3342"), "SW_RST",
                   RESET_AT[0] * sx, RESET_AT[1], -90.0 * sx, False, "Reset")
     B.connect(rst, "1", "RST")
@@ -761,19 +810,8 @@ def build(side: str) -> Board:
         B.keepout([(cx + ox * sx, cy + oy) for ox, oy in ((x0, y0), (x1, y0), (x1, y1), (x0, y1))],
                   f"controller-keepout-{i}", (pcbnew.F_Cu, pcbnew.B_Cu) if i == 0 else None)
 
-    # Provisional outline: convex hull of key cells, the controller and edge parts.
-    pts = []
-    for k in keys:
-        x, y, r = float(k["x_mm"]), float(k["y_mm"]), float(k["rotation_deg"])
-        for cxo, cyo in ((-9.525, -9.525), (9.525, -9.525), (9.525, 9.525), (-9.525, 9.525)):
-            dx, dy = rot(cxo, cyo, r)
-            pts.append((x + dx, y + dy))
-    for (px, py), (hw, hh) in ((POWER_SWITCH_AT, (3.5, 5.0)), (RESET_AT, (3.5, 5.0)), (JST_AT, (5.0, 5.0))):
-        for ox, oy in ((-hw, -hh), (hw, -hh), (hw, hh), (-hw, hh)):
-            pts.append(((px + ox) * sx, py + oy))
-    for ox, oy in ((-10.0, -21.5), (10.0, -21.5), (10.0, 18.5), (-10.0, 18.5)):  # controller incl. antenna strip
-        pts.append(((CONTROLLER_AT[0] + ox) * sx, CONTROLLER_AT[1] + oy))
-    hull = outline_points([(round(a, 4), round(b, 4)) for a, b in pts])
+    hull = outline_points([(round(a, 4), round(b, 4)) for a, b in pts] + switch_edge)
+    assert switch_edge[0] in hull, "the power switch is not on the board edge"
 
     # Four layers (owner, 2026-11-23): signals on F.Cu and B.Cu, solid planes inside, GND on
     # In1.Cu and VLED on In2.Cu. The planes are "power" layers, which the DSN export passes on,
@@ -828,7 +866,7 @@ def build(side: str) -> Board:
         ("RST", [term(upads[str(pins["power"]["rst"])])] + terms(rst, "1")),
         ("LED_EN", [term(upads[str(pins["led_power_enable"])])] + terms(lsw["Q2"], "1") + terms(lsw["R2"], "1")),
         ("BAT_IN", terms(j, "1") + terms(s, "2")),
-        ("RAW", [term(upads[str(pins["power"]["raw"])])] + terms(s, "1") + terms(lsw["Q1"], "2") + terms(lsw["R1"], "1")),
+        ("RAW", [term(upads[str(pins["power"]["raw"])])] + terms(s, on_pad) + terms(lsw["Q1"], "2") + terms(lsw["R1"], "1")),
         ("LED_GATE", terms(lsw["Q1"], "1") + terms(lsw["Q2"], "3") + terms(lsw["R1"], "2")),
     )
     for name, ts in jobs:
