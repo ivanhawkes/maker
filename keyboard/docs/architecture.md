@@ -89,7 +89,7 @@ flashed or measured.
 | Battery sense | 0 | v2 internal monitor |
 | **Total** | **12 of 18** | 6 spare |
 
-**LED supply (open).** The SK6812MINI-E is rated for 3.7–5.5 V
+**LED supply (option B decided 2026-11-23; see [pcb.md](pcb.md#optional-leds)).** The SK6812MINI-E is rated for 3.7–5.5 V
 ([datasheet mirror](https://akizukidenshi.com/goodsaffix/sk6812mini-e.pdf)), with VIH ≥ 0.7 VDD.
 The nice!nano's switched VCC is 3.3 V, below that range. The options:
 

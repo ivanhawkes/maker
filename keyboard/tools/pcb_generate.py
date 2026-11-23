@@ -10,8 +10,13 @@ kicad-base's site-packages) and PyYAML. Inputs:
     pcb/lib/marbastlib/...                   pinned third-party footprints
     $KICAD10_FOOTPRINT_DIR                   KiCad stock footprints
 
-Stage: v1 placement, ready for tools/pcb_route.py. Placeholder (clearly labelled on the board):
-    - LED supply net VLED ends at test pad TP_VLED: supply design is open.
+Stage: v1 placement, ready for tools/pcb_route.py. The finger columns are pre-routed (straight
+F.Cu tracks, locked); everything else is left to Freerouting.
+
+LED supply (option B, owner 2026-11-23): VLED is RAW (the battery, 3.0-4.2 V) through a
+high-side P-MOSFET, Q1, driven by a small N-MOSFET, Q2, from the LED_EN pin (pins.yaml).
+R2 holds LED_EN low, so the LEDs are off unless the firmware turns them on. Each LED draws
+about 1 mA even when dark (datasheet), hence the hardware switch.
 
 Battery path: JST-PH -> power switch -> nice!nano RAW pin. The official nice!nano v2
 pinout labels RAW "BATTERY+" (as well as the extra B+ pad, which is not socketed).
@@ -45,6 +50,15 @@ ORIGIN = (150.0, 100.0)  # KiCad page position (mm) of layout (0, 0)
 # stem on the bottom side, and the MX LED window, which is south of the stem.
 DIODE_OFFSET = (7.0, -4.0)
 LED_OFFSET = (0.0, -5.08)
+# KiCad's stock SK6812MINI-E reverse-mount pads sit 0.247 mm from its 3.4 x 3.0 mm cut-out,
+# under the 0.3 mm copper-to-edge rule. The cut-out cannot shrink: the body is 3.2 x 2.8 mm
+# +/-0.1 (datasheet), so the pads move outward instead. The leads (5.88 mm tip to tip) still
+# overlap the pads by about 0.8 mm.
+LED_PAD_SHIFT = 0.06
+
+# LED supply load switch, bottom side, in half-local plan coordinates for the LEFT half: the
+# free area between the battery connector and the thumb keys.
+LOAD_SWITCH_AT = (58.0, -16.0)
 
 # Controller and edge parts in half-local plan coordinates for the LEFT half; the right
 # half mirrors x. Provisional, for review.
@@ -95,7 +109,9 @@ FAB_MIN = {
     "m_SolderMaskToCopperClearance": (0.09, "solder_mask_to_copper_clearance"),  # JLCPCB
     "m_SolderMaskMinWidth": (0.13, None),                     # JLCPCB, black or white mask
 }
-POWER_NETS = ("GND", "RAW", "BAT_IN", "VLED", "VCC_3V3_SW")
+# VLED is not here: at 0.5 mm Freerouting cannot pass between the LED pads. The LEDs are
+# capped in firmware, so the current per track stays well under what 0.25 mm carries.
+POWER_NETS = ("GND", "RAW", "BAT_IN", "VCC_3V3_SW")
 
 
 def apply_rules(board: pcbnew.BOARD) -> None:
@@ -124,12 +140,9 @@ def apply_rules(board: pcbnew.BOARD) -> None:
 # rule for a specific footprint, with the reason.
 CUSTOM_RULES = """(version 1)
 
-# The board-setup copper-to-edge minimum is the fab floor, 0.25 mm (FAB_MIN). This rule keeps
-# 0.3 mm everywhere except at the LED cut-outs, where KiCad's stock SK6812MINI-E reverse-mount
-# pads sit 0.247 mm from their own cut-out (DRC, KiCad 10.0.8), so they fail the floor.
-(rule "Copper to edge except LED cut-outs"
-  (constraint edge_clearance (min 0.3mm))
-  (condition "!A.memberOfFootprint('LED*') && !B.memberOfFootprint('LED*')"))
+# The board-setup copper-to-edge minimum is the fab floor, 0.25 mm (FAB_MIN); keep 0.3 mm.
+(rule "Copper to edge"
+  (constraint edge_clearance (min 0.3mm)))
 
 # The keep-out between the controller's pin rows blocks the inward thermal spoke, so GND
 # pins there get at least one spoke instead of two.
@@ -239,6 +252,26 @@ class Board:
                 t.SetNet(a.GetNet())
                 self.b.Add(t)
 
+    def keepout(self, pts: list[tuple[float, float]], name: str):
+        """A rule area on both copper layers with no tracks, vias or fills (pads allowed)."""
+        zone = pcbnew.ZONE(self.b)
+        zone.SetIsRuleArea(True)
+        zone.SetDoNotAllowTracks(True)
+        zone.SetDoNotAllowVias(True)
+        zone.SetDoNotAllowZoneFills(True)
+        zone.SetDoNotAllowPads(False)
+        zone.SetDoNotAllowFootprints(False)
+        layers = pcbnew.LSET()
+        layers.AddLayer(pcbnew.F_Cu)
+        layers.AddLayer(pcbnew.B_Cu)
+        zone.SetLayerSet(layers)
+        poly = zone.Outline()
+        poly.NewOutline()
+        for px, py in pts:
+            poly.Append(to_board(px, py))
+        zone.SetZoneName(name)
+        self.b.Add(zone)
+
     def connect(self, fp, pad_number: str, net: str):
         hit = False
         for p in fp.Pads():
@@ -247,6 +280,15 @@ class Board:
                 hit = True
         if not hit:
             raise SystemExit(f"{fp.GetReference()}: no pad {pad_number!r}")
+
+
+def load_led() -> pcbnew.FOOTPRINT:
+    """KiCad's SK6812MINI-E reverse-mount footprint with its pads moved LED_PAD_SHIFT outward."""
+    fp = load(STOCK / "LED_SMD.pretty", "LED_SK6812MINI-E_3.2x2.8mm_P1.5mm_ReverseMount")
+    for p in fp.Pads():  # freshly loaded: footprint at the origin, so positions are local
+        pos = p.GetPosition()
+        p.SetPosition(pcbnew.VECTOR2I(pos.x + mm(math.copysign(LED_PAD_SHIFT, pos.x)), pos.y))
+    return fp
 
 
 def read_keys(side: str) -> list[dict]:
@@ -300,9 +342,11 @@ def build(side: str) -> Board:
     pad_net[pins["power"]["rst"]] = "RST"
     pad_net[pins["power"]["vcc"]] = "VCC_3V3_SW"
     pad_net[pins["power"]["raw"]] = "RAW"
+    pad_net[pins["led_power_enable"]] = "LED_EN"
 
     # Switches, diodes and LEDs.
     led_order = []
+    col_pins: dict[str, list] = {}  # finger column -> pin 2 plated holes, by row
     for i, k in enumerate(keys, start=1):
         x, y, r = float(k["x_mm"]), float(k["y_mm"]), float(k["rotation_deg"])
         kid = k["id"]
@@ -313,6 +357,9 @@ def build(side: str) -> Board:
         else:
             col, row = k["group"], k["row"]
         B.connect(sw, "2", f"COL_{col}")
+        if col != "T":
+            col_pins.setdefault(col, []).append(
+                (row, next(p for p in sw.Pads() if p.GetNumber() == "2" and p.GetAttribute() == pcbnew.PAD_ATTRIB_PTH)))
         B.connect(sw, "1", f"K_{kid}")
         B.join_same_pads(sw)
         dx, dy = rot(*DIODE_OFFSET, r)
@@ -320,9 +367,29 @@ def build(side: str) -> Board:
         B.connect(d, "1", f"ROW_{row}")  # cathode to row (col2row)
         B.connect(d, "2", f"K_{kid}")
         lx, ly = rot(*LED_OFFSET, r)
-        led = B.place(load(STOCK / "LED_SMD.pretty", "LED_SK6812MINI-E_3.2x2.8mm_P1.5mm_ReverseMount"),
-                      f"LED{i}", x + lx, y + ly, r, True, "SK6812MINI-E (optional)")
+        led = B.place(load_led(), f"LED{i}", x + lx, y + ly, r, True, "SK6812MINI-E (optional)")
         led_order.append((col, row, kid, led))
+        # Freerouting does not treat a footprint's cut-out as board edge, so keep tracks and
+        # vias out of the cut-out plus the 0.3 mm edge rule (cut-out reaches 1.80 x 1.60 mm
+        # from the centre, arcs included). The pads start at 2.11 mm and stay reachable.
+        cx_, cy_ = x + lx, y + ly
+        B.keepout([(cx_ + a, cy_ + b) for a, b in (rot(-2.1, -1.9, r), rot(2.1, -1.9, r), rot(2.1, 1.9, r), rot(-2.1, 1.9, r))],
+                  f"led-cutout-{kid}")
+
+    # Finger columns: the keys of a column are collinear, so one straight F.Cu track joins each
+    # pin 2 hole to the next. It clears the stem hole by 0.42 mm and the LED cut-out by 0.6 mm.
+    # Locked, so Freerouting keeps it.
+    for col, pads in col_pins.items():
+        pads.sort(key=lambda t: t[0])
+        for (_, a), (_, b) in zip(pads, pads[1:]):
+            t = pcbnew.PCB_TRACK(B.b)
+            t.SetStart(a.GetPosition())
+            t.SetEnd(b.GetPosition())
+            t.SetWidth(mm(RULES["track"]))
+            t.SetLayer(pcbnew.F_Cu)
+            t.SetNet(a.GetNet())
+            t.SetLocked(True)
+            B.b.Add(t)
 
     # LED chain: serpentine down/up the finger columns, then the thumb keys.
     col_order = ["C0", "C1", "C2", "C3", "C4", "C5", "T"]
@@ -361,29 +428,34 @@ def build(side: str) -> Board:
     B.connect(rst, "1", "RST")
     B.connect(rst, "2", "GND")
     tp = B.place(load(STOCK / "TestPoint.pretty", "TestPoint_Pad_D1.5mm"), "TP_VLED",
-                 VLED_PAD_AT[0] * sx, VLED_PAD_AT[1], 0.0, False, "placeholder: LED supply open")
+                 VLED_PAD_AT[0] * sx, VLED_PAD_AT[1], 0.0, False, "VLED")
     B.connect(tp, "1", "VLED")
+
+    # LED supply load switch (option B), bottom side, 1206 passives and SOT-23 transistors.
+    # SOT-23 pads: 1 gate, 2 source, 3 drain (AO3401A and 2N7002 alike).
+    lx0, ly0 = LOAD_SWITCH_AT
+    sot = STOCK / "Package_TO_SOT_SMD.pretty"
+    parts = (
+        # ref, library, footprint, (dx, dy), value, {pad: net}
+        ("Q1", sot, "SOT-23_Handsoldering", (0.0, 0.0), "AO3401A (P-MOSFET)", {"1": "LED_GATE", "2": "RAW", "3": "VLED"}),
+        ("Q2", sot, "SOT-23_Handsoldering", (0.0, -6.0), "2N7002 (N-MOSFET)", {"1": "LED_EN", "2": "GND", "3": "LED_GATE"}),
+        ("R1", STOCK / "Resistor_SMD.pretty", "R_1206_3216Metric_Pad1.30x1.75mm_HandSolder", (6.0, 0.0),
+         "100k (Q1 gate pull-up)", {"1": "RAW", "2": "LED_GATE"}),
+        ("R2", STOCK / "Resistor_SMD.pretty", "R_1206_3216Metric_Pad1.30x1.75mm_HandSolder", (6.0, -6.0),
+         "100k (LED_EN pull-down)", {"1": "LED_EN", "2": "GND"}),
+        ("C1", STOCK / "Capacitor_SMD.pretty", "C_1206_3216Metric_Pad1.33x1.80mm_HandSolder", (-6.0, 0.0),
+         "10uF 10V X5R (VLED bulk)", {"1": "VLED", "2": "GND"}),
+    )
+    for ref, lib, name, (dx, dy), value, nets in parts:
+        fp = B.place(load(lib, name), ref, (lx0 + dx) * sx, ly0 + dy, 0.0, True, value)
+        for pad, net in nets.items():
+            B.connect(fp, pad, net)
 
     # Copper keep-outs at the controller (antenna position on the module still unverified;
     # see CONTROLLER_KEEPOUTS). Pads stay outside them.
-    both = pcbnew.LSET()
-    both.AddLayer(pcbnew.F_Cu)
-    both.AddLayer(pcbnew.B_Cu)
     for i, (x0, y0, x1, y1) in enumerate(CONTROLLER_KEEPOUTS):
-        zone = pcbnew.ZONE(B.b)
-        zone.SetIsRuleArea(True)
-        zone.SetDoNotAllowTracks(True)
-        zone.SetDoNotAllowVias(True)
-        zone.SetDoNotAllowZoneFills(True)
-        zone.SetDoNotAllowPads(False)
-        zone.SetDoNotAllowFootprints(False)
-        zone.SetLayerSet(both)
-        poly = zone.Outline()
-        poly.NewOutline()
-        for ox, oy in ((x0, y0), (x1, y0), (x1, y1), (x0, y1)):
-            poly.Append(to_board(cx + ox * sx, cy + oy))
-        zone.SetZoneName(f"controller-keepout-{i}")
-        B.b.Add(zone)
+        B.keepout([(cx + ox * sx, cy + oy) for ox, oy in ((x0, y0), (x1, y0), (x1, y1), (x0, y1))],
+                  f"controller-keepout-{i}")
 
     # Provisional outline: convex hull of key cells, the controller and edge parts.
     pts = []
@@ -430,7 +502,7 @@ def build(side: str) -> Board:
     fill_zones(B.b)
 
     note = pcbnew.PCB_TEXT(B.b)
-    note.SetText(f"{side.upper()} v1 placement - NOT FOR FAB")
+    note.SetText(f"{side.upper()} v1 - NOT FOR FAB")
     note.SetPosition(to_board(0.0, 70.0))
     note.SetLayer(pcbnew.Cmts_User)
     B.b.Add(note)

@@ -45,9 +45,11 @@ Freerouting 2.5.0, which does not finish them. KiCad DRC leaves 41 unconnected i
 and 52 on the right, plus track-width errors from Freerouting's neck-downs below the 0.2 mm
 minimum. Details are in [pcb.md](pcb.md#v1-routing-results-2026-11-23). Next, in order:
 
-1. Script the regular routing in the generator: one straight F.Cu track per column, the LED
-   data chain, and VLED at signal width. VLED width needs checking against the LED supply
-   design, which is still open. Leave only the fan-in to the controller to Freerouting.
+1. Partly done 2026-11-23: the finger columns are scripted, VLED is at signal width, and option B
+   (load switch) is on the board. Freerouting still leaves 48 (left) and 58 (right) unconnected
+   items ([results](pcb.md#v1-routing-with-option-b-2026-11-23)). Next is one of: script the rows,
+   key-to-diode links and LED chain; try a 4-layer board with inner GND and VLED planes; or finish
+   the remainder by hand in KiCad. Owner to choose.
 2. Done 2026-11-23: the board rules are the stricter of JLCPCB's and PCBWay's limits, so either
    can make it ([fab house design rules](pcb.md#fab-house-design-rules-2026-11-23)). The 0.127 mm
    track minimum clears all but one neck-down. New: the LED cut-outs fail the 0.25 mm

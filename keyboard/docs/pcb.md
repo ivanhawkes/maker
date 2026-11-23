@@ -102,10 +102,38 @@ LiPo (protected cell) ── JST-PH ── slide switch ── nice!nano RAW (= 
 
 ### Optional LEDs
 
-- **Footprint:** a reverse-mount SK6812MINI-E position under each switch (KiCad stock
-  `LED_SK6812MINI-E_3.2x2.8mm_P1.5mm_ReverseMount`), daisy-chained, with data from D1/P0.06.
-- **Supply:** to be decided. The options are in
-  [architecture.md](architecture.md#firmware-and-pin-research-2026-11-22).
+- **Footprint:** a reverse-mount SK6812MINI-E position under each switch, daisy-chained, with
+  data from D1/P0.06. KiCad's stock `LED_SK6812MINI-E_3.2x2.8mm_P1.5mm_ReverseMount` with its
+  pads moved 0.06 mm outward (`LED_PAD_SHIFT`): stock, they sit 0.247 mm from the cut-out,
+  under the 0.3 mm copper-to-edge rule. The cut-out (3.4 × 3.0 mm) cannot shrink: the body is
+  3.2 × 2.8 mm ±0.1 mm (Opsco datasheet Rev. 02, p. 4). The leads, 5.88 mm tip to tip, still
+  overlap the pads by about 0.8 mm. A no-track area covers each cut-out plus 0.3 mm, because
+  Freerouting does not treat a footprint's cut-out as board edge.
+- **Supply: option B (Decided, owner 2026-11-23).** The battery (RAW, 3.0–4.2 V) through a
+  high-side switch, off unless the firmware turns it on:
+
+  ```text
+  RAW ──┬───────────── Q1 source      Q1 AO3401A (P-MOSFET, SOT-23)
+        R1 100k        Q1 drain ──┬── VLED ── LED VDD pins, TP_VLED
+        │                         C1 10 µF ── GND
+  LED_GATE ─────────── Q1 gate
+        └───────────── Q2 drain     Q2 2N7002 (N-MOSFET, SOT-23), source to GND
+  LED_EN (pad 17, P0.31) ── Q2 gate, R2 100k to GND
+  ```
+
+  Q2 is needed because a 3.3 V GPIO cannot turn the P-MOSFET fully off when its source is at
+  4.2 V. R2 keeps the LEDs off while the controller is off or resetting. Passives are 1206
+  (owner's preferred size), with hand-solder pads.
+- **Datasheet values (Rev. 02):** supply 3.7–5.5 V; DIN high at 0.7 × VDD or more (2.94 V at
+  4.2 V; the controller drives 3.3 V); about 1 mA each when dark, so about 28 mA per half,
+  hence the hardware switch; 12 mA per colour channel. Below 3.7 V of battery the LEDs are out
+  of specification: colours may shift or fail. A brightness cap in firmware is required.
+- **VLED width:** signal width (0.25 mm). At the 0.5 mm power width Freerouting could not pass
+  between the LED pads.
+- **To check on the bench:** DIN at a full battery (4.2 V), and the controller staying up when
+  Q1 switches C1 and the LEDs on (inrush).
+- **Firmware (to verify):** ZMK's external-power control on P0.31 instead of the board's
+  P0.13 VCC switch.
 - **Requirement:** the PCB must work with the LEDs and their supply parts left unfitted.
 
 ## Parts And Footprints (Candidates, To Verify Against Datasheets)
@@ -115,7 +143,9 @@ LiPo (protected cell) ── JST-PH ── slide switch ── nice!nano RAW (= 
 | Hot-swap socket | Kailh CPG151101S11 (MX) | [marbastlib](https://github.com/ebastler/marbastlib) `SW_MX_HS_CPG151101S11_1u` / `_1.5u`, CERN-OHL-P-2.0, commit `6b0a9a7` | Check against the Kailh drawing; the 1.5u caps on T2/T3 still use a 1u switch footprint |
 | Diode | 1N4148W, SOD-123 | KiCad stock `Diode_SMD` | Hand-solderable |
 | Controller | nice!nano v2 on low-profile sockets, mounted components up ("USB topside") | marbastlib experimental `ProMicro_Reversible_Single` | Battery enters through RAW. Check the pad and hole sizes against the chosen low-profile socket pins |
-| LED (optional) | SK6812MINI-E | KiCad stock, reverse mount | Supply open |
+| LED (optional) | SK6812MINI-E | KiCad stock, reverse mount, pads moved 0.06 mm out | Supply: option B |
+| LED switch (optional) | AO3401A P-MOSFET, 2N7002 N-MOSFET | KiCad stock `SOT-23_Handsoldering` | Pinout 1 G, 2 S, 3 D: check the bought parts |
+| Passives (optional) | 100k resistors ×2, 10 µF 10 V X5R capacitor, 1206 | KiCad stock `*_1206_3216Metric_*_HandSolder` | |
 | Battery connector | JST-PH 2-pin (S2B-PH, side entry) | KiCad stock `Connector_JST` | Polarity marked |
 | Power switch | Hand-solderable SMD or THT slide switch, edge-mounted | To choose | Rated for the cell's current |
 | Reset button | Small tactile switch, edge-accessible | To choose | |
@@ -203,6 +233,34 @@ beyond the USB end now); script the regular parts (straight column tracks on F.C
 plan-local x = 2.54 through each column, the LED chain and VLED) and leave only the fan-in to
 the controller to Freerouting; route VLED at signal width, since LED current per key is small
 (to check against the LED supply design).
+
+## v1 Routing With Option B (2026-11-23)
+
+Changes: the option B LED load switch (Q1, Q2, R1, R2, C1 at `LOAD_SWITCH_AT`, LED_EN on pad 17);
+LED pads moved 0.06 mm outward; a no-track area over each LED cut-out plus 0.3 mm; VLED at signal
+width; the finger columns pre-routed as straight, locked F.Cu tracks from pin 2 to pin 2. They pass
+DRC: 0.42 mm from the stem hole and 0.6 mm from the LED cut-out.
+
+Run: KiCad 10.0.8, Freerouting 2.5.0, `FREEROUTING_PASSES=8`, both boards in parallel, 7.8 min.
+
+| Check | Left | Right |
+| --- | --- | --- |
+| Unconnected before routing | 134 | 134 |
+| Freerouting | 80 unrouted, 6 violations | 104 unrouted, 6 violations |
+| DRC after routing: unconnected | 48 | 58 |
+| DRC after routing: errors | 9 `starved_thermal` only | 10 `starved_thermal` only |
+
+- Clearance, copper-to-edge and track-width errors are gone. Without the cut-out keep-outs,
+  Freerouting put about 20 tracks per board within 0.25 mm of an LED cut-out.
+- **Still unrouted, left:** VLED 6, GND 4 (pour islands), rows 7, column fan-ins to the controller
+  5, COL_T 2, LED chain links 17, key-to-diode links 6, RAW 1, BAT_IN 1. The right board is similar,
+  plus RST.
+- Freerouting does no better than before. Its best result is its first pass, and it never reaches
+  its optimiser.
+- Per-key geometry checked by hand for scripting the rest: a row at key-local y = −2.35 mm
+  clears the stem hole by 0.225 mm and the LED cut-out by 1 mm. The key-to-diode link and the LED
+  chain cross each other's layers in the space around the LED, with margins of 0.2–0.3 mm, so
+  scripting them needs a per-key layout worked out with care.
 
 ## Fab House Design Rules (2026-11-23)
 

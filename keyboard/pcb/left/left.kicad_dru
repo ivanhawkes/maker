@@ -1,11 +1,8 @@
 (version 1)
 
-# The board-setup copper-to-edge minimum is the fab floor, 0.25 mm (FAB_MIN). This rule keeps
-# 0.3 mm everywhere except at the LED cut-outs, where KiCad's stock SK6812MINI-E reverse-mount
-# pads sit 0.247 mm from their own cut-out (DRC, KiCad 10.0.8), so they fail the floor.
-(rule "Copper to edge except LED cut-outs"
-  (constraint edge_clearance (min 0.3mm))
-  (condition "!A.memberOfFootprint('LED*') && !B.memberOfFootprint('LED*')"))
+# The board-setup copper-to-edge minimum is the fab floor, 0.25 mm (FAB_MIN); keep 0.3 mm.
+(rule "Copper to edge"
+  (constraint edge_clearance (min 0.3mm)))
 
 # The keep-out between the controller's pin rows blocks the inward thermal spoke, so GND
 # pins there get at least one spoke instead of two.
