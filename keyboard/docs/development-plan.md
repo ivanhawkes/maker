@@ -114,6 +114,25 @@ exact). Step 4 is next and has two parts, neither started:
   6° raked plinth; no board change. Not started: retro tenting wedges. The controller's
   height is still unmeasured; the case keeps 6.5 mm clear over it.
 
+**Wanted later (owner, 2026-11-23): Blender scenes that showcase the keyboard.** Not started;
+announce it before starting.
+
+- Several interesting camera angles, with lighting to suit.
+- Scenes of the assembled product and exploded views.
+- Both keyboards: keyboard 1 in black, the retro one in off-white with its accent colour
+  ([case-retro.md](case-retro.md)).
+- The keycaps must be known accurate models of the KLP Lamé caps the owner will use, in place
+  of the plain blocks the case generators stand in for them. The published STEP models
+  ([decisions.md](decisions.md), measured 2026-11-22) are the place to start. They are in
+  `parts/3d/third-party/klp-lame/` (CC BY-SA 4.0: credit the author wherever they are shown),
+  and are to be checked against the owner's caps once measured. The set is 60 black caps, four
+  of them 1.5u, a mix of saddle and non-saddle with enough saddles for all the top and bottom
+  rows (owner); the exact kinds, and so which model goes on which key, are still to confirm. Blender has no STEP
+  import: convert the models with FreeCAD.
+- Blender 5.2.3 is in the devenv (`devenv.nix`) and runs headless (checked 2026-11-23).
+- The scenes should be made from the generated case files, so that a regenerated case can be
+  shown without rebuilding the scene by hand.
+
 Still to verify, from the review: the BQ24075's charge termination against TI's datasheet, the
 antenna's extent on the bought module, the soft-start values on the bench, and one real LED's
 pinout with a meter ([pcb.md](pcb.md#schematic-2026-11-23)). Run `python tools/pcb_check.py`,
@@ -127,4 +146,4 @@ Build and test each half and the central incrementally using [verification.md](v
 
 ## Intended Deliverables
 
-Editable CAD and corresponding verified exports, electrical schematics and PCB or wiring artifacts, component list with sourcing and safety notes, three reproducible firmware builds and flashing instructions, 3D printing and assembly instructions, operation guidance, and recorded verification results. Exact directory structure and formats should follow the tools selected during design.
+Editable CAD and corresponding verified exports, electrical schematics and PCB or wiring artifacts, component list with sourcing and safety notes, three reproducible firmware builds and flashing instructions, 3D printing and assembly instructions, operation guidance, and recorded verification results, and Blender showcase scenes (above). Exact directory structure and formats should follow the tools selected during design.
