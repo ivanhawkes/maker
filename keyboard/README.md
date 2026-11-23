@@ -95,8 +95,8 @@ blender -b --python tools/scene_build.py -- --render --size 4k   # 20 stills at 
 ```
 
 Stills go to `cad/scenes/renders/1080p/`, `2k/` or `4k/`. Add `--only kb1` or `--only retro` for
-one keyboard. Rendering is on the CPU and slow: 24 minutes for the 1080p set
-here, and by one measured 4k still about 80 minutes for the 4k set and 45 for the 2k set.
+one keyboard. Rendering is on the RTX 5060 Ti: the 4k set took 10 minutes here.
+Without a usable graphics card it falls back to the CPU, about eight times slower.
 
 ## Starting With Claude
 

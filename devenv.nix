@@ -60,7 +60,7 @@
     # render on the graphics cards with no display (the plain nixpkgs build has no GPU
     # kernels, and does not look in /run/opengl-driver for the driver's libraries). Not in
     # the binary cache: the first shell after this change compiles Blender, OpenUSD and
-    # OpenImageDenoise, which takes a long time once. Only the kernels for the RTX 50 series
+    # OpenImageDenoise, about 50 minutes here, once. Only the kernels for the RTX 50 series
     # (sm_120) are built: both cards here are that, and each further one adds to the build.
     # Unfree (NVIDIA's CUDA licence); the packages are permitted by name in devenv.yaml.
     (blender.override {

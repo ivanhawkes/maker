@@ -75,12 +75,12 @@ keycap models and the switch to STL in `cad/scenes/build/` (not kept in git), wi
 of positions. Run it after any case generator. Stills go to `cad/scenes/renders/<size>/`,
 named `<keyboard>-<scene>-<camera>.png`.
 
-**Rendering is on the CPU.** The devenv's Blender 5.2.3 cannot use a graphics card: it reports
-"Neither precompiled kernels nor CUDA compiler was found" and has no OptiX. The script picks
-the RTX 5060 Ti by name if a Blender that can use it is ever installed, and no other card
-(owner, 2026-11-23). On the Ryzen 9 3900X here the 20 stills at 1920 × 1080 took 24 minutes, and one
-4k still took 4 minutes (measured 2026-11-23). So expect about 80 minutes for the 4k set and
-about 45 for the 2k set; neither set has been rendered in full.
+**Rendering uses the graphics card.** The devenv's Blender 5.2.3 is built with CUDA and OptiX
+(`devenv.nix`, since 2026-11-24), and the script renders on the RTX 5060 Ti and no other card
+(owner, 2026-11-23); with no such card it falls back to the CPU. Measured here: the 20 stills
+at 4k took 10 minutes on the 5060 Ti. On the CPU (a Ryzen 9 3900X) the 1080p set took 24
+minutes and one 4k still 4 minutes, about eight times slower. The 1080p stills in the
+repository are the CPU ones; the 2k set has not been rendered.
 
 ## Credit And Licence
 
