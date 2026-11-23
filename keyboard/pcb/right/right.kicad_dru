@@ -4,18 +4,15 @@
 (rule "Copper to edge"
   (constraint edge_clearance (min 0.3mm)))
 
-# The keep-out between the controller's pin rows blocks the inward thermal spoke, so GND
-# pins there get at least one spoke instead of two.
-(rule "Controller GND spokes"
-  (constraint min_resolved_spokes (min 1))
-  (condition "A.memberOfFootprint('U1') || B.memberOfFootprint('U1')"))
-
 # Plated-through pads: JLCPCB wants 0.3 mm from the hole to inner-layer copper (0.28 mm on the
 # outer layers; vias and NPTH 0.2 mm, the board floor), and PCBWay's 10 mil component-hole ring
-# is stricter than JLCPCB's 0.18 mm.
+# is stricter than JLCPCB's 0.18 mm. The pair of a plated pad and a non-plated hole is left to
+# the 0.2 mm floor: the socket's widened pads sit 0.205 mm from its own peg holes.
+# Check kicad-cli's output after editing: a constraint KiCad does not know stops it reading
+# the rest of this file without failing the run (min_resolved_spokes did, until 2026-11-23).
 (rule "PTH hole to copper"
   (constraint hole_clearance (min 0.3mm))
-  (condition "A.Type == 'Pad' && A.Pad_Type == 'Through-hole'"))
+  (condition "A.Type == 'Pad' && A.Pad_Type == 'Through-hole' && (B.Type != 'Pad' || B.Pad_Type != 'NPTH, mechanical')"))
 
 (rule "PTH pad annular ring"
   (constraint annular_width (min 0.254mm))

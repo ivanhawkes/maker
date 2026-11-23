@@ -38,6 +38,8 @@ from pathlib import Path
 import pcbnew
 import yaml
 
+from pcb_maze import Maze
+
 ROOT = Path(__file__).resolve().parent.parent
 LAYOUT = ROOT / "layout" / "generated"
 PINS = ROOT / "pcb" / "pins.yaml"
@@ -148,18 +150,15 @@ CUSTOM_RULES = """(version 1)
 (rule "Copper to edge"
   (constraint edge_clearance (min 0.3mm)))
 
-# The keep-out between the controller's pin rows blocks the inward thermal spoke, so GND
-# pins there get at least one spoke instead of two.
-(rule "Controller GND spokes"
-  (constraint min_resolved_spokes (min 1))
-  (condition "A.memberOfFootprint('U1') || B.memberOfFootprint('U1')"))
-
 # Plated-through pads: JLCPCB wants 0.3 mm from the hole to inner-layer copper (0.28 mm on the
 # outer layers; vias and NPTH 0.2 mm, the board floor), and PCBWay's 10 mil component-hole ring
-# is stricter than JLCPCB's 0.18 mm.
+# is stricter than JLCPCB's 0.18 mm. The pair of a plated pad and a non-plated hole is left to
+# the 0.2 mm floor: the socket's widened pads sit 0.205 mm from its own peg holes.
+# Check kicad-cli's output after editing: a constraint KiCad does not know stops it reading
+# the rest of this file without failing the run (min_resolved_spokes did, until 2026-11-23).
 (rule "PTH hole to copper"
   (constraint hole_clearance (min 0.3mm))
-  (condition "A.Type == 'Pad' && A.Pad_Type == 'Through-hole'"))
+  (condition "A.Type == 'Pad' && A.Pad_Type == 'Through-hole' && (B.Type != 'Pad' || B.Pad_Type != 'NPTH, mechanical')"))
 
 (rule "PTH pad annular ring"
   (constraint annular_width (min 0.254mm))
@@ -260,8 +259,8 @@ class Board:
                 t.SetNet(a.GetNet())
                 self.b.Add(t)
 
-    def keepout(self, pts: list[tuple[float, float]], name: str):
-        """A rule area on every copper layer with no tracks, vias or fills (pads allowed)."""
+    def keepout(self, pts: list[tuple[float, float]], name: str, copper=None):
+        """A rule area with no tracks, vias or fills (pads allowed), on every copper layer unless given."""
         zone = pcbnew.ZONE(self.b)
         zone.SetIsRuleArea(True)
         zone.SetDoNotAllowTracks(True)
@@ -270,7 +269,7 @@ class Board:
         zone.SetDoNotAllowPads(False)
         zone.SetDoNotAllowFootprints(False)
         layers = pcbnew.LSET()
-        for layer in COPPER:
+        for layer in copper or COPPER:
             layers.AddLayer(layer)
         zone.SetLayerSet(layers)
         poly = zone.Outline()
@@ -344,6 +343,23 @@ def load_led() -> pcbnew.FOOTPRINT:
     return fp
 
 
+def pth_ring(fp: pcbnew.FOOTPRINT) -> pcbnew.FOOTPRINT:
+    """Widen plated-through pads whose ring is under the fab minimum (the PTH rule in CUSTOM_RULES).
+
+    The hot-swap socket footprint has 3.3 mm pads on 3.0 mm holes (0.15 mm) and KiCad's JST-PH
+    1.2 mm pads on 0.75 mm holes (0.225 mm); PCBWay's normal tier wants 0.254 mm.
+    """
+    ring = mm(0.26)
+    for p in fp.Pads():
+        if p.GetAttribute() != pcbnew.PAD_ATTRIB_PTH:
+            continue
+        size, drill = p.GetSize(), p.GetDrillSize()
+        want = pcbnew.VECTOR2I(max(size.x, drill.x + 2 * ring), max(size.y, drill.y + 2 * ring))
+        if want != size:
+            p.SetSize(want)
+    return fp
+
+
 def read_keys(side: str) -> list[dict]:
     with (LAYOUT / f"{side}-hand.csv").open() as f:
         return list(csv.DictReader(f))
@@ -408,7 +424,7 @@ def build(side: str) -> Board:
     for i, k in enumerate(keys, start=1):
         x, y, r = float(k["x_mm"]), float(k["y_mm"]), float(k["rotation_deg"])
         kid = k["id"]
-        sw = B.place(load(MARB / "marbastlib-mx.pretty", "SW_MX_HS_CPG151101S11_1u"), f"SW{i}", x, y, r, True, kid)
+        sw = B.place(pth_ring(load(MARB / "marbastlib-mx.pretty", "SW_MX_HS_CPG151101S11_1u")), f"SW{i}", x, y, r, True, kid)
         check_switch_pins(sw, x, y, r)
         if k["group"] == "T":
             col, row = "T", pins["thumb_rows"][kid]
@@ -701,7 +717,7 @@ def build(side: str) -> Board:
         track([(-62.5, -1.6), (-68.5, -7.6), (-68.5, -27.0), *into_thumb("T3")], rnet["R4"])
 
     # Battery connector, power switch, reset, and placeholder pads.
-    j = B.place(load(STOCK / "Connector_JST.pretty", "JST_PH_S2B-PH-K_1x02_P2.00mm_Horizontal"), "J1",
+    j = B.place(pth_ring(load(STOCK / "Connector_JST.pretty", "JST_PH_S2B-PH-K_1x02_P2.00mm_Horizontal")), "J1",
                 JST_AT[0] * sx, JST_AT[1], 0.0, False, "JST-PH battery (check polarity)")
     B.connect(j, "1", "BAT_IN")
     B.connect(j, "2", "GND")
@@ -728,16 +744,20 @@ def build(side: str) -> Board:
         ("C1", STOCK / "Capacitor_SMD.pretty", "C_1206_3216Metric_Pad1.33x1.80mm_HandSolder", (-6.0, 0.0),
          "10uF 10V X5R (VLED bulk)", {"1": "VLED", "2": "GND"}),
     )
+    lsw = {}
     for ref, lib, name, (dx, dy), value, nets in parts:
-        fp = B.place(load(lib, name), ref, (lx0 + dx) * sx, ly0 + dy, 0.0, True, value)
-        for pad, net in nets.items():
-            B.connect(fp, pad, net)
+        fp = lsw[ref] = B.place(load(lib, name), ref, (lx0 + dx) * sx, ly0 + dy, 0.0, True, value)
+        for pad_no, net in nets.items():
+            B.connect(fp, pad_no, net)
 
     # Copper keep-outs at the controller (antenna position on the module still unverified;
     # see CONTROLLER_KEEPOUTS). Pads stay outside them.
+    # The area between the pin rows is kept clear on the outer layers only (parts on the
+    # module's underside); the inner planes run under it, so the GND pins get their thermal
+    # spokes. The antenna strip is clear on every layer.
     for i, (x0, y0, x1, y1) in enumerate(CONTROLLER_KEEPOUTS):
         B.keepout([(cx + ox * sx, cy + oy) for ox, oy in ((x0, y0), (x1, y0), (x1, y1), (x0, y1))],
-                  f"controller-keepout-{i}")
+                  f"controller-keepout-{i}", (pcbnew.F_Cu, pcbnew.B_Cu) if i == 0 else None)
 
     # Provisional outline: convex hull of key cells, the controller and edge parts.
     pts = []
@@ -783,10 +803,40 @@ def build(side: str) -> Board:
 
     apply_rules(B.b)  # before plane_vias, which reads the net classes
     B.plane_vias()
+
+    # The irregular remainder, the power nets and the thumb column's run to the controller, goes
+    # to the grid router (tools/pcb_maze.py): deterministic, in this order, over the controller
+    # side of the board, around everything placed above.
+    def term(p):
+        pos = p.GetPosition()
+        return (pcbnew.ToMM(pos.x), pcbnew.ToMM(pos.y),
+                tuple(i for i, layer in enumerate((F, BK)) if p.IsOnLayer(layer)))
+
+    def terms(fp, number):
+        return [term(p) for p in fp.Pads() if p.GetNumber() == number]
+
+    xa, xb = sorted((36.0 * sx, 86.0 * sx))
+    maze = Maze(B.b, (ORIGIN[0] + xa, ORIGIN[1] - 40.0, ORIGIN[0] + xb, ORIGIN[1] + 52.0),
+                [(ORIGIN[0] + a, ORIGIN[1] - b) for a, b in hull], RULES["clearance"], RULES["copper_edge"])
+    trunk_end = pt((tkeys[-1], 2.54, 7.6))  # the thumb nearest the controller's outer side
+    trunk = (pcbnew.ToMM(trunk_end.x), pcbnew.ToMM(trunk_end.y), (0,))
+    # Longest first: the router has no rip-up, so a later net must find its way round earlier ones.
+    jobs = (
+        ("COL_T", [term(upads[str(pins["columns"]["T"])]), trunk]),
+        ("RST", [term(upads[str(pins["power"]["rst"])])] + terms(rst, "1")),
+        ("LED_EN", [term(upads[str(pins["led_power_enable"])])] + terms(lsw["Q2"], "1") + terms(lsw["R2"], "1")),
+        ("BAT_IN", terms(j, "1") + terms(s, "2")),
+        ("RAW", [term(upads[str(pins["power"]["raw"])])] + terms(s, "1") + terms(lsw["Q1"], "2") + terms(lsw["R1"], "1")),
+        ("LED_GATE", terms(lsw["Q1"], "1") + terms(lsw["Q2"], "3") + terms(lsw["R1"], "2")),
+    )
+    for name, ts in jobs:
+        power = name in POWER_NETS
+        maze.route(B.net(name), ts, RULES["power_track" if power else "track"],
+                   (RULES["power_via_diameter" if power else "via_diameter"], RULES["power_via_drill" if power else "via_drill"]))
     fill_zones(B.b)
 
     note = pcbnew.PCB_TEXT(B.b)
-    note.SetText(f"{side.upper()} v1 - NOT FOR FAB")
+    note.SetText(f"{side.upper()} v3 - NOT FOR FAB")
     note.SetPosition(to_board(0.0, 70.0))
     note.SetLayer(pcbnew.Cmts_User)
     B.b.Add(note)
