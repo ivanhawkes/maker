@@ -21,3 +21,6 @@ _autosave-*
 # West workspace for the firmware: ZMK, Zephyr and their modules, fetched by `west update`,
 # and the build output (see firmware/README.md)
 firmware/workspace/
+
+# Meshes converted for the Blender scenes by tools/scene_export.py
+cad/scenes/build/

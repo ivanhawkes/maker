@@ -28,6 +28,7 @@ import Mesh
 import MeshPart
 import Part
 
+AS_LIBRARY = getattr(FreeCAD, "case_as_library", False)   # set by a script that imports this one for its constants
 FreeCAD.case_as_library = True
 sys.path.insert(0, "tools")
 import case_generate as cg   # noqa: E402
@@ -276,9 +277,10 @@ def main():
         raise SystemExit(1)
 
 
-try:
-    main()
-except Exception:
-    import traceback
-    traceback.print_exc()
-    raise
+if not AS_LIBRARY:
+    try:
+        main()
+    except Exception:
+        import traceback
+        traceback.print_exc()
+        raise

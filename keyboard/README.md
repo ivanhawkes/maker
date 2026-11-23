@@ -26,9 +26,77 @@ The geometry, switch count, dimensions, and relationships between the source and
 - [Case design](docs/case.md): the printed case for keyboard 1, how it is generated and checked, and its limits.
 - [Retro case](docs/case-retro.md): the 1970s case for keyboard 2, built round the first case's insides.
 - [Dongle case](docs/dongle-case.md): the printed case for the hand-wired dongle, and its wiring.
+- [Showcase scenes](docs/scenes.md): the Blender files and stills of both keyboards, and how they are made.
 - [Parts](parts/README.md): local footprints, 3D models and datasheets for every part.
 - [Verification plan](docs/verification.md): digital checks and physical tests to plan and record.
 - [AGENTS.md](AGENTS.md): shared instructions for agents; [CLAUDE.md](CLAUDE.md) imports them for Claude Code.
+
+## Generating Everything
+
+Run these from `keyboard/` inside the devenv shell, in this order. Each step reads what the one
+before it wrote, so after a change run that step and everything below it. Every generator
+checks its own output and exits with 1 if a check fails. FreeCAD comes from the system, not
+the devenv ([PCB design](docs/pcb.md#running-the-tools)).
+
+**1. Layout** ([layout/README.md](layout/README.md))
+
+```sh
+python tools/layout.py build       # layout/generated/ from layout/layout.yaml
+python tools/layout.py check       # 28 keys a half, no overlaps, exact mirror, outputs fresh
+```
+
+**2. Boards and schematics** ([PCB design](docs/pcb.md)). These need KiCad's own Python:
+
+```sh
+K=$(nix-store -qR "$(dirname "$(dirname "$(readlink -f "$(which kicad-cli)")")")")
+PY=$(echo "$K" | grep 'python3-3.14.*-env
+
+Open this directory as the project and select the desired available model in your Claude-enabled client. In Claude Code, the root `CLAUDE.md` imports the shared instructions. Ask the agent to start with the prototype inspection and decision review in the development plan. The PCB commands are `python tools/pcb_generate.py` (boards and schematics) and `python tools/pcb_check.py` (see [PCB design](docs/pcb.md#running-the-tools)). Claude's instruction-file loading can be checked with `/context all` where supported.)/bin/python3
+YAML=$(dirname "$(dirname "$(python3 -c 'import yaml; print(yaml.__file__)')")")
+export PYTHONPATH=$(echo "$K" | grep 'kicad-base-10')/lib/python3.14/site-packages:$YAML
+
+"$PY" tools/pcb_generate.py        # both boards, routed, and their schematics; about 15 s
+"$PY" tools/pcb_check.py           # design rules, electrical rules, schematic parity; about 40 s
+"$PY" tools/pcb_review.py          # the boards' nets against the firmware's matrix
+
+for s in left right; do            # 1:1 prints for checking parts against the board
+  kicad-cli pcb export pdf --mode-single --black-and-white --ev \
+    --layers F.Cu,F.SilkS,F.Fab,Edge.Cuts -o pcb/print/$s-front.pdf pcb/$s/$s.kicad_pcb
+  kicad-cli pcb export pdf --mode-single --black-and-white --ev --mirror \
+    --layers B.Cu,B.SilkS,B.Fab,Edge.Cuts -o pcb/print/$s-back.pdf pcb/$s/$s.kicad_pcb
+done
+```
+
+**3. Firmware shield** ([firmware/README.md](firmware/README.md), which also has the build commands)
+
+```sh
+python tools/zmk_generate.py            # the ZMK shield from pcb/pins.yaml and the layout
+python tools/zmk_generate.py --check    # the shield is up to date
+```
+
+**4. Cases** ([case](docs/case.md), [retro case](docs/case-retro.md), [dongle case](docs/dongle-case.md))
+
+```sh
+"$PY" tools/case_board.py                 # board outlines and part positions, for the cases
+FreeCADCmd tools/case_generate.py         # keyboard 1: tray, plate, lid; about 3 minutes
+FreeCADCmd tools/wedge_generate.py        # its tenting wedges; about 1 minute
+FreeCADCmd tools/case_retro_generate.py   # keyboard 2, the retro case; about 4 minutes
+FreeCADCmd tools/dongle_generate.py       # the dongle's case; a few seconds
+```
+
+**5. Showcase scenes** ([scenes](docs/scenes.md))
+
+```sh
+FreeCADCmd tools/scene_export.py                                 # meshes for Blender; about 1 minute
+blender -b --python tools/scene_build.py                         # the two .blend files only
+blender -b --python tools/scene_build.py -- --render             # and 20 stills at 1920 x 1080
+blender -b --python tools/scene_build.py -- --render --size 2k   # 20 stills at 2560 x 1440
+blender -b --python tools/scene_build.py -- --render --size 4k   # 20 stills at 3840 x 2160
+```
+
+Stills go to `cad/scenes/renders/1080p/`, `2k/` or `4k/`. Add `--only kb1` or `--only retro` for
+one keyboard. Rendering is on the CPU and slow: 24 minutes for the 1080p set
+here, and by one measured 4k still about 80 minutes for the 4k set and 45 for the 2k set.
 
 ## Starting With Claude
 

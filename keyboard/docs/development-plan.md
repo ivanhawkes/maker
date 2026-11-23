@@ -114,8 +114,9 @@ exact). Step 4 is next and has two parts, neither started:
   6° raked plinth; no board change. Not started: retro tenting wedges. The controller's
   height is still unmeasured; the case keeps 6.5 mm clear over it.
 
-**Wanted later (owner, 2026-11-23): Blender scenes that showcase the keyboard.** Not started;
-announce it before starting.
+**Blender scenes that showcase the keyboard (owner, 2026-11-23). Built 2026-11-23**
+([scenes.md](scenes.md)): two files, each with an assembled and an exploded scene and five
+cameras, and a still for each camera. The brief was:
 
 - Several interesting camera angles, with lighting to suit.
 - Scenes of the assembled product and exploded views.
