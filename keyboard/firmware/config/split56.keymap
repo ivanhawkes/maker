@@ -1,0 +1,43 @@
+/*
+ * QWERTY base layer, accepted by the owner (2026-11-23). The thumb keys and the Fn layer are a
+ * first proposal, to refine in use. The dongle holds the keymap, so only the dongle needs
+ * flashing after a change here.
+ *
+ * Key order (firmware/boards/shields/split56/split56.dtsi): the four finger rows, each from
+ * the left outer pinky to the right outer pinky, then the eight thumb keys, left to right.
+ *
+ * Lighting uses separate on and off keys, not a toggle: each half keeps its own on/off state,
+ * and a toggle would leave them opposite if one half missed a press.
+ */
+
+#include <behaviors.dtsi>
+#include <dt-bindings/zmk/keys.h>
+#include <dt-bindings/zmk/rgb.h>
+
+/ {
+    keymap {
+        compatible = "zmk,keymap";
+
+        base {
+            display-name = "Base";
+            bindings = <
+&kp ESC    &kp N1  &kp N2  &kp N3  &kp N4  &kp N5      &kp N6  &kp N7  &kp N8     &kp N9   &kp N0    &kp MINUS
+&kp TAB    &kp Q   &kp W   &kp E   &kp R   &kp T       &kp Y   &kp U   &kp I      &kp O    &kp P     &kp BSLH
+&kp LCTRL  &kp A   &kp S   &kp D   &kp F   &kp G       &kp H   &kp J   &kp K      &kp L    &kp SEMI  &kp SQT
+&kp LSHFT  &kp Z   &kp X   &kp C   &kp V   &kp B       &kp N   &kp M   &kp COMMA  &kp DOT  &kp FSLH  &kp RSHFT
+                   &kp LGUI  &kp LALT  &kp SPACE  &mo 1      &mo 1  &kp BSPC  &kp RET  &kp RALT
+            >;
+        };
+
+        fn {
+            display-name = "Fn";
+            bindings = <
+&kp F1          &kp F2           &kp F3           &kp F4           &kp F5           &kp F6      &kp F7    &kp F8     &kp F9     &kp F10    &kp F11     &kp F12
+&trans          &trans           &trans           &trans           &trans           &trans      &kp HOME  &kp PG_DN  &kp PG_UP  &kp END    &kp INS     &kp DEL
+&trans          &trans           &trans           &trans           &trans           &trans      &kp LEFT  &kp DOWN   &kp UP     &kp RIGHT  &trans      &trans
+&rgb_ug RGB_ON  &rgb_ug RGB_OFF  &rgb_ug RGB_EFF  &rgb_ug RGB_BRD  &rgb_ug RGB_BRI  &trans      &trans    &trans     &trans     &trans     &sys_reset  &bootloader
+                                 &trans  &trans  &trans  &trans      &trans  &trans  &trans  &trans
+            >;
+        };
+    };
+};

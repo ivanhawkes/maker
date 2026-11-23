@@ -170,6 +170,8 @@ sizes and the `adjustments` section (it held one entry, of zero) were removed fr
 
 ## Not Yet Generated
 
-ZMK physical layout and matrix transform, KiCad footprint placement, and plate/case
-geometry or exports. Add generators here as those designs start, and extend `check` so every
-output is verified against this source.
+Plate and case geometry or exports. Add generators as those designs start, and check every
+output against this source.
+
+Generated elsewhere from this source: the PCB footprint placement (`tools/pcb_generate.py`) and
+the ZMK matrix transform and physical layout (`tools/zmk_generate.py`, with `--check`).

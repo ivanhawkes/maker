@@ -1,0 +1,4 @@
+# Makes firmware/ a Zephyr module, so its boards/shields/ are found (pass it as ZMK_EXTRA_MODULES).
+build:
+  settings:
+    board_root: .

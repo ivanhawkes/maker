@@ -2,7 +2,7 @@
 
 A personal keyboard project based on an accepted left-hand switch-position prototype. The goal is two mirrored, rechargeable keyboard halves communicating over Bluetooth Low Energy (BLE) with a separate desk controller connected to the PC by USB. The owner intends to print the cases on a Bambu Labs X2D.
 
-**Status (2026-11-23):** design in progress. Both PCB halves are generated and fully routed by script, and pass KiCad's design rule check; nothing has been fabricated, and there is no schematic, firmware or final case yet. Nothing here is verified on hardware.
+**Status (2026-11-23):** design in progress. Both PCB halves are generated and fully routed by script, and pass KiCad's design rule check; the firmware for both halves and the dongle compiles ([firmware](firmware/README.md)). Nothing has been fabricated or flashed, and there is no schematic or final case yet. Nothing here is verified on hardware.
 
 ## Prototype
 

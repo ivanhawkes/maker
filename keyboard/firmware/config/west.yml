@@ -1,0 +1,18 @@
+# West manifest for the keyboard firmware. Both revisions are pinned (docs/decisions.md):
+# re-pin deliberately and record why.
+manifest:
+  remotes:
+    - name: zmkfirmware
+      url-base: https://github.com/zmkfirmware
+    - name: englmaxi
+      url-base: https://github.com/englmaxi
+  projects:
+    - name: zmk
+      remote: zmkfirmware
+      revision: 4de313367288aad5aeaa1243890e40dc813f7008   # main, 2026-11-14; Zephyr v4.1.0+zmk-fixes
+      import: app/west.yml
+    - name: zmk-dongle-display
+      remote: englmaxi
+      revision: 2bb333f87136d33e94a49d86236ed9ec254a8060   # main, 2026-02-13
+  self:
+    path: config

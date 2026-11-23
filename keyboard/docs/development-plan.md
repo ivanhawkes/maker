@@ -79,7 +79,10 @@ each before starting it:
    ([pcb.md](pcb.md#electrical-review-2026-11-23)). No routing fault; six changes proposed, all
    accepted by the owner, and the four board changes applied and regenerated the same day:
    0 unconnected, 0 DRC errors on both boards.
-2. The ZMK shield, generated from `pcb/pins.yaml` (a mid-tier model at medium effort is enough).
+2. **Done 2026-11-23, compile only:** the ZMK shield, generated from `pcb/pins.yaml` by
+   `tools/zmk_generate.py`. The left, right, dongle and settings-reset images build, and the built
+   pin mapping matches the pin table ([firmware/README.md](../firmware/README.md)). Nothing is
+   flashed. The keymap is a placeholder.
 3. The schematic, last. One generated from the same script as the board only agrees with
    itself, so it adds less than the two steps above.
 4. Before any order: measure the bought parts against a 1:1 print of the board, and settle the

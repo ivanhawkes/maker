@@ -1,0 +1,13 @@
+# The firmware builds, in the form ZMK's GitHub Actions workflow reads. firmware/README.md has
+# the same builds as local commands.
+---
+include:
+  - board: nice_nano//zmk
+    shield: split56_left
+  - board: nice_nano//zmk
+    shield: split56_right
+  - board: nice_nano//zmk
+    shield: split56_dongle dongle_display
+  # Clears bonds and saved settings: flash it to a part before pairing it afresh.
+  - board: nice_nano//zmk
+    shield: settings_reset

@@ -20,6 +20,8 @@ from pathlib import Path
 import pcbnew
 import yaml
 
+from zmk_generate import COLS, ROWS, matrix_rc, read_keys
+
 ROOT = Path(__file__).resolve().parent.parent
 MM = pcbnew.ToMM
 RHO = 1.72e-8        # ohm metre, copper at 20 C
@@ -88,8 +90,14 @@ def review(side: str) -> list[str]:
         if (row, col) in matrix:
             bad.append(f"SW{i} and {matrix[(row, col)]} share {row}/{col}")
         matrix[(row, col)] = f"SW{i}"
+    # The firmware's matrix position of each key (tools/zmk_generate.py) against the board's nets.
+    layout = read_keys(side)
+    for (row, col), sw in matrix.items():
+        r, c = matrix_rc(pins, "L", layout[fps[sw].GetValue()])
+        if (row, col) != (f"ROW_{ROWS[r]}", f"COL_{COLS[c]}"):
+            bad.append(f"{sw} ({fps[sw].GetValue()}): board {row}/{col}, firmware ROW_{ROWS[r]}/COL_{COLS[c]}")
     print(f"matrix: {n_keys} keys on {len(matrix)} distinct row/column pairs, "
-          f"{len({r for r, _ in matrix})} rows x {len({c for _, c in matrix})} columns")
+          f"{len({r for r, _ in matrix})} rows x {len({c for _, c in matrix})} columns, as the firmware's transform")
 
     # --- netlist: LED chain, walked from R4, the series resistor on the controller's data pad
     if {net_of("R4", "1"), net_of("R4", "2")} != {"LED_DATA", "LED_DIN"} or len(members["LED_DATA"]) != 2:

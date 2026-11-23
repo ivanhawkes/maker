@@ -669,6 +669,11 @@ between raising LED_EN and the first data, for the soft start; VLED off when idl
 the external-power control on P0.31. The setting names are to be verified at the pinned ZMK
 commit.
 
+**Status 2026-11-23:** verified in ZMK's source at the pinned commit and built into the shield
+([firmware/README.md](../firmware/README.md#lighting)). The cap, idle-off and P0.31 are settings.
+The start-up delay is not needed: ZMK resends the frame every 50 ms. Data-low rests on ZMK's
+order of operations plus R4 and C2, and needs a scope to confirm. Compile-time only.
+
 ### Applied (2026-11-23)
 
 The owner accepted all six proposals. Proposals 4 (the 20 % cap) and 6 (VLED off when idle) are
@@ -714,8 +719,8 @@ scope while LED_EN rises, with the LEDs fitted.
 ## Open Items
 
 - Done 2026-11-23: the electrical review, and its accepted changes
-  ([applied](#applied-2026-11-23)). **Next:** the ZMK shield, with the firmware requirements
-  listed in the review.
+  ([applied](#applied-2026-11-23)), and the ZMK shield ([firmware](../firmware/README.md)),
+  compile only. **Next:** the schematic.
 - To verify: the BQ24075's charge-termination behaviour against TI's datasheet (not in
   `parts/datasheets/`), and the antenna's extent on the bought module.
 - Bench: the soft-start values (R3, C2), with a scope on RAW.

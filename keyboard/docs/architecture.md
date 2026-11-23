@@ -45,6 +45,8 @@ flashed or measured.
 - **Toolchain risk:** the devenv shell provides GCC 15 (`gcc-arm-embedded` 15.3) rather
   than the Zephyr SDK, and building Zephyr 3.5 with GCC 15 is unverified. ZMK's standard
   GitHub Actions build, which uses a pinned container image, is the fallback.
+  **Resolved for the pinned `main` commit, 2026-11-23:** all images build with GCC 15.3.1 on
+  Zephyr 4.1 ([firmware/README.md](../firmware/README.md)). Compile only.
 - **Gradual fade:** neither ref has a built-in fade-to-black. `AUTO_OFF_IDLE` switches the
   lighting off when the keyboard goes idle.
 
