@@ -1,0 +1,32 @@
+WEDGE the tray's outline, 60 points, from cad/case/left-tray.step
+WEDGE  5 ok   one valid solid, 82.9 cm3, 210.5 x 130.2 x 26.2 mm
+WEDGE  5 ok   fits the 256 mm bed
+WEDGE  5 ok   the case sits in it without overlap (0.0000 mm3)
+WEDGE  5 ok   the case's floor rests on 3522 mm2 of ledge and ribs
+WEDGE  5 ok   the rim stops the case sliding 1 mm in any of four directions
+WEDGE  5 ok   a press on any key, straight down or along its axis, lands inside the feet
+WEDGE  5 ok   centre of mass of tray and wedge is over the feet
+WEDGE  5 the case's outer edge is 5.2 mm above the desk, its inner edge 23.0 mm; feet at (-81.3, 30.5), (-73.6, -40.4), (-16.8, 57.4), (102.9, -56.2), (112.1, -28.9), (47.4, 48.3)
+WEDGE  5 ok   cad/case/print/left-wedge-5.3mf: 7276 facets, volume 82.9 cm3
+WEDGE  5 ok   cad/case/print/right-wedge-5.3mf: 7276 facets, volume 82.9 cm3
+WEDGE 10 ok   one valid solid, 132.6 cm3, 213.7 x 130.2 x 44.3 mm
+WEDGE 10 ok   fits the 256 mm bed
+WEDGE 10 ok   the case sits in it without overlap (0.0000 mm3)
+WEDGE 10 ok   the case's floor rests on 3438 mm2 of ledge and ribs
+WEDGE 10 ok   the rim stops the case sliding 1 mm in any of four directions
+WEDGE 10 ok   a press on any key, straight down or along its axis, lands inside the feet
+WEDGE 10 ok   centre of mass of tray and wedge is over the feet
+WEDGE 10 the case's outer edge is 5.5 mm above the desk, its inner edge 40.8 mm; feet at (-79.0, 30.5), (-70.8, -40.6), (-13.9, 57.4), (107.2, -56.2), (116.7, -29.0), (51.0, 48.3)
+WEDGE 10 ok   cad/case/print/left-wedge-10.3mf: 7426 facets, volume 132.6 cm3
+WEDGE 10 ok   cad/case/print/right-wedge-10.3mf: 7426 facets, volume 132.6 cm3
+WEDGE 15 ok   one valid solid, 182.5 cm3, 218.5 x 130.2 x 62.0 mm
+WEDGE 15 ok   fits the 256 mm bed
+WEDGE 15 ok   the case sits in it without overlap (0.0000 mm3)
+WEDGE 15 ok   the case's floor rests on 3389 mm2 of ledge and ribs
+WEDGE 15 ok   the rim stops the case sliding 1 mm in any of four directions
+WEDGE 15 ok   a press on any key, straight down or along its axis, lands inside the feet
+WEDGE 15 ok   centre of mass of tray and wedge is over the feet
+WEDGE 15 the case's outer edge is 5.7 mm above the desk, its inner edge 58.4 mm; feet at (-76.4, 30.6), (-68.6, -40.5), (-9.6, 57.4), (114.0, -56.1), (123.6, -29.0), (56.4, 48.2)
+WEDGE 15 ok   cad/case/print/left-wedge-15.3mf: 7826 facets, volume 182.5 cm3
+WEDGE 15 ok   cad/case/print/right-wedge-15.3mf: 7826 facets, volume 182.5 cm3
+WEDGE RESULT: all checks pass

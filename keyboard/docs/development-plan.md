@@ -106,15 +106,16 @@ exact). Step 4 is next and has two parts, neither started:
   [pcb.md](pcb.md#v4-notches-and-mounting-holes-2026-11-23)). Both boards: 0 unconnected, 0 DRC
   errors, ERC clean, parity exact. The case is rebuilt on them (v2: six screws from below, four
   of them through the board) and the 1:1 prints are redone. Next: the owner prints one half as a
-  fit test. Not started: tenting wedges, the retro case, the dongle's case. The controller's
+  fit test. Tenting wedges are generated at 5°, 10° and 15° ([case.md](case.md#tenting-wedges-2026-11-23)),
+  digital checks only; print the 10° one first. Not started: the retro case, the dongle's case. The controller's
   height is still unmeasured; the case keeps 6.5 mm clear over it.
 
 Still to verify, from the review: the BQ24075's charge termination against TI's datasheet, the
 antenna's extent on the bought module, the soft-start values on the bench, and one real LED's
 pinout with a meter ([pcb.md](pcb.md#schematic-2026-11-23)). Run `python tools/pcb_check.py`,
 `tools/pcb_review.py`, `tools/zmk_generate.py --check` and `tools/layout.py check` after any
-change; all four pass at this commit. After a board change also run `tools/case_board.py` and
-`tools/case_generate.py` ([case.md](case.md#generating-and-checking)).
+change; all four pass at this commit. After a board change also run `tools/case_board.py`,
+`tools/case_generate.py` and `tools/wedge_generate.py` ([case.md](case.md#generating-and-checking)).
 
 ## 4. Assemble And Validate
 

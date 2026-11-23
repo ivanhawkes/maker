@@ -565,9 +565,10 @@ def main():
         raise SystemExit(1)
 
 
-try:
-    main()
-except Exception:
-    import traceback
-    traceback.print_exc()
-    raise
+if not getattr(FreeCAD, "case_as_library", False):   # tools/wedge_generate.py imports this file for its helpers
+    try:
+        main()
+    except Exception:
+        import traceback
+        traceback.print_exc()
+        raise
