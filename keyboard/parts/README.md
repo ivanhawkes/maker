@@ -28,7 +28,7 @@ installed KiCad libraries.
 | --- | --- | --- | --- | --- |
 | SW1–28 (socket) | Kailh CPG151101S11 MX hot-swap socket | `marbastlib/marbastlib-mx.pretty/SW_MX_HS_CPG151101S11_1u` | `third-party/HS_CPG151101S11_MX.step` | `Kailh_CPG151101S11_MX_hot-swap_socket.pdf` |
 | (key switch) | Kailh Speed Bronze, CPG151101D214 | Fits the socket footprint | `third-party/SW_Cherry_MX_PCB.step`, `cherry-mx-switch_ConstantinoSchillebeeckx.step` (generic MX) | `Kailh_CPG151101D214_Speed_Bronze_switch_spec.pdf` |
-| (keycaps) | KLP Lamé, MX stem, black: a moulded set of 60 with four 1.5u (owner) | — | `third-party/klp-lame/mx-stem-mx-size/` (12 kinds); `mx-stem-choc-size/` in case the set is that size | — |
+| (keycaps) | KLP Lamé, the MX set, black: a moulded set of 60 with four 1.5u (owner) | — | `third-party/klp-lame/mx-stem-mx-size/` (12 kinds). `mx-stem-choc-size/` is kept in case a later design wants Choc-size caps (owner) | — |
 | D1–28 | Diodes 1N4148W-7-F | `kicad/Diode_SMD.pretty/D_SOD-123` | `kicad/D_SOD-123.step` | `Diodes_1N4148W_switching_diode_SOD-123.pdf` |
 | LED1–28 | SK6812MINI-E (optional) | `kicad/LED_SMD.pretty/LED_SK6812MINI-E_3.2x2.8mm_P1.5mm_ReverseMount` | `kicad/LED_SK6812MINI-E_3.2x2.8mm_P1.5mm_ReverseMount.step` | `SK6812MINI-E_Opsco_rev02.pdf` |
 | U1 | nice!nano v2 (nRF52840) | `marbastlib/marbastlib-xp-promicroish.pretty/ProMicro_Reversible_Single` | `third-party/Nice_Nano_V2.step` | `nice-nano_v2_pinout.png`, `nice-nano_v2_schematic.png`, `Nordic_nRF52840_Product_Specification_v1.11.pdf` |
@@ -154,8 +154,8 @@ round from the Opsco datasheet (KiCad: 1 VSS, 2 DIN, 3 VDD, 4 DOUT; datasheet: 1
 - The keycap models are the published design (commit `8e4b89b`), not the moulded caps: the
   owner's set is to be measured against them when it arrives. The set of 60 is a mix of saddle
   and non-saddle caps, with enough saddles for all the top and bottom rows (owner); the exact
-  kinds, and whether it is MX or Choc size, are not confirmed yet. Only the MX-stem models are
-  kept here.
+  kinds are not confirmed yet. It is the MX set: MX stem and MX cap size (owner, 2026-11-23).
+  Only the MX-stem models are kept here.
 - `Nice_Nano_V2.step` is named "Flipped MCU only" inside the file: check its orientation and
   what it includes before using it for the case.
 - No datasheet for the Australian battery candidates (Little Bird LB-00237 and others).
