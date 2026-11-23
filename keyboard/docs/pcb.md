@@ -3,7 +3,9 @@
 Status: design started 2026-11-23. **v3 (4-layer): both boards fully routed by script, DRC clean.**
 Generate and route with `python tools/pcb_generate.py` (no autorouter; about 15 s); the boards
 are written to `pcb/left/left.kicad_pcb` and `pcb/right/right.kicad_pcb`. Nothing is checked for
-fabrication, or ordered: no schematic or ERC yet, and the footprints are unverified against parts. Results are in [v3](#v3-scripted-routing-2026-11-23); the method, every template and the findings are in
+fabrication, or ordered: no schematic or ERC yet, and the footprints are unverified against parts.
+The [electrical review](#electrical-review-2026-11-23) found no routing fault; its six proposals
+were accepted and the board changes [applied](#applied-2026-11-23) the same day. Results are in [v3](#v3-scripted-routing-2026-11-23); the method, every template and the findings are in
 [pcb-routing.md](pcb-routing.md). Check a generated board with `python tools/pcb_check.py`.
 This brief collects
 the owner's decisions, the proposed electrical design, and how the boards will be generated
@@ -123,13 +125,19 @@ LiPo (protected cell) ── JST-PH ── slide switch ── nice!nano RAW (= 
   high-side switch, off unless the firmware turns it on:
 
   ```text
-  RAW ──┬───────────── Q1 source      Q1 AO3401A (P-MOSFET, SOT-23)
-        R1 100k        Q1 drain ──┬── VLED ── LED VDD pins
-        │                         C1 10 µF ── GND
-  LED_GATE ─────────── Q1 gate
-        └───────────── Q2 drain     Q2 2N7002 (N-MOSFET, SOT-23), source to GND
+  RAW ──┬──────┬────── Q1 source      Q1 DMG2305UX (P-MOSFET, SOT-23)
+        R1     C2      Q1 drain ──┬── VLED ── LED VDD pins
+        100k   1 µF               C1 10 µF ── GND
+  LED_GATE ────┴────── Q1 gate
+        R3 10k
+  LED_GATE_DRV ─────── Q2 drain     Q2 BSS138 (N-MOSFET, SOT-23), source to GND
   LED_EN (pad 17, P0.31) ── Q2 gate, R2 100k to GND
+  LED_DATA (pad 10, P0.11) ── R4 470 Ω ── LED_DIN ── first LED
   ```
+
+  R3 and C2 are the soft start and R4 the data resistor, added after the
+  [electrical review](#applied-2026-11-23). R3 and R4 are in series: each needs its resistor or
+  a 0 Ω link, or the LEDs stay off. C2 may be left off.
 
   Q2 is needed because a 3.3 V GPIO cannot turn the P-MOSFET fully off when its source is at
   4.2 V. R2 keeps the LEDs off while the controller is off or resetting. Passives are 1206
@@ -194,6 +202,9 @@ fallback.
 | N-MOSFET, SOT-23 (Q2) | 5 | onsemi BSS138 | unverified (512-BSS138?) | unverified | Threshold 0.8–1.5 V and pinout G-S-D, both from the datasheet (2026-11-23). Chosen over 2N7002, whose 2.5 V maximum threshold is marginal from a 3.3 V pin |
 | Resistor 100 kΩ 1 % 1206 (R1, R2) | 10 | Yageo RC1206FR-07100KL | 603-RC1206FR-07100KL (unverified) | 311-100KFRTR-ND (reel) | |
 | Capacitor 10 µF 25 V X5R 1206 (C1) | 10 | Samsung CL31A106KAHNNNE | 187-CL31A106KAHNNNE | unverified | |
+| Resistor 10 kΩ 1 % 1206 (R3) | 10 | Yageo RC1206FR-0710KL (unverified) | unverified | unverified | Soft start. Value to settle on the bench; 0 Ω removes it |
+| Resistor 470 Ω 1 % 1206 (R4) | 10 | Yageo RC1206FR-07470RL (unverified) | unverified | unverified | LED data |
+| Capacitor 1 µF 16 V or more, X7R, 1206 (C2) | 10 | To choose | — | — | Soft start; optional |
 | JST-PH 2-pin side entry (J1) | 4 | JST S2B-PH-K-S(LF)(SN) | 306-S2BPHKSLFSNPP | 455-1719-ND | |
 | Slide switch SPDT (SW_PWR) | 4 | C&K PCM12SMTR | 611-PCM12SMTR | Obsolete there | Buy at Mouser. DigiKey's suggested replacement does not fit the footprint |
 | Tactile switch (SW_RST) | 4 | E-Switch TL3342F160QG | 612-TL3342F160 | EG2531CT-ND | |
@@ -544,6 +555,9 @@ Nix store are read-only there.
 - Check: `python tools/pcb_check.py` runs DRC on both boards, tests that KiCad read the whole
   custom rules file, and prints a fingerprint of the routing. Exit 1 on any error.
   Pass one side per process to route both in parallel.
+- Review: `python tools/pcb_review.py` reads both boards and prints the figures used in the
+  [electrical review](#electrical-review-2026-11-23). It also checks the nets against
+  `pcb/pins.yaml` and this brief, and exits 1 if they differ. It changes nothing.
 - DRC: `kicad-cli pcb drc --format json -o <out>.json pcb/left/left.kicad_pcb`. Do not pass
   `--schematic-parity=false`: this kicad-cli rejects it and writes no report.
 - Review render: `kicad-cli pcb export svg --layers F.Cu,B.Cu,Edge.Cuts --mode-single
@@ -569,21 +583,142 @@ Read from the datasheets, not tried on parts.
   about 2.4 mm away.
 - **Hot-swap sockets:** hand solder at 350 °C for at most 3 s. Kailh rates them for 100 switch
   insertions.
+- **LED parts:** R3 and R4 are in series with the LED supply's gate drive and the LED data. Fit
+  each, or a 0 Ω link in its place, or the LEDs stay off. C2 is optional.
 - **Controller:** the nice!nano has 13 holes a side. The pair at the USB end (B+, B−) hangs past
   the 12-way sockets and takes no pin. Do not bridge the BOOST jumper (see the review item below).
 
+## Electrical Review (2026-11-23)
+
+A review by Claude of the v3 boards as generated (fingerprints left `a8ecd0e7cc062915`, right
+`125e64f16522f208`; DRC re-run the same day: 0 unconnected, 0 errors). It is a paper review plus
+measurements of the board files. **Nothing was tested on hardware.** Figures marked "estimate"
+are hand calculations, not simulations. The measurements come from
+`python tools/pcb_review.py` (KiCad 10.0.8), which only reads the boards.
+
+**Result: no routing fault found. Six changes were proposed; the owner accepted all six on
+2026-11-23 and the four that change the board are [applied](#applied-2026-11-23).** The table
+and findings below describe the board as reviewed, before those changes.
+
+### Checked And Passed
+
+| Check | Result (left / right where they differ) |
+| --- | --- |
+| Nets against `pcb/pins.yaml` and this brief. There is no schematic, so this is the only independent test of the netlist | 28 keys on 28 distinct row and column pairs, 4 × 7. Every key: column → switch → diode anode, cathode → row. One LED chain of 28 from pad 10, C5R4 to T3. Battery, load switch and reset nets as drawn above |
+| Battery path copper | BAT_IN and RAW are 0.5 mm throughout, vias 0.8/0.4 mm. 44 + 58 mΩ / 45 + 60 mΩ, counting every track of a net in series (an upper bound) |
+| Drop from J1 to VLED at 0.3 A | Tracks 0.10 Ω, switch 0.07 Ω max, Q1 0.10 Ω max (at −2.5 V gate drive), stub, via and plane under 0.01 Ω: under 0.28 Ω, about 85 mV. The cell and its lead are extra |
+| VLED plane (In2) | One piece. Copper at least 2 mm wide joins every via; at 3 mm wide, 99.9 % of it is still one piece. At about 1 mΩ per square (0.5 oz) the drop across it is a few millivolts (estimate) |
+| GND plane (In1) | One piece at 3 mm wide. Each LED's GND via joins it through a neck 1 to 2 mm wide, ample for 36 mA. A 0.6 mm² sliver between controller pads 3 and 4 touches only those two pads: harmless |
+| Thermal spokes, 0.4 mm | J1 pin 2: three. Controller GND pins 3, 4 and 14: two each to the main plane |
+| LED data beside column tracks | The longest run on any one link is 10.9 mm at a 0.26 mm gap, on F.Cu, 0.2 mm above the GND plane. Both lines are driven (ZMK drives idle columns low; each LED re-drives the data). A few-nanosecond spike of the order of 0.1 V against more than 1 V of margin (estimate): acceptable |
+| LED link lengths | 19 to 81 mm / 19 to 92 mm; controller to first LED 58 / 50 mm. Short for 800 kHz data: no termination needed |
+| LED data level | The LED input draws no current, so the pin sits at its 3.3 V supply against a threshold of 2.94 V at a full battery: 0.36 V of margin, and the threshold falls with the battery. Meets the datasheet on paper; the bench check stays. It assumes 3.3 V I/O: measure a pin driven high on the bought (AliExpress) module |
+| Per-LED capacitors (the datasheet calls them essential) | Not needed here. The LED outputs switch in about 100 ns (datasheet) and the supply and return are planes, so the edges produce under a millivolt (estimate). Boards without planes commonly omit them. C1 stays |
+
+### Findings And Proposals
+
+1. **Plane copper under the antenna.** From the official pinout image the antenna section is
+   about the last 5 mm of the module (read off the image: confirm on the module). The keep-out
+   clears all layers only beyond the pin rows; 54 of that section's 89 mm² has GND and VLED plane
+   beneath it, on both boards. On the right half the module is face down, nearer the planes.
+   Radio range will suffer; by how much is unknown. **Proposed:** keep both planes out of the
+   last 5 mm of the module across its whole width (tracks to pads 11 and 12 stay). No GND pin is
+   there, so nothing is lost. The case must keep the battery and any metal clear of that end too.
+2. **LED data can back-power the LEDs.** The LED's input limit is VDD + 0.5 V (datasheet). With
+   VLED off, VDD is 0 V, so a high on pad 10 drives current through the first LED's input into
+   the whole VLED plane. The datasheet also asks for about 500 Ω in series with the data.
+   **Proposed:** one 1206 resistor, 470 Ω, in LED_DIN beside pad 10, and a firmware rule: data
+   low whenever LED_EN is low.
+3. **Inrush when the LEDs turn on.** Q2 pulls Q1's gate down in microseconds, connecting the
+   empty C1 (10 µF) to RAW, which holds 4.7 µF on the module (schematic, C6). RAW dips sharply
+   for some microseconds until the cell refills it (estimate; the depth depends on the cell).
+   Whether the controller rides through is already a bench check; a failure would mean a new
+   board. **Proposed:** two optional 1206 footprints: R3 between Q2's drain and Q1's gate, and
+   C2 across R1. With 10 kΩ and 1 µF the gate ramps over milliseconds and the peak is about
+   0.2 A (estimate); with 0 Ω and C2 left off, the circuit is today's. C2 goes gate to source,
+   not gate to drain: gate to drain would turn Q1 on briefly whenever the battery is connected.
+4. **The switch's 0.3 A limit rests on firmware alone.** Correction to earlier notes: charge and
+   LED current do not add. Q1 takes the LED supply from RAW, on the controller's side of the
+   switch, so the switch carries only the cell's current: the charge current (about 0.1 A) on
+   USB, or the LEDs plus the controller on battery. All 28 LEDs at full white are 1.0 A, and
+   28 mA when dark (datasheet). To stay under 0.3 A on average the firmware cap must be 24 % at
+   white or less. **Proposed:** cap at 20 % (about 0.23 A; the current is pulsed at 1.2 kHz, so
+   peaks are higher), and keep the BOOST jumper open. An alternative, not recommended: take Q1's
+   supply from BAT_IN instead. The switch then never carries LED current, but "off" no longer
+   isolates the LED circuit from the cell.
+5. **VLED's feed is signal-sized.** Q1's drain reaches the plane through a 1.5 mm stub 0.25 mm
+   wide and one 0.6/0.3 mm via (shared with C1 on the left board). Fine at 0.3 A; thin if the
+   firmware cap fails at 1.0 A. **Proposed:** power width and the 0.8/0.4 mm via for the Q1 and
+   C1 stubs, a one-line change in `plane_vias`.
+6. **Charging with the LEDs lit.** The module's charger is a BQ24075 (schematic image) and RAW
+   is its battery pin, so the LEDs are a load on the cell, not on a system rail. From memory of
+   TI's datasheet, **not re-read and to verify**: charging ends when the current falls to about
+   a tenth of the charge current, so even the dark LEDs' 28 mA can stop it finishing and the
+   charger's safety timer may trip. Above about 0.1 A of LED current the cell discharges while
+   plugged in. With the power switch off on USB there is no cell on RAW and the LEDs will not
+   run reliably. **Proposed:** firmware turns VLED off when idle; note both in the operating
+   guide. No board change.
+
+Not changed, for the owner to know: there is **no reverse-polarity protection** on J1. A series
+P-MOSFET would block a reversed cell only while USB is unplugged, so the meter check in the
+assembly cautions remains the protection.
+
+**Firmware requirements from this review**, for the ZMK shield (accepted by the owner,
+2026-11-23): LED brightness cap of 20 %; LED data low whenever LED_EN is low; about 50 ms
+between raising LED_EN and the first data, for the soft start; VLED off when idle and in sleep;
+the external-power control on P0.31. The setting names are to be verified at the pinned ZMK
+commit.
+
+### Applied (2026-11-23)
+
+The owner accepted all six proposals. Proposals 4 (the 20 % cap) and 6 (VLED off when idle) are
+firmware and operating notes, carried in the list above. The other four are in
+`tools/pcb_generate.py` and both boards were regenerated:
+
+| Proposal | What changed on the board |
+| --- | --- |
+| 1. Antenna | A third rule area: no plane copper on any layer under the last 5 mm of the module, 8.9 mm either side of its centre line. Tracks to pads 11 and 12 pass through it |
+| 2. Data resistor | R4 (470 Ω, 1206, bottom side) in series with the LED data. Pad 10 to R4 is the new net LED_DATA; R4 to the first LED is LED_DIN |
+| 3. Soft start | R3 (10 kΩ) between Q2's drain and Q1's gate, on the new net LED_GATE_DRV, and C2 (1 µF) across R1. Both 1206, bottom side, beside the load switch |
+| 5. VLED feed | The stubs from Q1's drain and C1 to the VLED plane are 0.5 mm with 0.8/0.4 mm vias |
+
+Results (KiCad 10.0.8, `tools/pcb_check.py` and `tools/pcb_review.py`; simulation only):
+
+| Check | Left | Right |
+| --- | --- | --- |
+| DRC: unconnected / errors | 0 / 0 | 0 / 0 |
+| DRC warnings (silkscreen only) | 57 `silk_over_copper`, 33 `silk_overlap`, 48 `text_height`, 2 `silk_edge_clearance` | 53, 33, 48, 2 |
+| Tracks / vias | 839 / 148 | 858 / 144 |
+| Fingerprint, the same on three runs | `9eb48eb700d3ef4d` | `b266d5be79ed4f4b` |
+| Nets, including R3, R4 and C2 | as drawn above | as drawn above |
+| Plane copper under the antenna section | 0 mm² (was 54 of 89) | 0 mm² |
+| Controller to R4 / R4 to first LED | 24 / 37 mm | 24 / 29 mm |
+| Thermal spokes, plane widths | unchanged | unchanged |
+
+Three things to know:
+
+- **R4 is not beside pad 10.** It is 24 mm along the data track, at the nearest free space on
+  the bottom side, below the antenna strip. It still limits the current and is in the first
+  part of the link; as a damping resistor it is a little less effective there.
+- **The new keep-out is the module's width, not the 9.5 mm of the strip beyond it.** At 9.5 mm
+  the plane reached the reset switch's lower GND via by a sliver, which DRC still counted as
+  connected. At 8.9 mm the via is in solid copper. The switch's other GND pad has its own via.
+- **On the right board the soft-start links are longer** (LED_GATE 25 mm, LED_GATE_DRV 12 mm,
+  against 12 and 3 mm): the parts are not mirror images, so Q2's drain faces away from R3
+  there. These lines carry no current to speak of.
+
+The soft-start values (10 kΩ, 1 µF) are estimates. Settle them on the bench: watch RAW on a
+scope while LED_EN rises, with the LEDs fitted.
+
+
 ## Open Items
 
-- **Next:** review the scripted routes before fabrication. DRC passes, but they have had no
-  electrical review. To look at:
-  - LED data beside the column tracks, VLED current and voltage drop, return paths.
-  - The slide switch is rated 0.3 A at 6 V (datasheet). Charging (100 mA; 500 mA with the
-    nice!nano's BOOST jumper) and the whole LED supply pass through it. So the BOOST jumper must
-    stay open, and the firmware's LED cap must keep LED current plus the controller's under
-    0.3 A, or the switch must change.
-  - The LED datasheet asks for a series resistor on the data line and a capacitor at each LED;
-    the board has neither per LED, only C1 (10 µF) on VLED.
-  - The LED's input-high threshold is 0.7 × VDD: 2.9 V at a full battery, against 3.3 V logic.
+- Done 2026-11-23: the electrical review, and its accepted changes
+  ([applied](#applied-2026-11-23)). **Next:** the ZMK shield, with the firmware requirements
+  listed in the review.
+- To verify: the BQ24075's charge-termination behaviour against TI's datasheet (not in
+  `parts/datasheets/`), and the antenna's extent on the bought module.
+- Bench: the soft-start values (R3, C2), with a scope on RAW.
 - Controller height, unread: the Mill-Max catalogue figure is ambiguous about the socket's
   seated height (0.071 in or 0.095 in). It decides two things. The left board runs 1 to 12 mm
   past the module's USB end, so a USB-C plug's overmould may hit the board. On the right half

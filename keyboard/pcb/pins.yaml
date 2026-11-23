@@ -73,7 +73,8 @@ thumb_rows:      # which row each thumb key uses
   T3: R4
 
 # LED data: an unrestricted pin (about 800 kHz). Pad 10, at the thumb end of the inner row,
-# since the chain now starts at C5R4 (2026-11-23; was pad 1).
+# since the chain now starts at C5R4 (2026-11-23; was pad 1). On the board it passes through R4
+# (470R) to the first LED. Firmware: hold it low whenever led_power_enable is low.
 led_data: 10     # D7  P0.11
 # LED supply enable (option B load switch), active high, pulled down on the board. A static
 # level, so a low-frequency pin is fine. Firmware: ZMK's ext-power control GPIO (to verify).

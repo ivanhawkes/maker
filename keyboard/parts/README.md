@@ -102,8 +102,9 @@ measured against a bought part.**
   cut corner are at pin 3, and the generator stops if they are not. **Fit each LED with its cut
   corner at the mark.**
 - The slide switch is rated 0.3 A. Battery charging and the LED supply both pass through it, so
-  it caps the LED current and rules out the nice!nano's 500 mA charge jumper. For the electrical
-  review.
+  it caps the LED current and rules out the nice!nano's 500 mA charge jumper. Reviewed
+  2026-11-23: the two currents do not add
+  ([pcb.md](../docs/pcb.md#electrical-review-2026-11-23), finding 4).
 - The socket holes are plated at ø3.0, and Kailh draws ø3.00 for a single-sided board. A plated
   hole at the bottom of its tolerance (2.92) is smaller than the largest barrel (2.95). marbastlib
   boards are made this way; noted, not changed.

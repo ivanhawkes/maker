@@ -10,13 +10,15 @@ This is a handoff for future work, not a claim that implementation has started. 
 
 **Gate:** owner accepts the recorded baseline and intended mirror; unresolved measurements are identified, not guessed.
 
+**Pinned (owner, 2026-11-23):** the switch positions in [`layout/layout.yaml`](../layout/layout.yaml) as they stand are the reference. The working CAD and the generated files are checked against them; nothing is checked against the prototype any more ([layout/README.md](../layout/README.md#verification-record)).
+
 **Inspection to date:** On 2026-11-16, `FreeCADCmd --version` reported FreeCAD 1.1.3. An initial read-only inspection terminated unexpectedly for an unknown reason; subsequent attempts opened the relocated source successfully. The prototype was moved to `prototype/left-hand/`, with matching SHA-256 checksums for all four files. The following read-only check sorted the baseplate sketch's edges into 29 closed loops: the outer boundary and 28 switch outlines. Both faces of the baseplate pad had 28 inner boundaries. Twenty-six switch outlines had a 56.000 mm perimeter and two had approximately 56.308 mm; investigate the differences and verify fit before designing around them. Switch positions, export relationships, and physical fit remain unverified. No physical test was performed.
 
 ```sh
 FreeCADCmd -c 'import FreeCAD, Part; doc=FreeCAD.openDocument("prototype/left-hand/test-pad.fcstd"); sketch=doc.getObject("Sketch"); groups=Part.sortEdges(sketch.Shape.Edges); print("Sketch closed loops:", len(groups)); [print("loop", index, "edges", len(group), "closed", Part.Wire(group).isClosed(), "perimeter", round(sum(edge.Length for edge in group),3)) for index,group in enumerate(groups)]; pad=doc.getObject("Pad"); print("Baseplate faces with inner boundaries:", [(round(face.CenterOfMass.z,3), len(face.Wires)-1) for face in pad.Shape.Faces if len(face.Wires)>1])'
 ```
 
-**Handoff for the two differing outlines:** A second read-only FreeCAD 1.1.3 inspection found that each has four edges of approximately 14.077116 mm, with perimeters of approximately 56.308464 mm. One has a vertex at sketch coordinate `(-57.5215, -2.6215)` mm and the other at `(-55.5302, -21.5671)` mm. These coordinates identify openings in the existing left-hand sketch, not proposed replacements. The other 26 outlines have perimeters rounding to 56.000 mm. Before changing either opening, verify its shape and switch fit, determine whether the difference is intentional, and discuss any geometry change with the owner.
+**Handoff for the two differing outlines:** A second read-only FreeCAD 1.1.3 inspection found that each has four edges of approximately 14.077116 mm, with perimeters of approximately 56.308464 mm. One has a vertex at sketch coordinate `(-57.5215, -2.6215)` mm and the other at `(-55.5302, -21.5671)` mm. These coordinates identify openings in the existing left-hand sketch, not proposed replacements. The other 26 outlines have perimeters rounding to 56.000 mm. Before changing either opening, verify its shape and switch fit, determine whether the difference is intentional, and discuss any geometry change with the owner. **Settled (owner, 2026-11-23):** not intentional. Every cutout is meant to be 14.0 mm; the two differ through rounding when the prototype was laid out by hand, and the layout source no longer records them ([layout/README.md](../layout/README.md#verification-record)).
 
 ```sh
 FreeCADCmd -c 'import FreeCAD, Part; doc=FreeCAD.openDocument("prototype/left-hand/test-pad.fcstd"); groups=Part.sortEdges(doc.getObject("Sketch").Shape.Edges); [print("perimeter_mm", round(sum(edge.Length for edge in group),6), "edge_lengths_mm", [round(edge.Length,6) for edge in group], "vertices_mm", [(round(vertex.Point.x,4), round(vertex.Point.y,4)) for vertex in Part.Wire(group).Vertexes]) for group in groups if 56.1 < sum(edge.Length for edge in group) < 60]; print("body", doc.getObject("Body").Shape.BoundBox)'
@@ -73,8 +75,10 @@ fabrication output exists.
 **Next, in this order** (proposed by Claude and accepted by the owner, 2026-11-23). Announce
 each before starting it:
 
-1. Electrical review of the scripted routes (suggested: the strongest model, high effort). The
-   list of what to look at is in [pcb.md](pcb.md#open-items).
+1. **Done 2026-11-23, on paper:** electrical review of the scripted routes
+   ([pcb.md](pcb.md#electrical-review-2026-11-23)). No routing fault; six changes proposed, all
+   accepted by the owner, and the four board changes applied and regenerated the same day:
+   0 unconnected, 0 DRC errors on both boards.
 2. The ZMK shield, generated from `pcb/pins.yaml` (a mid-tier model at medium effort is enough).
 3. The schematic, last. One generated from the same script as the board only agrees with
    itself, so it adds less than the two steps above.

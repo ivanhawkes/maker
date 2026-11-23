@@ -17,7 +17,9 @@ run. Run kicad-cli DRC afterwards.
 LED supply (option B, owner 2026-11-23): VLED is RAW (the battery, 3.0-4.2 V) through a
 high-side P-MOSFET, Q1, driven by a small N-MOSFET, Q2, from the LED_EN pin (pins.yaml).
 R2 holds LED_EN low, so the LEDs are off unless the firmware turns them on. Each LED draws
-about 1 mA even when dark (datasheet), hence the hardware switch.
+about 1 mA even when dark (datasheet), hence the hardware switch. R3 and C2 slow Q1's turn-on
+(inrush into C1); R4 is in series with the LED data, which the LED datasheet asks for and which
+limits the current into the first LED when the pin is high with VLED off (review, 2026-11-23).
 
 Battery path: JST-PH -> power switch -> nice!nano RAW pin. The official nice!nano v2
 pinout labels RAW "BATTERY+" (as well as the extra B+ pad, which is not socketed).
@@ -80,11 +82,20 @@ RESET_AT = (64.0, 12.0)
 # reach them. v0 covered the pads too, which left every controller pin unroutable.
 #   - between the two pin rows, the full module length (parts on the module's underside);
 #   - the module's far end from USB (plan -y), where the antenna is: the footprint marks
-#     USB at plan +y. The module ends about 16.6 mm from its centre; the strip runs to 21 mm.
+#     USB at plan +y. The module ends about 16.6 mm from its centre; the strip runs to 21 mm;
+#   - the antenna section itself, about the last 5 mm of the module (read off the official
+#     pinout image, to confirm on the module): no plane copper on any layer. Pads 11, 12, 23
+#     and 24 are in it, so tracks are allowed (review, 2026-11-23). It is the module's own
+#     width, 8.9 mm a side, and no wider: the reset switch's lower GND via is at x = 9.35, and
+#     at 9.5 the plane reached it by a sliver that DRC still counted as connected.
 CONTROLLER_KEEPOUTS = (
     (-6.3, -15.3, 6.3, 16.6),
     (-9.5, -21.0, 9.5, -15.3),
+    (-8.9, -15.3, 8.9, -11.7),
 )
+# LED data series resistor, bottom side, in half-local plan coordinates for the LEFT half: the
+# nearest free bottom-side space to the data line's run beside the controller (x = 41.0).
+LED_DATA_R_AT = (44.0, -8.0)
 
 
 COPPER = (pcbnew.F_Cu, pcbnew.In1_Cu, pcbnew.In2_Cu, pcbnew.B_Cu)
@@ -265,12 +276,15 @@ class Board:
                 t.SetNet(a.GetNet())
                 self.b.Add(t)
 
-    def keepout(self, pts: list[tuple[float, float]], name: str, copper=None):
-        """A rule area with no tracks, vias or fills (pads allowed), on every copper layer unless given."""
+    def keepout(self, pts: list[tuple[float, float]], name: str, copper=None, fills_only: bool = False):
+        """A rule area with no tracks, vias or fills (pads allowed), on every copper layer unless given.
+
+        With fills_only, tracks and vias are allowed and only zone fills are kept out.
+        """
         zone = pcbnew.ZONE(self.b)
         zone.SetIsRuleArea(True)
-        zone.SetDoNotAllowTracks(True)
-        zone.SetDoNotAllowVias(True)
+        zone.SetDoNotAllowTracks(not fills_only)
+        zone.SetDoNotAllowVias(not fills_only)
         zone.SetDoNotAllowZoneFills(True)
         zone.SetDoNotAllowPads(False)
         zone.SetDoNotAllowFootprints(False)
@@ -298,7 +312,9 @@ class Board:
             for p in fp.Pads():
                 if p.GetAttribute() != pcbnew.PAD_ATTRIB_SMD or p.GetNetname() not in planes:
                     continue
-                power = p.GetNetname() in POWER_NETS  # same values as apply_rules gives the classes
+                # Same values as apply_rules gives the classes. Q1 and C1 carry the whole LED
+                # supply into the VLED plane, so their stubs and vias are power-sized too.
+                power = p.GetNetname() in POWER_NETS or fp.GetReference() in ("Q1", "C1")
                 via_d = mm(RULES["power_via_diameter" if power else "via_diameter"])
                 drill = mm(RULES["power_via_drill" if power else "via_drill"])
                 track_w = mm(RULES["power_track" if power else "track"])
@@ -437,7 +453,7 @@ def build(side: str) -> Board:
         pad_net[pad] = f"ROW_{row}"
     for col, pad in pins["columns"].items():
         pad_net[pad] = f"COL_{col}"
-    pad_net[pins["led_data"]] = "LED_DIN"
+    pad_net[pins["led_data"]] = "LED_DATA"  # through R4 to LED_DIN, the first LED's input
     for pad in pins["power"]["gnd"]:
         pad_net[pad] = "GND"
     pad_net[pins["power"]["rst"]] = "RST"
@@ -678,11 +694,21 @@ def build(side: str) -> Board:
             track([o, (ka, 4.85, -4.33), (ka, 4.85, -8.3), *([(kb, -12.0, -8.3)] if gap else []), (kb, -4.1, -8.3), *enter], net)
 
     # LED data: from its pad down F.Cu beside the controller (x = 41.0, clear of the antenna
-    # keep-out), under C5R4 to a via, then B.Cu into the first LED's DIN.
+    # keep-out), under C5R4 to a via, then B.Cu into the first LED's DIN. R4 (bottom side,
+    # upright) is in series: the F.Cu run drops through a via to R4's upper pad and resumes
+    # from a via at its lower pad.
     first = chain[0]
     din, dpad = pad_of(first[3], "4"), upads[str(pins["led_data"])]
-    path(din.GetNet(), (F, [dpad.GetPosition(), (41.0 * sx, plan(dpad.GetPosition())[1]), (41.0 * sx, -24.5), (first[2], -4.1, -8.3)]),
-         (BK, [(first[2], -4.1, -5.83), din.GetPosition()]))
+    r4 = B.place(load(STOCK / "Resistor_SMD.pretty", "R_1206_3216Metric_Pad1.30x1.75mm_HandSolder"), "R4",
+                 LED_DATA_R_AT[0] * sx, LED_DATA_R_AT[1], 90.0, True, "470R (LED data)")
+    r4_up, r4_down = sorted(r4.Pads(), key=lambda p: p.GetPosition().y)  # board y grows towards the user
+    B.connect(r4, r4_up.GetNumber(), "LED_DATA")
+    B.connect(r4, r4_down.GetNumber(), "LED_DIN")
+    dx_ = 41.0 * sx
+    path(dpad.GetNet(), (F, [dpad.GetPosition(), (dx_, plan(dpad.GetPosition())[1]), (dx_, plan(r4_up.GetPosition())[1])]),
+         (BK, [r4_up.GetPosition()]))
+    path(din.GetNet(), (BK, [r4_down.GetPosition(), (dx_, plan(r4_down.GetPosition())[1])]),
+         (F, [(dx_, -24.5), (first[2], -4.1, -8.3)]), (BK, [(first[2], -4.1, -5.83), din.GetPosition()]))
 
     # Thumb column: an F.Cu trunk through key-local (2.54, 7.6) of each thumb, above the switch
     # pins, with a drop to each pin 2. A straight pin-to-pin track would pass 0.17 mm from the
@@ -787,19 +813,31 @@ def build(side: str) -> Board:
     parts = (
         # ref, library, footprint, (dx, dy), value, {pad: net}
         ("Q1", sot, "SOT-23_Handsoldering", (0.0, 0.0), "DMG2305UX-7 (P-MOSFET)", {"1": "LED_GATE", "2": "RAW", "3": "VLED"}),
-        ("Q2", sot, "SOT-23_Handsoldering", (0.0, -6.0), "BSS138 (N-MOSFET)", {"1": "LED_EN", "2": "GND", "3": "LED_GATE"}),
+        ("Q2", sot, "SOT-23_Handsoldering", (0.0, -6.0), "BSS138 (N-MOSFET)", {"1": "LED_EN", "2": "GND", "3": "LED_GATE_DRV"}),
         ("R1", STOCK / "Resistor_SMD.pretty", "R_1206_3216Metric_Pad1.30x1.75mm_HandSolder", (6.0, 0.0),
          "100k (Q1 gate pull-up)", {"1": "RAW", "2": "LED_GATE"}),
         ("R2", STOCK / "Resistor_SMD.pretty", "R_1206_3216Metric_Pad1.30x1.75mm_HandSolder", (6.0, -6.0),
          "100k (LED_EN pull-down)", {"1": "LED_EN", "2": "GND"}),
         ("C1", STOCK / "Capacitor_SMD.pretty", "C_1206_3216Metric_Pad1.33x1.80mm_HandSolder", (-6.0, 0.0),
          "10uF 10V X5R (VLED bulk)", {"1": "VLED", "2": "GND"}),
+        # Soft start for Q1 (review, 2026-11-23): R3 between Q2's drain and Q1's gate, C2 across
+        # R1 (gate to source, not gate to drain, which would turn Q1 on whenever the battery is
+        # connected). 0R and no C2 give the plain switch. R3 sits between the two transistors,
+        # its pads under Q2's drain and Q1's gate side; C2 sits above R1, pad for pad.
+        ("R3", STOCK / "Resistor_SMD.pretty", "R_1206_3216Metric_Pad1.30x1.75mm_HandSolder", (0.0, -3.0),
+         "10k (Q1 soft start; 0R without)", {}),
+        ("C2", STOCK / "Capacitor_SMD.pretty", "C_1206_3216Metric_Pad1.33x1.80mm_HandSolder", (6.0, 3.0),
+         "1uF 16V X7R (Q1 soft start; optional)", {"1": "RAW", "2": "LED_GATE"}),
     )
     lsw = {}
     for ref, lib, name, (dx, dy), value, nets in parts:
         fp = lsw[ref] = B.place(load(lib, name), ref, (lx0 + dx) * sx, ly0 + dy, 0.0, True, value)
         for pad_no, net in nets.items():
             B.connect(fp, pad_no, net)
+    q2_drain_x = pad_of(lsw["Q2"], "3").GetPosition().x
+    r3_drv, r3_gate = sorted(lsw["R3"].Pads(), key=lambda p: abs(p.GetPosition().x - q2_drain_x))
+    B.connect(lsw["R3"], r3_drv.GetNumber(), "LED_GATE_DRV")
+    B.connect(lsw["R3"], r3_gate.GetNumber(), "LED_GATE")
 
     # Copper keep-outs at the controller (antenna position on the module still unverified;
     # see CONTROLLER_KEEPOUTS). Pads stay outside them.
@@ -808,7 +846,7 @@ def build(side: str) -> Board:
     # spokes. The antenna strip is clear on every layer.
     for i, (x0, y0, x1, y1) in enumerate(CONTROLLER_KEEPOUTS):
         B.keepout([(cx + ox * sx, cy + oy) for ox, oy in ((x0, y0), (x1, y0), (x1, y1), (x0, y1))],
-                  f"controller-keepout-{i}", (pcbnew.F_Cu, pcbnew.B_Cu) if i == 0 else None)
+                  f"controller-keepout-{i}", (pcbnew.F_Cu, pcbnew.B_Cu) if i == 0 else None, fills_only=(i == 2))
 
     hull = outline_points([(round(a, 4), round(b, 4)) for a, b in pts] + switch_edge)
     assert switch_edge[0] in hull, "the power switch is not on the board edge"
@@ -866,8 +904,10 @@ def build(side: str) -> Board:
         ("RST", [term(upads[str(pins["power"]["rst"])])] + terms(rst, "1")),
         ("LED_EN", [term(upads[str(pins["led_power_enable"])])] + terms(lsw["Q2"], "1") + terms(lsw["R2"], "1")),
         ("BAT_IN", terms(j, "1") + terms(s, "2")),
-        ("RAW", [term(upads[str(pins["power"]["raw"])])] + terms(s, on_pad) + terms(lsw["Q1"], "2") + terms(lsw["R1"], "1")),
-        ("LED_GATE", terms(lsw["Q1"], "1") + terms(lsw["Q2"], "3") + terms(lsw["R1"], "2")),
+        ("RAW", [term(upads[str(pins["power"]["raw"])])] + terms(s, on_pad) + terms(lsw["Q1"], "2") + terms(lsw["R1"], "1")
+         + terms(lsw["C2"], "1")),
+        ("LED_GATE", terms(lsw["Q1"], "1") + terms(lsw["R3"], r3_gate.GetNumber()) + terms(lsw["R1"], "2") + terms(lsw["C2"], "2")),
+        ("LED_GATE_DRV", terms(lsw["Q2"], "3") + terms(lsw["R3"], r3_drv.GetNumber())),
     )
     for name, ts in jobs:
         power = name in POWER_NETS

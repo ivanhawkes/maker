@@ -5,8 +5,10 @@ items, 0 DRC errors, and the same tracks on every run. This document records how
 reached, how the routing works, and what was learned, so the work can be repeated or changed.
 The board design itself (parts, nets, rules, decisions) is in [pcb.md](pcb.md).
 
-Everything here is simulation: KiCad geometry and DRC. Nothing has been fabricated, and the
-routes have had no electrical review.
+Everything here is simulation: KiCad geometry and DRC. Nothing has been fabricated. The
+routes had a paper electrical review on 2026-11-23
+([pcb.md](pcb.md#electrical-review-2026-11-23)): no routing fault. Its four board changes were
+applied the same day; the figures under Verification are for the boards after them.
 
 ## Summary
 
@@ -154,7 +156,9 @@ The F.Cu runs use a corridor about 1 mm wide to the right of the column track: x
 next key's pin 2 pad, then x = 3.05 between the column track and the peg hole.
 
 **LED data.** F.Cu from pad 10 to plan x = ±41.0, down to y = −24.5, to a via at C5R4's
-(−4.1, −8.3); B.Cu into its DIN.
+(−4.1, −8.3); B.Cu into its DIN. R4, the series resistor, stands upright on the bottom side at
+plan (±44.0, −8.0): the F.Cu run drops through a via to R4's upper pad and resumes from a via at
+its lower pad.
 
 **Thumb column.** An F.Cu trunk through (2.54, 7.6) of each thumb, with a drop to each pin 2.
 A straight pin-to-pin track would pass 0.17 mm from the next thumb's pin 1.
@@ -194,15 +198,16 @@ is `pcb/pins.yaml`; the ZMK shield must be generated from it.
 
 ## The Grid Router
 
-`tools/pcb_maze.py`, for what has no regular shape: BAT_IN, RAW, RST, LED_EN, LED_GATE, and
-the thumb column's run from its trunk to pad 21.
+`tools/pcb_maze.py`, for what has no regular shape: BAT_IN, RAW, RST, LED_EN, LED_GATE,
+LED_GATE_DRV, and the thumb column's run from its trunk to pad 21.
 
 - A* on a 0.1 mm grid over the controller side of the board (plan x 36 to 86, mirrored on the
   right; y −52 to 40), two layers, 8 directions, vias at a cost of 60 cells.
 - Obstacles come from the board as it stands: pads (as bounding boxes), tracks, vias, holes,
-  rule areas (as bounding boxes) and the outline. Each is grown by the net's clearance, half
+  rule areas that forbid tracks (as bounding boxes) and the outline. Each is grown by the net's clearance, half
   its track width and a 0.08 mm grid margin; items of the same net are not obstacles.
-- Deterministic: a fixed net order (COL_T, RST, LED_EN, BAT_IN, RAW, LED_GATE; longest first)
+- Deterministic: a fixed net order (COL_T, RST, LED_EN, BAT_IN, RAW, LED_GATE, LED_GATE_DRV;
+  longest first)
   and fixed tie-breaking. Power nets use the 0.5 mm track and 0.8/0.4 mm via.
 - No rip-up and no push and shove. The order matters: with the power nets first, the right
   half's thumb column could not reach its pad.
@@ -218,20 +223,21 @@ python tools/pcb_generate.py     # both boards: placement, nets, routing, planes
 python tools/pcb_check.py        # DRC, the rules-file check and the fingerprint (about 40 s)
 ```
 
-Result on 2026-11-23, KiCad 10.0.8, after the power switch moved to the board edge and the LED
-mark moved to the cut corner (before that: left `27ca349965833f2f`, right `575f199c05a9dda2`):
+Result on 2026-11-23, KiCad 10.0.8, after the electrical review's changes (before them: left
+`a8ecd0e7cc062915`, right `125e64f16522f208`, 814 / 146 and 846 / 142 tracks and vias; before
+the power switch moved to the board edge: `27ca349965833f2f`, `575f199c05a9dda2`):
 
 | Check | Left | Right |
 | --- | --- | --- |
 | Unconnected | 0 | 0 |
 | DRC errors | 0 | 0 |
-| DRC warnings | 56 `silk_over_copper`, 29 `silk_overlap`, 48 `text_height`, 2 `silk_edge_clearance` (the power switch) | 52, 29, 48, 2 |
-| Tracks / vias | 814 / 146 | 846 / 142 |
-| Fingerprint | `a8ecd0e7cc062915` | `125e64f16522f208` |
+| DRC warnings | 57 `silk_over_copper`, 33 `silk_overlap`, 48 `text_height`, 2 `silk_edge_clearance` (the power switch) | 53, 33, 48, 2 |
+| Tracks / vias | 839 / 148 | 858 / 144 |
+| Fingerprint | `9eb48eb700d3ef4d` | `b266d5be79ed4f4b` |
 | Custom rules all read | yes | (same file) |
 
-- The **fingerprint** is a hash of every track, via and footprint placement. Two generator runs
-  gave the same fingerprints. KiCad writes fresh UUIDs each time, so the files themselves differ.
+- The **fingerprint** is a hash of every track, via and footprint placement. Three generator runs
+  gave the same fingerprints. It does not cover the plane fills. KiCad writes fresh UUIDs each time, so the files themselves differ.
 - The **working loop** was: change a template, generate, run DRC, read the violations (each
   names the two items and their position), adjust. Margins were first worked out by hand in
   key-local coordinates; DRC found the three places the arithmetic was wrong (a via 0.085 mm
@@ -286,9 +292,9 @@ Tightest margins in the templates, by hand (DRC enforces the limits, not these f
   and are the most layout-specific.
 - The grid router has no rip-up. If a part near the controller moves and it reports no route,
   change the net order or the placement.
-- DRC passes, but there has been **no electrical review**: LED data runs beside column tracks
-  for about 10 mm at 0.26 mm; VLED and its return are planes; the 0.25 mm signal tracks carry
-  only matrix and LED data. Review in KiCad before any fabrication output.
+- Reviewed on paper 2026-11-23 ([pcb.md](pcb.md#electrical-review-2026-11-23)): LED data beside
+  the column tracks (10.9 mm at 0.26 mm at most) is acceptable, and the planes are sound. The
+  four board changes it proposed are applied ([pcb.md](pcb.md#applied-2026-11-23)).
 - More silkscreen now overlaps copper (the widened pads reach under footprint outlines), and the
   controller footprint's 0.8 mm pin labels are under JLCPCB's 1.0 mm text height. Warnings only.
 - No schematic yet, so no ERC and no schematic-to-board parity check.

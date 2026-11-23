@@ -63,7 +63,7 @@ class Maze:
                 if li is not None:
                     self.shapes.append((net, li, "capsule", (mmv(s.x), mmv(s.y), mmv(e.x), mmv(e.y), mmv(t.GetWidth()) / 2)))
         for z in self.b.Zones():
-            if z.GetIsRuleArea():
+            if z.GetIsRuleArea() and z.GetDoNotAllowTracks():  # a fills-only area does not stop tracks
                 bb = z.GetBoundingBox()
                 rect = (mmv(bb.GetLeft()), mmv(bb.GetTop()), mmv(bb.GetRight()), mmv(bb.GetBottom()))
                 for li in (0, 1):
