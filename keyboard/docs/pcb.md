@@ -3,7 +3,8 @@
 Status: design started 2026-11-23. **v3 (4-layer): both boards fully routed by script, DRC clean.**
 Generate and route with `python tools/pcb_generate.py` (no autorouter; about 15 s); the boards
 are written to `pcb/left/left.kicad_pcb` and `pcb/right/right.kicad_pcb`. Nothing is checked for
-fabrication, or ordered: no schematic or ERC yet, and the footprints are unverified against parts.
+fabrication, or ordered, and the footprints are unverified against parts. Each half has a
+[schematic](#schematic-2026-11-23) drawn from its board: ERC is clean and it matches the board.
 The [electrical review](#electrical-review-2026-11-23) found no routing fault; its six proposals
 were accepted and the board changes [applied](#applied-2026-11-23) the same day. Results are in [v3](#v3-scripted-routing-2026-11-23); the method, every template and the findings are in
 [pcb-routing.md](pcb-routing.md). Check a generated board with `python tools/pcb_check.py`.
@@ -179,8 +180,8 @@ project, in [`parts/`](../parts/README.md), with their sources, licences and che
    connector, switch and reset button, and writes the left and right boards. The right board is
    built from the mirrored layout, with its footprints placed for the right half, not copied
    mirror-image, so the parts remain real parts.
-3. The schematic and netlist come from the same generator, so ERC and the
-   schematic-to-PCB consistency check work.
+3. The schematic is drawn from the finished board by `tools/sch_generate.py`, so ERC and the
+   schematic-to-PCB parity check work ([schematic](#schematic-2026-11-23)).
 4. Routing is scripted in the generator ([v3](#v3-scripted-routing-2026-11-23)), then checked
    with `kicad-cli pcb drc` against both fab houses' rules, and reviewed.
 5. Fabrication outputs (Gerbers, drill files and a BOM for hand assembly) come from
@@ -558,8 +559,14 @@ Nix store are read-only there.
 - Review: `python tools/pcb_review.py` reads both boards and prints the figures used in the
   [electrical review](#electrical-review-2026-11-23). It also checks the nets against
   `pcb/pins.yaml` and this brief, and exits 1 if they differ. It changes nothing.
-- DRC: `kicad-cli pcb drc --format json -o <out>.json pcb/left/left.kicad_pcb`. Do not pass
-  `--schematic-parity=false`: this kicad-cli rejects it and writes no report.
+- Schematic: `python tools/sch_generate.py` (KiCad's Python) draws both schematics from the
+  boards; `tools/pcb_generate.py` runs it at the end. `tools/pcb_check.py` runs ERC and the
+  parity check with the DRC.
+- **Close KiCad before generating.** KiCad opens a locked project read-only and then does not
+  save the design rules; the generator stops if it finds a `~*.lck` file. A lock left behind by
+  a stopped `kicad-cli` can be deleted.
+- DRC: `kicad-cli pcb drc --schematic-parity --format json -o <out>.json pcb/left/left.kicad_pcb`.
+  Do not pass `--schematic-parity=false`: this kicad-cli rejects it and writes no report.
 - Review render: `kicad-cli pcb export svg --layers F.Cu,B.Cu,Edge.Cuts --mode-single
   --fit-page-to-board --exclude-drawing-sheet`, then `magick -density 150 in.svg -background
   white -flatten out.png`.
@@ -716,11 +723,72 @@ The soft-start values (10 kΩ, 1 µF) are estimates. Settle them on the bench: w
 scope while LED_EN rises, with the LEDs fitted.
 
 
+## Schematic (2026-11-23)
+
+`pcb/left/left.kicad_sch` and `pcb/right/right.kicad_sch`, written by `tools/sch_generate.py`.
+Open either project in KiCad to read it, or export it: `kicad-cli sch export pdf`.
+
+**What it is.** A drawing of the board, made from the board: every footprint becomes a symbol
+and every pad's net a label on the matching pin. One cell per key (diode, switch and LED) on
+the matrix's rows and columns, then the controller and the power parts. Nets join by label;
+there are no wires.
+
+**What it is not.** An independent design. It cannot disagree with the board, so it does not
+check the netlist; `tools/pcb_review.py` does that, against `pins.yaml` and this brief.
+
+**What it adds.**
+
+- **ERC**, KiCad's electrical rules check, on pin types: supplies with no source, outputs tied
+  together, pins left open. Clean on both halves. GND, RAW and VLED carry a power flag, which
+  states that each is fed from outside the drawing (the battery; VLED through Q1).
+- **A drawing a person can check**, with pin numbers and names shown: each diode's cathode on
+  its row, Q1's source on RAW and drain on VLED, each LED's four pins.
+- **Schematic parity** in DRC: references, footprints and every pad's net agree, 0 differences.
+  It guards against a hand edit to either file.
+- A normal KiCad project: each board directory has a symbol and a footprint library table
+  pointing into `parts/`.
+
+Results (KiCad 10.0.8, `tools/pcb_check.py`; simulation only):
+
+| Check | Left | Right |
+| --- | --- | --- |
+| ERC | clean | clean |
+| Schematic parity differences | 0 | 0 |
+| DRC: unconnected / errors | 0 / 0 | 0 / 0 |
+| Tracks / vias, fingerprint | 839 / 148, `9eb48eb700d3ef4d` (unchanged) | 858 / 144, `b266d5be79ed4f4b` (unchanged) |
+| New DRC warnings | 57 `lib_footprint_mismatch` | 57 |
+| Two generator runs | identical files | identical files |
+
+Both checks were tried against planted faults on a copy: a diode labelled with the wrong row
+is reported by parity, and a supply with its flag removed by ERC.
+
+**Changes to the board that came with it** (no track or via moved):
+
+- Footprints now carry their library names, as KiCad expects. KiCad therefore notices the 57
+  footprints a board that the generator alters on purpose and warns that they differ from the
+  library: the 28 sockets and the battery connector (widened pads) and the 28 LEDs (moved pads,
+  turned mark). `tools/pcb_check.py` fails on any other mismatch.
+- The two nets that had a single pad, `VCC_3V3_SW` and `LED_DOUT_END`, are gone. Those pads, the
+  five spare controller pads and the power switch's unused contact are marked unconnected in
+  the schematic and carry KiCad's `unconnected-(…)` net names on the board.
+
+**Found: KiCad's own LED symbol is numbered differently from the datasheet.** KiCad's
+SK6812MINI-E symbol calls pin 1 VSS, 2 DIN, 3 VDD, 4 DOUT; the Opsco datasheet calls pin 1 VDD,
+2 DOUT, 3 GND, 4 DIN. The two are the same part turned half a turn, and the part's pads are
+symmetric under that turn, so both fit the footprint. This board follows the datasheet, with
+the cut-corner mark moved to pad 3 to match
+([footprint check](../parts/README.md#footprint-check-against-datasheets-2026-11-23)), and the
+schematic's LED symbol is renumbered to the datasheet too. Nothing is wrong on the board, but
+it makes the assembly rule critical: **an LED fitted with its cut corner away from the mark is
+connected backwards across the supply.** Check one real LED with a meter against the board
+before fitting the rest.
+
 ## Open Items
 
 - Done 2026-11-23: the electrical review, and its accepted changes
   ([applied](#applied-2026-11-23)), and the ZMK shield ([firmware](../firmware/README.md)),
-  compile only. **Next:** the schematic.
+  compile only, and the [schematic](#schematic-2026-11-23). **Next:** before any order, measure
+  the bought parts against a 1:1 print of the board, and settle the outline with the case.
 - To verify: the BQ24075's charge-termination behaviour against TI's datasheet (not in
   `parts/datasheets/`), and the antenna's extent on the bought module.
 - Bench: the soft-start values (R3, C2), with a scope on RAW.

@@ -231,7 +231,8 @@ the power switch moved to the board edge: `27ca349965833f2f`, `575f199c05a9dda2`
 | --- | --- | --- |
 | Unconnected | 0 | 0 |
 | DRC errors | 0 | 0 |
-| DRC warnings | 57 `silk_over_copper`, 33 `silk_overlap`, 48 `text_height`, 2 `silk_edge_clearance` (the power switch) | 53, 33, 48, 2 |
+| DRC warnings | 57 `silk_over_copper`, 33 `silk_overlap`, 48 `text_height`, 2 `silk_edge_clearance` (the power switch), 57 `lib_footprint_mismatch` (footprints altered on purpose) | 53, 33, 48, 2, 57 |
+| Schematic parity differences / ERC | 0 / clean | 0 / clean |
 | Tracks / vias | 839 / 148 | 858 / 144 |
 | Fingerprint | `9eb48eb700d3ef4d` | `b266d5be79ed4f4b` |
 | Custom rules all read | yes | (same file) |
@@ -297,4 +298,5 @@ Tightest margins in the templates, by hand (DRC enforces the limits, not these f
   four board changes it proposed are applied ([pcb.md](pcb.md#applied-2026-11-23)).
 - More silkscreen now overlaps copper (the widened pads reach under footprint outlines), and the
   controller footprint's 0.8 mm pin labels are under JLCPCB's 1.0 mm text height. Warnings only.
-- No schematic yet, so no ERC and no schematic-to-board parity check.
+- Each half has a schematic drawn from its board (2026-11-23): ERC is clean and parity is exact
+  ([pcb.md](pcb.md#schematic-2026-11-23)). It is not an independent check of the netlist.

@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
-"""Check the generated boards: KiCad DRC, the custom rules file, and a fingerprint of the routing.
+"""Check the generated boards: KiCad DRC with schematic parity, ERC, the custom rules file, and a
+fingerprint of the routing.
 
-    python tools/pcb_check.py        # exit 1 on a DRC error, an open connection or an unread rule
+    python tools/pcb_check.py        # exit 1 on a DRC or ERC error, a parity difference, an open
+                                     # connection, an unread rule or an unexpected library mismatch
 
 Run it after tools/pcb_generate.py, with the same Python (KiCad's pcbnew) and kicad-cli on PATH.
 Per board it prints the DRC counts by type, the unconnected count and a hash of every track, via
@@ -19,6 +21,7 @@ from __future__ import annotations
 import collections
 import hashlib
 import json
+import re
 import shutil
 import subprocess
 import sys
@@ -29,19 +32,31 @@ import pcbnew
 
 ROOT = Path(__file__).resolve().parent.parent
 CANARY = '\n(rule "canary"\n  (constraint annular_width (min 9mm)))\n'
+# Footprints the generator changes on purpose, so KiCad reports them as differing from their
+# library copies: the sockets' and the battery connector's widened pads (pth_ring) and the LED's
+# moved pads and turned mark (load_led). Any other mismatch is an error.
+CHANGED_FOOTPRINTS = re.compile(r"Footprint (SW\d+|LED\d+|J1)\b")
 
 
 def drc(board: Path) -> dict:
     with tempfile.TemporaryDirectory() as tmp:
         out = Path(tmp) / "drc.json"
-        subprocess.run(["kicad-cli", "pcb", "drc", "--format", "json", "--severity-all", "-o", str(out), str(board)],
-                       check=True, capture_output=True)
+        subprocess.run(["kicad-cli", "pcb", "drc", "--schematic-parity", "--format", "json", "--severity-all",
+                        "-o", str(out), str(board)], check=True, capture_output=True)
         return json.loads(out.read_text())
+
+
+def erc(schematic: Path) -> list[dict]:
+    with tempfile.TemporaryDirectory() as tmp:
+        out = Path(tmp) / "erc.json"
+        subprocess.run(["kicad-cli", "sch", "erc", "--format", "json", "--severity-all", "-o", str(out), str(schematic)],
+                       check=True, capture_output=True)
+        return [v for sheet in json.loads(out.read_text())["sheets"] for v in sheet["violations"]]
 
 
 def rules_read(board: Path) -> bool:
     with tempfile.TemporaryDirectory() as tmp:
-        for ext in (".kicad_pcb", ".kicad_pro", ".kicad_dru"):
+        for ext in (".kicad_pcb", ".kicad_pro", ".kicad_dru", ".kicad_sch"):
             shutil.copy(board.with_suffix(ext), tmp)
         copy = Path(tmp) / board.name
         with copy.with_suffix(".kicad_dru").open("a") as f:
@@ -72,10 +87,16 @@ def main() -> int:
         errors = {t: n for (sev, t), n in sorted(counts.items()) if sev == "error"}
         warnings = {t: n for (sev, t), n in sorted(counts.items()) if sev != "error"}
         unconnected = len(report["unconnected_items"])
+        parity = [v["description"] for v in report.get("schematic_parity", [])]
+        stray = [v["items"][0]["description"] for v in report["violations"] if v["type"] == "lib_footprint_mismatch"
+                 and not CHANGED_FOOTPRINTS.match(v["items"][0]["description"])]
+        rules = collections.Counter((v["severity"], v["type"]) for v in erc(board.with_suffix(".kicad_sch")))
         digest, tracks, vias = fingerprint(board)
         print(f"{side}: unconnected {unconnected}, errors {errors or 0}, warnings {warnings or 0}")
+        print(f"{side}: schematic parity differences {parity or 0}; ERC {dict(rules) or 'clean'}"
+              + (f"; UNEXPECTED library mismatch {stray}" if stray else ""))
         print(f"{side}: {tracks} tracks, {vias} vias, fingerprint {digest}")
-        bad |= bool(errors) or unconnected > 0
+        bad |= bool(errors) or unconnected > 0 or bool(parity) or bool(rules) or bool(stray)
     if not rules_read(ROOT / "pcb" / "left" / "left.kicad_pcb"):
         print("left.kicad_dru: KiCad did not read the whole rules file (a rule it cannot parse stops it)")
         bad = True

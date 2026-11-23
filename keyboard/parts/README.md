@@ -112,11 +112,23 @@ measured against a bought part.**
   the other (from the footprint's outline). Whether a USB-C plug clears the board
   there depends on the socket height: check it when the outline is settled.
 
+## Symbols
+
+`symbols/keyboard.kicad_sym` holds the schematic symbols, written by
+`python tools/sch_generate.py --extract-symbols <KiCad symbols directory>` (`symbols/SOURCE.txt`
+lists where each came from). Ten are copied from KiCad's libraries with derived symbols made
+standalone; the controller's is generated from `pcb/pins.yaml`.
+
+**The LED symbol is renumbered.** KiCad's SK6812MINI-E symbol numbers the part half a turn
+round from the Opsco datasheet (KiCad: 1 VSS, 2 DIN, 3 VDD, 4 DOUT; datasheet: 1 VDD, 2 DOUT,
+3 GND, 4 DIN). The board uses the datasheet's numbers, so the copy here does too
+([details](../docs/pcb.md#schematic-2026-11-23)).
+
 ## Licences
 
 | Files | Licence or owner |
 | --- | --- |
-| `footprints/kicad/`, `3d/kicad/` | KiCad libraries: CC-BY-SA 4.0 with the KiCad exception (`LICENSE.md`) |
+| `footprints/kicad/`, `3d/kicad/`, `symbols/` | KiCad libraries: CC-BY-SA 4.0 with the KiCad exception (`LICENSE.md`) |
 | `footprints/marbastlib/`, `3d/third-party/HS_CPG151101S11_MX.step` | marbastlib, CERN-OHL-P v2 |
 | `3d/third-party/SW_Cherry_MX_PCB.step` | kiswitch, dual MIT / CC-BY-SA 4.0 |
 | `3d/third-party/cherry-mx-switch_ConstantinoSchillebeeckx.step` | MIT, © 2017 Constantino Schillebeeckx |

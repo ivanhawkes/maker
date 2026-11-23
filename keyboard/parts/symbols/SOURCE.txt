@@ -1,0 +1,14 @@
+keyboard.kicad_sym: written by tools/sch_generate.py --extract-symbols.
+Stock symbols copied from KiCad's symbol libraries (/nix/store/1zvkafhqwk2i7vbszbswi3iqcjp3jvir-kicad-symbols-402e704beb/share/kicad/symbols):
+  R: Device.kicad_sym, R
+  C: Device.kicad_sym, C
+  D: Device.kicad_sym, D
+  SW_Push: Switch.kicad_sym, SW_Push
+  SW_SPDT: Switch.kicad_sym, SW_SPDT
+  SK6812MINI-E: LED.kicad_sym, SK6812MINI-E
+  Q_PMOS_GSD: Transistor_FET.kicad_sym, Q_PMOS_GSD
+  Q_NMOS_GSD: Transistor_FET.kicad_sym, Q_NMOS_GSD
+  Conn_01x02: Connector_Generic.kicad_sym, Conn_01x02
+  PWR_FLAG: power.kicad_sym, PWR_FLAG
+  nice_nano_v2: generated from pcb/pins.yaml (not a KiCad symbol)
+Licence: KiCad libraries, CC-BY-SA 4.0 with the KiCad exception (parts/footprints/kicad/LICENSE.md).

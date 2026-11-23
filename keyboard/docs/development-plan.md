@@ -83,10 +83,28 @@ each before starting it:
    `tools/zmk_generate.py`. The left, right, dongle and settings-reset images build, and the built
    pin mapping matches the pin table ([firmware/README.md](../firmware/README.md)). Nothing is
    flashed. The keymap is a placeholder.
-3. The schematic, last. One generated from the same script as the board only agrees with
-   itself, so it adds less than the two steps above.
+3. **Done 2026-11-23:** the schematic, drawn from each board by `tools/sch_generate.py`. ERC is
+   clean and DRC's parity check finds no difference ([pcb.md](pcb.md#schematic-2026-11-23)). As
+   expected it only agrees with the board; the independent netlist checks are in
+   `tools/pcb_review.py`.
 4. Before any order: measure the bought parts against a 1:1 print of the board, and settle the
    outline with the case.
+
+**Handoff (end of 2026-11-23).** Steps 1 to 3 are done and pushed: the electrical review and its
+board changes, the firmware (compiles; nothing flashed) and the schematics (ERC clean, parity
+exact). Step 4 is next and has two parts, neither started:
+
+- **1:1 prints of both boards** for checking the bought parts, a small job: `kicad-cli pcb export
+  pdf` at scale 1. No such file exists yet.
+- **The case design**, a major piece of work (suggested: the strongest model, high effort; the
+  brief is in [decisions.md](decisions.md)). It settles the board outline, the battery's place
+  and the controller's height, which are still open in [pcb.md](pcb.md#open-items).
+
+Still to verify, from the review: the BQ24075's charge termination against TI's datasheet, the
+antenna's extent on the bought module, the soft-start values on the bench, and one real LED's
+pinout with a meter ([pcb.md](pcb.md#schematic-2026-11-23)). Run `python tools/pcb_check.py`,
+`tools/pcb_review.py`, `tools/zmk_generate.py --check` and `tools/layout.py check` after any
+change; all four pass at this commit.
 
 ## 4. Assemble And Validate
 

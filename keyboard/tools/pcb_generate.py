@@ -134,7 +134,7 @@ FAB_MIN = {
 }
 # VLED is not here: at 0.5 mm Freerouting cannot pass between the LED pads. The LEDs are
 # capped in firmware, so the current per track stays well under what 0.25 mm carries.
-POWER_NETS = ("GND", "RAW", "BAT_IN", "VCC_3V3_SW")
+POWER_NETS = ("GND", "RAW", "BAT_IN")
 
 
 def apply_rules(board: pcbnew.BOARD) -> None:
@@ -223,6 +223,9 @@ def load(lib: Path, name: str) -> pcbnew.FOOTPRINT:
     fp = pcbnew.FootprintLoad(str(lib), name)
     if fp is None:
         raise SystemExit(f"footprint not found: {lib}:{name}")
+    # Name the library, as KiCad's own editor does: the schematic's footprint fields and each
+    # project's fp-lib-table use the same nicknames (the .pretty directory's name).
+    fp.SetFPID(pcbnew.LIB_ID(lib.stem, name))
     return fp
 
 
@@ -457,7 +460,8 @@ def build(side: str) -> Board:
     for pad in pins["power"]["gnd"]:
         pad_net[pad] = "GND"
     pad_net[pins["power"]["rst"]] = "RST"
-    pad_net[pins["power"]["vcc"]] = "VCC_3V3_SW"
+    # The module's 3.3 V output (pins.yaml power.vcc) is not used: its pad has no net, like the
+    # spare GPIO pads, and the schematic marks them all as unconnected.
     pad_net[pins["power"]["raw"]] = "RAW"
     pad_net[pins["led_power_enable"]] = "LED_EN"
 
@@ -521,8 +525,9 @@ def build(side: str) -> Board:
     prev = "LED_DIN"
     for n, (_, _, kid, led) in enumerate(chain):
         B.connect(led, "4", prev)               # DIN
-        nxt = f"LED_D{n + 1}" if n + 1 < len(chain) else "LED_DOUT_END"
-        B.connect(led, "2", nxt)                # DOUT
+        nxt = f"LED_D{n + 1}"
+        if n + 1 < len(chain):                  # the last LED's DOUT goes nowhere: no net
+            B.connect(led, "2", nxt)            # DOUT
         B.connect(led, "1", "VLED")             # VDD
         B.connect(led, "3", "GND")              # VSS
         prev = nxt
@@ -924,6 +929,11 @@ def build(side: str) -> Board:
 
 
 def main() -> int:
+    # KiCad opens a locked project read-only, and then the rules below are silently not saved.
+    locks = sorted(p for side in ("left", "right") for p in (ROOT / "pcb" / side).glob("~*.lck"))
+    if locks:
+        raise SystemExit(f"locked: {', '.join(str(p.relative_to(ROOT)) for p in locks)}. "
+                         "Close the project in KiCad, or delete the lock if nothing has it open.")
     for side in ("left", "right"):
         B = build(side)
         out = ROOT / "pcb" / side / f"{side}.kicad_pcb"
@@ -936,10 +946,16 @@ def main() -> int:
         # project (checked with KiCad 10.0.8), hence the subprocess.
         out.with_suffix(".kicad_pro").write_text("{}\n")
         out.with_suffix(".kicad_dru").write_text(CUSTOM_RULES)
+        libs = sorted(p for root in (MARB, STOCK) for p in root.glob("*.pretty"))
+        (out.parent / "fp-lib-table").write_text("(fp_lib_table\n  (version 7)\n" + "".join(
+            f'  (lib (name "{p.stem}")(type "KiCad")(uri "$' + '{KIPRJMOD}/../../' + f'{p.relative_to(ROOT).as_posix()}")(options "")(descr ""))\n'
+            for p in libs) + ")\n")
         subprocess.run([sys.executable, __file__, "--finish", str(out)], check=True)
         check_rules(out)
         fps = len(B.b.GetFootprints())
         print(f"wrote {out.relative_to(ROOT)} (+ .kicad_pro rules): {fps} footprints, {len(B.nets)} nets")
+    # The schematics are drawn from the finished boards (tools/sch_generate.py).
+    subprocess.run([sys.executable, str(Path(__file__).with_name("sch_generate.py"))], check=True)
     return 0
 
 

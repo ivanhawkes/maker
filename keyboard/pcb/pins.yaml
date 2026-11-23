@@ -82,5 +82,5 @@ led_power_enable: 17   # D21 P0.31
 power:
   gnd: [3, 4, 14]
   rst: 15
-  vcc: 16
+  vcc: 16        # not used on the PCB: no net
   raw: 13

@@ -53,8 +53,12 @@ def review(side: str) -> list[str]:
     fps = {fp.GetReference(): fp for fp in board.GetFootprints()}
     bad: list[str] = []
 
+    def net_name(pad):
+        # KiCad's placeholder for a pin the schematic marks unconnected counts as no net.
+        return "" if pad.GetNetname().startswith("unconnected-") else pad.GetNetname()
+
     def nets_of(ref, number):
-        return {p.GetNetname() for p in fps[ref].Pads() if p.GetNumber() == number}
+        return {net_name(p) for p in fps[ref].Pads() if p.GetNumber() == number}
 
     def net_of(ref, number):
         nets = nets_of(ref, number)
@@ -65,15 +69,15 @@ def review(side: str) -> list[str]:
     members = defaultdict(set)
     for ref, fp in fps.items():
         for p in fp.Pads():
-            if p.GetNetname():
-                members[p.GetNetname()].add(f"{ref}.{p.GetNumber()}")
+            if net_name(p):
+                members[net_name(p)].add(f"{ref}.{p.GetNumber()}")
     print(f"\n===== {side} =====")
 
     # --- netlist: controller pads against pins.yaml
     want = {pad: f"ROW_{r}" for r, pad in pins["rows"].items()}
     want |= {pad: f"COL_{c}" for c, pad in pins["columns"].items()}
     want |= {pins["led_data"]: "LED_DATA", pins["led_power_enable"]: "LED_EN", pins["power"]["rst"]: "RST",
-             pins["power"]["raw"]: "RAW", pins["power"]["vcc"]: "VCC_3V3_SW"}
+             pins["power"]["raw"]: "RAW"}  # the 3.3 V output pad is unused: no net
     want |= {pad: "GND" for pad in pins["power"]["gnd"]}
     for pad in pins["controller"]["pads"]:
         got = net_of("U1", str(pad))
@@ -109,11 +113,11 @@ def review(side: str) -> list[str]:
         chain.append(led)
         if net_of(led, "1") != "VLED" or net_of(led, "3") != "GND":
             bad.append(f"{led}: supply pads on {net_of(led, '1')}, {net_of(led, '3')}")
-        if len(members[net]) != 2 and net != "LED_DOUT_END":
+        if len(members[net]) != 2:
             bad.append(f"{net}: {sorted(members[net])}")
         net = net_of(led, "2")
-    if len(chain) != n_keys or net != "LED_DOUT_END" or members[net] != {f"{chain[-1]}.2"}:
-        bad.append(f"LED chain: {len(chain)} LEDs, ends on {net}")
+    if len(chain) != n_keys or net != "":  # the last LED's output has no net
+        bad.append(f"LED chain: {len(chain)} LEDs, ends on {net!r}")
     print(f"LED chain: {len(chain)} LEDs in one chain from U1.{pins['led_data']} through R4, "
           f"{chain[0]} ({fps['SW' + chain[0][3:]].GetValue()}) to {chain[-1]} ({fps['SW' + chain[-1][3:]].GetValue()})")
 
@@ -126,7 +130,6 @@ def review(side: str) -> list[str]:
         "LED_GATE_DRV": {"Q2.3"},                 # and the other
         "LED_EN": {f"U1.{pins['led_power_enable']}", "Q2.1", "R2.1"},
         "RST": {f"U1.{pins['power']['rst']}", "SW_RST.1"},
-        "VCC_3V3_SW": {f"U1.{pins['power']['vcc']}"},
         "VLED": {"Q1.3", "C1.1"} | {f"{l}.1" for l in chain},
         "GND": {"J1.2", "Q2.2", "R2.2", "C1.2", "SW_RST.2"} | {f"U1.{p}" for p in pins["power"]["gnd"]} | {f"{l}.3" for l in chain},
     }

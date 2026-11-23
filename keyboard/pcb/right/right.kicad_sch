@@ -1,0 +1,9137 @@
+(kicad_sch
+	(version 20260306)
+	(generator "sch_generate")
+	(generator_version "10.0")
+	(uuid "a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9")
+	(paper "A2")
+	(title_block
+		(title "Split keyboard, right half")
+		(comment 1 "Generated from the board by tools/sch_generate.py. Do not edit.")
+	)
+	(lib_symbols
+		(symbol "keyboard:C"
+			(pin_numbers (hide yes))
+			(pin_names (offset 0.254))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "C"
+				(at 0.635 2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font (size 1.27 1.27))
+					(justify left)
+				)
+			)
+			(property "Value" "C"
+				(at 0.635 -2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font (size 1.27 1.27))
+					(justify left)
+				)
+			)
+			(property "Footprint" ""
+				(at 0.9652 -3.81 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(property "Description" "Unpolarized capacitor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(property "ki_keywords" "cap capacitor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(property "ki_fp_filters" "C_*"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(symbol "C_0_1"
+				(polyline
+					(pts (xy -2.032 0.762) (xy 2.032 0.762))
+					(stroke (width 0.508) (type default))
+					(fill (type none))
+				)
+				(polyline
+					(pts (xy -2.032 -0.762) (xy 2.032 -0.762))
+					(stroke (width 0.508) (type default))
+					(fill (type none))
+				)
+			)
+			(symbol "C_1_1"
+				(pin passive line
+					(at 0 3.81 270)
+					(length 2.794)
+					(name ""
+						(effects
+							(font (size 1.27 1.27))
+						)
+					)
+					(number "1"
+						(effects
+							(font (size 1.27 1.27))
+						)
+					)
+				)
+				(pin passive line
+					(at 0 -3.81 90)
+					(length 2.794)
+					(name ""
+						(effects
+							(font (size 1.27 1.27))
+						)
+					)
+					(number "2"
+						(effects
+							(font (size 1.27 1.27))
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
+		(symbol "keyboard:Conn_01x02"
+			(pin_names (offset 1.016) (hide yes))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "J"
+				(at 0 2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(property "Value" "Conn_01x02"
+				(at 0 -5.08 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(property "Description" "Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(property "ki_keywords" "connector"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(property "ki_fp_filters" "Connector*:*_1x??_*"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(symbol "Conn_01x02_1_1"
+				(rectangle
+					(start -1.27 1.27)
+					(end 1.27 -3.81)
+					(stroke (width 0.254) (type default))
+					(fill (type background))
+				)
+				(rectangle
+					(start -1.27 0.127)
+					(end 0 -0.127)
+					(stroke (width 0.1524) (type default))
+					(fill (type none))
+				)
+				(rectangle
+					(start -1.27 -2.413)
+					(end 0 -2.667)
+					(stroke (width 0.1524) (type default))
+					(fill (type none))
+				)
+				(pin passive line
+					(at -5.08 0 0)
+					(length 3.81)
+					(name "Pin_1"
+						(effects
+							(font (size 1.27 1.27))
+						)
+					)
+					(number "1"
+						(effects
+							(font (size 1.27 1.27))
+						)
+					)
+				)
+				(pin passive line
+					(at -5.08 -2.54 0)
+					(length 3.81)
+					(name "Pin_2"
+						(effects
+							(font (size 1.27 1.27))
+						)
+					)
+					(number "2"
+						(effects
+							(font (size 1.27 1.27))
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
+		(symbol "keyboard:D"
+			(pin_numbers (hide yes))
+			(pin_names (offset 1.016) (hide yes))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "D"
+				(at 0 2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(property "Value" "D"
+				(at 0 -2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(property "Description" "Diode"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(property "Sim.Device" "D"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(property "Sim.Pins" "1=K 2=A"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(property "ki_keywords" "diode"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(property "ki_fp_filters" "TO-???* *_Diode_* *SingleDiode* D_*"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(symbol "D_0_1"
+				(polyline
+					(pts (xy -1.27 1.27) (xy -1.27 -1.27))
+					(stroke (width 0.254) (type default))
+					(fill (type none))
+				)
+				(polyline
+					(pts (xy 1.27 1.27) (xy 1.27 -1.27) (xy -1.27 0) (xy 1.27 1.27))
+					(stroke (width 0.254) (type default))
+					(fill (type none))
+				)
+				(polyline
+					(pts (xy 1.27 0) (xy -1.27 0))
+					(stroke (width 0) (type default))
+					(fill (type none))
+				)
+			)
+			(symbol "D_1_1"
+				(pin passive line
+					(at -3.81 0 0)
+					(length 2.54)
+					(name "K"
+						(effects
+							(font (size 1.27 1.27))
+						)
+					)
+					(number "1"
+						(effects
+							(font (size 1.27 1.27))
+						)
+					)
+				)
+				(pin passive line
+					(at 3.81 0 180)
+					(length 2.54)
+					(name "A"
+						(effects
+							(font (size 1.27 1.27))
+						)
+					)
+					(number "2"
+						(effects
+							(font (size 1.27 1.27))
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
+		(symbol "keyboard:PWR_FLAG"
+			(power global)
+			(pin_numbers (hide yes))
+			(pin_names (offset 0) (hide yes))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "#FLG"
+				(at 0 1.905 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(property "Value" "PWR_FLAG"
+				(at 0 3.81 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(property "Description" "Special symbol for telling ERC where power comes from"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(property "ki_keywords" "flag power"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(symbol "PWR_FLAG_0_0"
+				(pin power_out line
+					(at 0 0 90)
+					(length 0)
+					(name ""
+						(effects
+							(font (size 1.27 1.27))
+						)
+					)
+					(number "1"
+						(effects
+							(font (size 1.27 1.27))
+						)
+					)
+				)
+			)
+			(symbol "PWR_FLAG_0_1"
+				(polyline
+					(pts (xy 0 0) (xy 0 1.27) (xy -1.016 1.905) (xy 0 2.54) (xy 1.016 1.905) (xy 0 1.27))
+					(stroke (width 0) (type default))
+					(fill (type none))
+				)
+			)
+			(embedded_fonts no)
+		)
+		(symbol "keyboard:Q_NMOS_GSD"
+			(pin_names (offset 0) (hide yes))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "Q"
+				(at 5.08 1.905 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font (size 1.27 1.27))
+					(justify left)
+				)
+			)
+			(property "Value" "Q_NMOS_GSD"
+				(at 5.08 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font (size 1.27 1.27))
+					(justify left)
+				)
+			)
+			(property "Footprint" ""
+				(at 5.08 2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(property "Description" "N-MOSFET transistor, gate/source/drain"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(property "ki_keywords" "transistor NMOS N-MOS N-MOSFET"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(symbol "Q_NMOS_GSD_0_1"
+				(polyline
+					(pts (xy 0.254 1.905) (xy 0.254 -1.905))
+					(stroke (width 0.254) (type default))
+					(fill (type none))
+				)
+				(polyline
+					(pts (xy 0.254 0) (xy -2.54 0))
+					(stroke (width 0) (type default))
+					(fill (type none))
+				)
+				(polyline
+					(pts (xy 0.762 2.286) (xy 0.762 1.27))
+					(stroke (width 0.254) (type default))
+					(fill (type none))
+				)
+				(polyline
+					(pts (xy 0.762 0.508) (xy 0.762 -0.508))
+					(stroke (width 0.254) (type default))
+					(fill (type none))
+				)
+				(polyline
+					(pts (xy 0.762 -1.27) (xy 0.762 -2.286))
+					(stroke (width 0.254) (type default))
+					(fill (type none))
+				)
+				(polyline
+					(pts (xy 0.762 -1.778) (xy 3.302 -1.778) (xy 3.302 1.778) (xy 0.762 1.778))
+					(stroke (width 0) (type default))
+					(fill (type none))
+				)
+				(polyline
+					(pts (xy 1.016 0) (xy 2.032 0.381) (xy 2.032 -0.381) (xy 1.016 0))
+					(stroke (width 0) (type default))
+					(fill (type outline))
+				)
+				(circle
+					(center 1.651 0)
+					(radius 2.794)
+					(stroke (width 0.254) (type default))
+					(fill (type none))
+				)
+				(polyline
+					(pts (xy 2.54 2.54) (xy 2.54 1.778))
+					(stroke (width 0) (type default))
+					(fill (type none))
+				)
+				(circle
+					(center 2.54 1.778)
+					(radius 0.254)
+					(stroke (width 0) (type default))
+					(fill (type outline))
+				)
+				(circle
+					(center 2.54 -1.778)
+					(radius 0.254)
+					(stroke (width 0) (type default))
+					(fill (type outline))
+				)
+				(polyline
+					(pts (xy 2.54 -2.54) (xy 2.54 0) (xy 0.762 0))
+					(stroke (width 0) (type default))
+					(fill (type none))
+				)
+				(polyline
+					(pts (xy 2.921 0.381) (xy 3.683 0.381))
+					(stroke (width 0) (type default))
+					(fill (type none))
+				)
+				(polyline
+					(pts (xy 3.302 0.381) (xy 2.921 -0.254) (xy 3.683 -0.254) (xy 3.302 0.381))
+					(stroke (width 0) (type default))
+					(fill (type none))
+				)
+			)
+			(symbol "Q_NMOS_GSD_1_1"
+				(pin input line
+					(at -5.08 0 0)
+					(length 2.54)
+					(name "G"
+						(effects
+							(font (size 1.27 1.27))
+						)
+					)
+					(number "1"
+						(effects
+							(font (size 1.27 1.27))
+						)
+					)
+				)
+				(pin passive line
+					(at 2.54 -5.08 90)
+					(length 2.54)
+					(name "S"
+						(effects
+							(font (size 1.27 1.27))
+						)
+					)
+					(number "2"
+						(effects
+							(font (size 1.27 1.27))
+						)
+					)
+				)
+				(pin passive line
+					(at 2.54 5.08 270)
+					(length 2.54)
+					(name "D"
+						(effects
+							(font (size 1.27 1.27))
+						)
+					)
+					(number "3"
+						(effects
+							(font (size 1.27 1.27))
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
+		(symbol "keyboard:Q_PMOS_GSD"
+			(pin_names (offset 0) (hide yes))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "Q"
+				(at 5.08 1.905 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font (size 1.27 1.27))
+					(justify left)
+				)
+			)
+			(property "Value" "Q_PMOS_GSD"
+				(at 5.08 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font (size 1.27 1.27))
+					(justify left)
+				)
+			)
+			(property "Footprint" ""
+				(at 5.08 2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(property "Description" "P-MOSFET transistor, gate/source/drain"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(property "ki_keywords" "transistor PMOS P-MOS P-MOSFET"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(symbol "Q_PMOS_GSD_0_1"
+				(polyline
+					(pts (xy 0.254 1.905) (xy 0.254 -1.905))
+					(stroke (width 0.254) (type default))
+					(fill (type none))
+				)
+				(polyline
+					(pts (xy 0.254 0) (xy -2.54 0))
+					(stroke (width 0) (type default))
+					(fill (type none))
+				)
+				(polyline
+					(pts (xy 0.762 2.286) (xy 0.762 1.27))
+					(stroke (width 0.254) (type default))
+					(fill (type none))
+				)
+				(polyline
+					(pts (xy 0.762 1.778) (xy 3.302 1.778) (xy 3.302 -1.778) (xy 0.762 -1.778))
+					(stroke (width 0) (type default))
+					(fill (type none))
+				)
+				(polyline
+					(pts (xy 0.762 0.508) (xy 0.762 -0.508))
+					(stroke (width 0.254) (type default))
+					(fill (type none))
+				)
+				(polyline
+					(pts (xy 0.762 -1.27) (xy 0.762 -2.286))
+					(stroke (width 0.254) (type default))
+					(fill (type none))
+				)
+				(circle
+					(center 1.651 0)
+					(radius 2.794)
+					(stroke (width 0.254) (type default))
+					(fill (type none))
+				)
+				(polyline
+					(pts (xy 2.286 0) (xy 1.27 0.381) (xy 1.27 -0.381) (xy 2.286 0))
+					(stroke (width 0) (type default))
+					(fill (type outline))
+				)
+				(polyline
+					(pts (xy 2.54 2.54) (xy 2.54 1.778))
+					(stroke (width 0) (type default))
+					(fill (type none))
+				)
+				(circle
+					(center 2.54 1.778)
+					(radius 0.254)
+					(stroke (width 0) (type default))
+					(fill (type outline))
+				)
+				(circle
+					(center 2.54 -1.778)
+					(radius 0.254)
+					(stroke (width 0) (type default))
+					(fill (type outline))
+				)
+				(polyline
+					(pts (xy 2.54 -2.54) (xy 2.54 0) (xy 0.762 0))
+					(stroke (width 0) (type default))
+					(fill (type none))
+				)
+				(polyline
+					(pts (xy 2.921 -0.381) (xy 3.683 -0.381))
+					(stroke (width 0) (type default))
+					(fill (type none))
+				)
+				(polyline
+					(pts (xy 3.302 -0.381) (xy 2.921 0.254) (xy 3.683 0.254) (xy 3.302 -0.381))
+					(stroke (width 0) (type default))
+					(fill (type none))
+				)
+			)
+			(symbol "Q_PMOS_GSD_1_1"
+				(pin input line
+					(at -5.08 0 0)
+					(length 2.54)
+					(name "G"
+						(effects
+							(font (size 1.27 1.27))
+						)
+					)
+					(number "1"
+						(effects
+							(font (size 1.27 1.27))
+						)
+					)
+				)
+				(pin passive line
+					(at 2.54 -5.08 90)
+					(length 2.54)
+					(name "S"
+						(effects
+							(font (size 1.27 1.27))
+						)
+					)
+					(number "2"
+						(effects
+							(font (size 1.27 1.27))
+						)
+					)
+				)
+				(pin passive line
+					(at 2.54 5.08 270)
+					(length 2.54)
+					(name "D"
+						(effects
+							(font (size 1.27 1.27))
+						)
+					)
+					(number "3"
+						(effects
+							(font (size 1.27 1.27))
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
+		(symbol "keyboard:R"
+			(pin_numbers (hide yes))
+			(pin_names (offset 0))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "R"
+				(at 2.032 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(property "Value" "R"
+				(at 0 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(property "Footprint" ""
+				(at -1.778 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(property "Description" "Resistor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(property "ki_keywords" "R res resistor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(property "ki_fp_filters" "R_*"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(symbol "R_0_1"
+				(rectangle
+					(start -1.016 -2.54)
+					(end 1.016 2.54)
+					(stroke (width 0.254) (type default))
+					(fill (type none))
+				)
+			)
+			(symbol "R_1_1"
+				(pin passive line
+					(at 0 3.81 270)
+					(length 1.27)
+					(name ""
+						(effects
+							(font (size 1.27 1.27))
+						)
+					)
+					(number "1"
+						(effects
+							(font (size 1.27 1.27))
+						)
+					)
+				)
+				(pin passive line
+					(at 0 -3.81 90)
+					(length 1.27)
+					(name ""
+						(effects
+							(font (size 1.27 1.27))
+						)
+					)
+					(number "2"
+						(effects
+							(font (size 1.27 1.27))
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
+		(symbol "keyboard:SK6812MINI-E"
+			(pin_names (offset 0.254))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "D"
+				(at 5.08 5.715 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font (size 1.27 1.27))
+					(justify right bottom)
+				)
+			)
+			(property "Value" "SK6812MINI-E"
+				(at 1.27 -5.715 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font (size 1.27 1.27))
+					(justify left top)
+				)
+			)
+			(property "Footprint" "LED_SMD:LED_SK6812MINI-E_3.2x2.8mm_P1.5mm_ReverseMount"
+				(at 1.27 -7.62 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font (size 1.27 1.27))
+					(justify left top)
+				)
+			)
+			(property "Datasheet" "https://www.lcsc.com/datasheet/C5149201.pdf"
+				(at 2.54 -9.525 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font (size 1.27 1.27))
+					(justify left top)
+				)
+			)
+			(property "Description" "RGB LED with integrated controller"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(property "ki_keywords" "RGB LED NeoPixel addressable"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(property "ki_fp_filters" "LED?SK6812MINI?E?3.2x2.8mm?P1.5mm*"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(embedded_fonts no)
+			(symbol "SK6812MINI-E_0_0"
+				(text "RGB"
+					(at 2.286 -4.191 0)
+					(effects
+						(font (size 0.762 0.762))
+					)
+				)
+			)
+			(symbol "SK6812MINI-E_0_1"
+				(polyline
+					(pts (xy 1.27 -2.54) (xy 1.778 -2.54))
+					(stroke (width 0) (type default))
+					(fill (type none))
+				)
+				(polyline
+					(pts (xy 1.27 -3.556) (xy 1.778 -3.556))
+					(stroke (width 0) (type default))
+					(fill (type none))
+				)
+				(polyline
+					(pts (xy 2.286 -1.524) (xy 1.27 -2.54) (xy 1.27 -2.032))
+					(stroke (width 0) (type default))
+					(fill (type none))
+				)
+				(polyline
+					(pts (xy 2.286 -2.54) (xy 1.27 -3.556) (xy 1.27 -3.048))
+					(stroke (width 0) (type default))
+					(fill (type none))
+				)
+				(polyline
+					(pts (xy 3.683 -1.016) (xy 3.683 -3.556) (xy 3.683 -4.064))
+					(stroke (width 0) (type default))
+					(fill (type none))
+				)
+				(polyline
+					(pts (xy 4.699 -1.524) (xy 2.667 -1.524) (xy 3.683 -3.556) (xy 4.699 -1.524))
+					(stroke (width 0) (type default))
+					(fill (type none))
+				)
+				(polyline
+					(pts (xy 4.699 -3.556) (xy 2.667 -3.556))
+					(stroke (width 0) (type default))
+					(fill (type none))
+				)
+				(rectangle
+					(start 5.08 5.08)
+					(end -5.08 -5.08)
+					(stroke (width 0.254) (type default))
+					(fill (type background))
+				)
+			)
+			(symbol "SK6812MINI-E_1_1"
+				(pin power_in line
+					(at 0 -7.62 90)
+					(length 2.54)
+					(name "VSS"
+						(effects
+							(font (size 1.27 1.27))
+						)
+					)
+					(number "3"
+						(effects
+							(font (size 1.27 1.27))
+						)
+					)
+				)
+				(pin input line
+					(at -7.62 0 0)
+					(length 2.54)
+					(name "DIN"
+						(effects
+							(font (size 1.27 1.27))
+						)
+					)
+					(number "4"
+						(effects
+							(font (size 1.27 1.27))
+						)
+					)
+				)
+				(pin power_in line
+					(at 0 7.62 270)
+					(length 2.54)
+					(name "VDD"
+						(effects
+							(font (size 1.27 1.27))
+						)
+					)
+					(number "1"
+						(effects
+							(font (size 1.27 1.27))
+						)
+					)
+				)
+				(pin output line
+					(at 7.62 0 180)
+					(length 2.54)
+					(name "DOUT"
+						(effects
+							(font (size 1.27 1.27))
+						)
+					)
+					(number "2"
+						(effects
+							(font (size 1.27 1.27))
+						)
+					)
+				)
+			)
+		)
+		(symbol "keyboard:SW_Push"
+			(pin_numbers (hide yes))
+			(pin_names (offset 1.016) (hide yes))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "SW"
+				(at 1.27 2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font (size 1.27 1.27))
+					(justify left)
+				)
+			)
+			(property "Value" "SW_Push"
+				(at 0 -1.524 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(property "Footprint" ""
+				(at 0 5.08 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 5.08 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(property "Description" "Push button switch, generic, two pins"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(property "ki_keywords" "switch normally-open pushbutton push-button"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(symbol "SW_Push_0_1"
+				(circle
+					(center -2.032 0)
+					(radius 0.508)
+					(stroke (width 0) (type default))
+					(fill (type none))
+				)
+				(polyline
+					(pts (xy 0 1.27) (xy 0 3.048))
+					(stroke (width 0) (type default))
+					(fill (type none))
+				)
+				(circle
+					(center 2.032 0)
+					(radius 0.508)
+					(stroke (width 0) (type default))
+					(fill (type none))
+				)
+				(polyline
+					(pts (xy 2.54 1.27) (xy -2.54 1.27))
+					(stroke (width 0) (type default))
+					(fill (type none))
+				)
+				(pin passive line
+					(at -5.08 0 0)
+					(length 2.54)
+					(name "1"
+						(effects
+							(font (size 1.27 1.27))
+						)
+					)
+					(number "1"
+						(effects
+							(font (size 1.27 1.27))
+						)
+					)
+				)
+				(pin passive line
+					(at 5.08 0 180)
+					(length 2.54)
+					(name "2"
+						(effects
+							(font (size 1.27 1.27))
+						)
+					)
+					(number "2"
+						(effects
+							(font (size 1.27 1.27))
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
+		(symbol "keyboard:SW_SPDT"
+			(pin_names (offset 0) (hide yes))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "SW"
+				(at 0 5.08 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(property "Value" "SW_SPDT"
+				(at 0 -5.08 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 -7.62 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(property "Description" "Switch, single pole double throw"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(property "ki_keywords" "switch single-pole double-throw spdt ON-ON"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(symbol "SW_SPDT_0_1"
+				(circle
+					(center -2.032 0)
+					(radius 0.4572)
+					(stroke (width 0) (type default))
+					(fill (type none))
+				)
+				(polyline
+					(pts (xy -1.651 0.254) (xy 1.651 2.286))
+					(stroke (width 0) (type default))
+					(fill (type none))
+				)
+				(circle
+					(center 2.032 2.54)
+					(radius 0.4572)
+					(stroke (width 0) (type default))
+					(fill (type none))
+				)
+				(circle
+					(center 2.032 -2.54)
+					(radius 0.4572)
+					(stroke (width 0) (type default))
+					(fill (type none))
+				)
+			)
+			(symbol "SW_SPDT_1_1"
+				(rectangle
+					(start -3.175 3.81)
+					(end 3.175 -3.81)
+					(stroke (width 0) (type default))
+					(fill (type background))
+				)
+				(pin passive line
+					(at 5.08 2.54 180)
+					(length 2.54)
+					(name "A"
+						(effects
+							(font (size 1.27 1.27))
+						)
+					)
+					(number "1"
+						(effects
+							(font (size 1.27 1.27))
+						)
+					)
+				)
+				(pin passive line
+					(at -5.08 0 0)
+					(length 2.54)
+					(name "B"
+						(effects
+							(font (size 1.27 1.27))
+						)
+					)
+					(number "2"
+						(effects
+							(font (size 1.27 1.27))
+						)
+					)
+				)
+				(pin passive line
+					(at 5.08 -2.54 180)
+					(length 2.54)
+					(name "C"
+						(effects
+							(font (size 1.27 1.27))
+						)
+					)
+					(number "3"
+						(effects
+							(font (size 1.27 1.27))
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
+		(symbol "keyboard:nice_nano_v2"
+			(pin_names (offset 1.016))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "U"
+				(at 0 19.05 0)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(property "Value" "nice_nano_v2"
+				(at 0 -19.05 0)
+				(effects
+					(font (size 1.27 1.27))
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(effects
+					(font (size 1.27 1.27))
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "https://nicekeyboards.com/docs/nice-nano/pinout-schematic"
+				(at 0 0 0)
+				(effects
+					(font (size 1.27 1.27))
+					(hide yes)
+				)
+			)
+			(property "Description" "nice!nano v2 (nRF52840), Pro Micro footprint; pins from pcb/pins.yaml"
+				(at 0 0 0)
+				(effects
+					(font (size 1.27 1.27))
+					(hide yes)
+				)
+			)
+			(symbol "nice_nano_v2_1_1"
+				(rectangle
+					(start -12.7 16.51)
+					(end 12.7 -16.51)
+					(stroke (width 0.254) (type default))
+					(fill (type background))
+				)
+				(pin bidirectional line
+					(at -15.24 13.97 0)
+					(length 2.54)
+					(name "D1/P0.06"
+						(effects
+							(font (size 1.0 1.0))
+						)
+					)
+					(number "1"
+						(effects
+							(font (size 1.0 1.0))
+						)
+					)
+				)
+				(pin bidirectional line
+					(at -15.24 11.43 0)
+					(length 2.54)
+					(name "D0/P0.08"
+						(effects
+							(font (size 1.0 1.0))
+						)
+					)
+					(number "2"
+						(effects
+							(font (size 1.0 1.0))
+						)
+					)
+				)
+				(pin power_in line
+					(at -15.24 8.89 0)
+					(length 2.54)
+					(name "GND"
+						(effects
+							(font (size 1.0 1.0))
+						)
+					)
+					(number "3"
+						(effects
+							(font (size 1.0 1.0))
+						)
+					)
+				)
+				(pin power_in line
+					(at -15.24 6.3500000000000005 0)
+					(length 2.54)
+					(name "GND"
+						(effects
+							(font (size 1.0 1.0))
+						)
+					)
+					(number "4"
+						(effects
+							(font (size 1.0 1.0))
+						)
+					)
+				)
+				(pin bidirectional line
+					(at -15.24 3.8100000000000005 0)
+					(length 2.54)
+					(name "D2/P0.17"
+						(effects
+							(font (size 1.0 1.0))
+						)
+					)
+					(number "5"
+						(effects
+							(font (size 1.0 1.0))
+						)
+					)
+				)
+				(pin bidirectional line
+					(at -15.24 1.2700000000000014 0)
+					(length 2.54)
+					(name "D3/P0.20"
+						(effects
+							(font (size 1.0 1.0))
+						)
+					)
+					(number "6"
+						(effects
+							(font (size 1.0 1.0))
+						)
+					)
+				)
+				(pin bidirectional line
+					(at -15.24 -1.2699999999999996 0)
+					(length 2.54)
+					(name "D4/P0.22"
+						(effects
+							(font (size 1.0 1.0))
+						)
+					)
+					(number "7"
+						(effects
+							(font (size 1.0 1.0))
+						)
+					)
+				)
+				(pin bidirectional line
+					(at -15.24 -3.8100000000000005 0)
+					(length 2.54)
+					(name "D5/P0.24"
+						(effects
+							(font (size 1.0 1.0))
+						)
+					)
+					(number "8"
+						(effects
+							(font (size 1.0 1.0))
+						)
+					)
+				)
+				(pin bidirectional line
+					(at -15.24 -6.35 0)
+					(length 2.54)
+					(name "D6/P1.00"
+						(effects
+							(font (size 1.0 1.0))
+						)
+					)
+					(number "9"
+						(effects
+							(font (size 1.0 1.0))
+						)
+					)
+				)
+				(pin bidirectional line
+					(at -15.24 -8.889999999999999 0)
+					(length 2.54)
+					(name "D7/P0.11"
+						(effects
+							(font (size 1.0 1.0))
+						)
+					)
+					(number "10"
+						(effects
+							(font (size 1.0 1.0))
+						)
+					)
+				)
+				(pin bidirectional line
+					(at -15.24 -11.429999999999998 0)
+					(length 2.54)
+					(name "D8/P1.04"
+						(effects
+							(font (size 1.0 1.0))
+						)
+					)
+					(number "11"
+						(effects
+							(font (size 1.0 1.0))
+						)
+					)
+				)
+				(pin bidirectional line
+					(at -15.24 -13.97 0)
+					(length 2.54)
+					(name "D9/P1.06"
+						(effects
+							(font (size 1.0 1.0))
+						)
+					)
+					(number "12"
+						(effects
+							(font (size 1.0 1.0))
+						)
+					)
+				)
+				(pin power_in line
+					(at 15.24 13.97 180)
+					(length 2.54)
+					(name "RAW/BAT+"
+						(effects
+							(font (size 1.0 1.0))
+						)
+					)
+					(number "13"
+						(effects
+							(font (size 1.0 1.0))
+						)
+					)
+				)
+				(pin power_in line
+					(at 15.24 11.43 180)
+					(length 2.54)
+					(name "GND"
+						(effects
+							(font (size 1.0 1.0))
+						)
+					)
+					(number "14"
+						(effects
+							(font (size 1.0 1.0))
+						)
+					)
+				)
+				(pin input line
+					(at 15.24 8.89 180)
+					(length 2.54)
+					(name "RST"
+						(effects
+							(font (size 1.0 1.0))
+						)
+					)
+					(number "15"
+						(effects
+							(font (size 1.0 1.0))
+						)
+					)
+				)
+				(pin power_out line
+					(at 15.24 6.3500000000000005 180)
+					(length 2.54)
+					(name "VCC/3V3"
+						(effects
+							(font (size 1.0 1.0))
+						)
+					)
+					(number "16"
+						(effects
+							(font (size 1.0 1.0))
+						)
+					)
+				)
+				(pin bidirectional line
+					(at 15.24 3.8100000000000005 180)
+					(length 2.54)
+					(name "D21/P0.31"
+						(effects
+							(font (size 1.0 1.0))
+						)
+					)
+					(number "17"
+						(effects
+							(font (size 1.0 1.0))
+						)
+					)
+				)
+				(pin bidirectional line
+					(at 15.24 1.2700000000000014 180)
+					(length 2.54)
+					(name "D20/P0.29"
+						(effects
+							(font (size 1.0 1.0))
+						)
+					)
+					(number "18"
+						(effects
+							(font (size 1.0 1.0))
+						)
+					)
+				)
+				(pin bidirectional line
+					(at 15.24 -1.2699999999999996 180)
+					(length 2.54)
+					(name "D19/P0.02"
+						(effects
+							(font (size 1.0 1.0))
+						)
+					)
+					(number "19"
+						(effects
+							(font (size 1.0 1.0))
+						)
+					)
+				)
+				(pin bidirectional line
+					(at 15.24 -3.8100000000000005 180)
+					(length 2.54)
+					(name "D18/P1.15"
+						(effects
+							(font (size 1.0 1.0))
+						)
+					)
+					(number "20"
+						(effects
+							(font (size 1.0 1.0))
+						)
+					)
+				)
+				(pin bidirectional line
+					(at 15.24 -6.35 180)
+					(length 2.54)
+					(name "D15/P1.13"
+						(effects
+							(font (size 1.0 1.0))
+						)
+					)
+					(number "21"
+						(effects
+							(font (size 1.0 1.0))
+						)
+					)
+				)
+				(pin bidirectional line
+					(at 15.24 -8.889999999999999 180)
+					(length 2.54)
+					(name "D14/P1.11"
+						(effects
+							(font (size 1.0 1.0))
+						)
+					)
+					(number "22"
+						(effects
+							(font (size 1.0 1.0))
+						)
+					)
+				)
+				(pin bidirectional line
+					(at 15.24 -11.429999999999998 180)
+					(length 2.54)
+					(name "D16/P0.10"
+						(effects
+							(font (size 1.0 1.0))
+						)
+					)
+					(number "23"
+						(effects
+							(font (size 1.0 1.0))
+						)
+					)
+				)
+				(pin bidirectional line
+					(at 15.24 -13.97 180)
+					(length 2.54)
+					(name "D10/P0.09"
+						(effects
+							(font (size 1.0 1.0))
+						)
+					)
+					(number "24"
+						(effects
+							(font (size 1.0 1.0))
+						)
+					)
+				)
+			)
+		)
+	)
+	(text "Key matrix, 4 rows by 7 columns: column -> switch -> diode -> row (ZMK col2row). Each key's LED is drawn under it; the LED_D nets chain them."
+		(exclude_from_sim no)
+		(at 25.4 20.32 0)
+		(effects
+			(font (size 2.5 2.5))
+			(justify left)
+		)
+		(uuid "ef72c5d7-9110-5d0f-9a8b-6877474cfa48")
+	)
+	(symbol
+		(lib_id "keyboard:SW_Push")
+		(at 52.07 38.1 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "e08244fd-e708-57bb-9618-6e074172dfa5")
+		(property "Reference" "SW1"
+			(at 52.07 30.48 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "C0R1"
+			(at 52.07 33.02 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "marbastlib-mx:SW_MX_HS_CPG151101S11_1u"
+			(at 52.07 38.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 52.07 38.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 52.07 38.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "c628224e-dac7-5f69-bb33-5975908d17ad"))
+		(pin "2" (uuid "b01fc73d-d9d2-5784-82cf-1094c832e53c"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "SW1") (unit 1))
+			)
+		)
+	)
+	(global_label "K_C0R1"
+		(shape passive)
+		(at 46.99 38.1 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "b6c7e2ce-b467-5fba-88b8-d3ec0cbadf54")
+	)
+	(global_label "COL_C0"
+		(shape passive)
+		(at 57.15 38.1 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "38e0ca8e-3793-5324-9f74-046fcff33cdc")
+	)
+	(symbol
+		(lib_id "keyboard:D")
+		(at 43.18 38.1 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "16f9f20a-4379-5384-8f4f-5404198007f3")
+		(property "Reference" "D1"
+			(at 41.91 34.29 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "1N4148W"
+			(at 41.91 41.91 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "Diode_SMD:D_SOD-123"
+			(at 43.18 38.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 43.18 38.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 43.18 38.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "7a3c5aac-3db0-5f6f-90e3-1441821c0117"))
+		(pin "2" (uuid "397c7153-eab7-5314-8115-94d346409c9d"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "D1") (unit 1))
+			)
+		)
+	)
+	(global_label "ROW_R1"
+		(shape passive)
+		(at 39.37 38.1 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "be067177-7aba-57af-9251-ad16f86874b2")
+	)
+	(symbol
+		(lib_id "keyboard:SK6812MINI-E")
+		(at 48.26 63.5 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "a6ec78e4-4063-55ad-81ec-624fef3deb6b")
+		(property "Reference" "LED1"
+			(at 58.42 54.61 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "SK6812MINI-E (optional)"
+			(at 60.96 72.39 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "LED_SMD:LED_SK6812MINI-E_3.2x2.8mm_P1.5mm_ReverseMount"
+			(at 48.26 63.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 48.26 63.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 48.26 63.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "963acb52-27ef-5a83-8c0d-6cd28a9c06e1"))
+		(pin "2" (uuid "c1730d59-916e-5394-85ac-f4bdb245c28a"))
+		(pin "3" (uuid "0ff9cb5a-3ec9-5648-a9ba-c8a984c96f6c"))
+		(pin "4" (uuid "6df75136-c872-5bfe-8e1c-fdc2246f6090"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "LED1") (unit 1))
+			)
+		)
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 48.26 71.12 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "37b05cc5-8f84-50f3-afe0-3bf66d2c0e3f")
+	)
+	(global_label "LED_D20"
+		(shape passive)
+		(at 40.64 63.5 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "4bdd12c8-9ae8-5540-9fc0-a938377dc838")
+	)
+	(global_label "VLED"
+		(shape passive)
+		(at 48.26 55.88 90)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "a7a821f2-3c3e-59fb-ae4b-2f9fa03c11da")
+	)
+	(global_label "LED_D21"
+		(shape passive)
+		(at 55.88 63.5 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "6451a621-6500-523b-ba1f-c5ff02ba762b")
+	)
+	(symbol
+		(lib_id "keyboard:SW_Push")
+		(at 52.07 88.9 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "e0d3238c-acc6-5af5-9768-fe08de15ee27")
+		(property "Reference" "SW2"
+			(at 52.07 81.28 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "C0R2"
+			(at 52.07 83.82 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "marbastlib-mx:SW_MX_HS_CPG151101S11_1u"
+			(at 52.07 88.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 52.07 88.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 52.07 88.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "7cbd4097-3e42-59c2-944e-01adc1e897ee"))
+		(pin "2" (uuid "7654f029-cd7b-5131-872a-17b041b3eb5a"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "SW2") (unit 1))
+			)
+		)
+	)
+	(global_label "K_C0R2"
+		(shape passive)
+		(at 46.99 88.9 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "f137e6c5-0324-5b4e-967a-f76ee2e4cb0c")
+	)
+	(global_label "COL_C0"
+		(shape passive)
+		(at 57.15 88.9 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "5eab35d6-6504-5c42-8bd7-79470300b3a1")
+	)
+	(symbol
+		(lib_id "keyboard:D")
+		(at 43.18 88.9 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "0141f67d-5275-59a4-8159-eabd930ae450")
+		(property "Reference" "D2"
+			(at 41.91 85.09 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "1N4148W"
+			(at 41.91 92.71 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "Diode_SMD:D_SOD-123"
+			(at 43.18 88.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 43.18 88.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 43.18 88.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "ae0ef848-aeee-5f34-958a-89de07b590d2"))
+		(pin "2" (uuid "16842172-1096-5367-9b40-395d2561c6cd"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "D2") (unit 1))
+			)
+		)
+	)
+	(global_label "ROW_R2"
+		(shape passive)
+		(at 39.37 88.9 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "b3a12df9-61ee-5978-a46e-d107f1de426c")
+	)
+	(symbol
+		(lib_id "keyboard:SK6812MINI-E")
+		(at 48.26 114.3 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "138ca9c0-6338-595d-bf60-763303863be3")
+		(property "Reference" "LED2"
+			(at 58.42 105.41 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "SK6812MINI-E (optional)"
+			(at 60.96 123.19 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "LED_SMD:LED_SK6812MINI-E_3.2x2.8mm_P1.5mm_ReverseMount"
+			(at 48.26 114.3 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 48.26 114.3 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 48.26 114.3 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "57a5d3da-ac86-553a-8ea6-f4d987599ef2"))
+		(pin "2" (uuid "f2e859b3-8c2a-562f-a715-030634344167"))
+		(pin "3" (uuid "867f2402-ec43-5647-a282-4fad1f461bcd"))
+		(pin "4" (uuid "7391bbd7-ac4c-5e47-8668-ec5f79c913a9"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "LED2") (unit 1))
+			)
+		)
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 48.26 121.92 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "648920f3-72eb-561c-90cc-15a2c2edba55")
+	)
+	(global_label "LED_D21"
+		(shape passive)
+		(at 40.64 114.3 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "f1d346c3-a099-5cba-b43e-429ae14a924b")
+	)
+	(global_label "VLED"
+		(shape passive)
+		(at 48.26 106.68 90)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "e98485b0-400e-5b61-9f64-bcb3b9425cdc")
+	)
+	(global_label "LED_D22"
+		(shape passive)
+		(at 55.88 114.3 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "b97c3a0d-e765-5104-a4c0-9198b5817305")
+	)
+	(symbol
+		(lib_id "keyboard:SW_Push")
+		(at 52.07 139.7 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "0cb5a2c1-7fff-5fb8-bb4c-2cdbfe1dd58f")
+		(property "Reference" "SW3"
+			(at 52.07 132.08 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "C0R3"
+			(at 52.07 134.62 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "marbastlib-mx:SW_MX_HS_CPG151101S11_1u"
+			(at 52.07 139.7 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 52.07 139.7 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 52.07 139.7 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "0cb8a4e6-a25f-53a8-8983-7d284ea08cf5"))
+		(pin "2" (uuid "8d60f316-ea9f-5e44-8cc8-fc1dcea91e38"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "SW3") (unit 1))
+			)
+		)
+	)
+	(global_label "K_C0R3"
+		(shape passive)
+		(at 46.99 139.7 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "44a9cf9b-acb6-5a8a-a938-5ce52d1fe2b5")
+	)
+	(global_label "COL_C0"
+		(shape passive)
+		(at 57.15 139.7 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "c966501e-deb8-5bdc-8463-ce2b2b27d4ed")
+	)
+	(symbol
+		(lib_id "keyboard:D")
+		(at 43.18 139.7 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "bd3790b8-362f-5322-8f04-c51996baf208")
+		(property "Reference" "D3"
+			(at 41.91 135.89 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "1N4148W"
+			(at 41.91 143.51 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "Diode_SMD:D_SOD-123"
+			(at 43.18 139.7 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 43.18 139.7 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 43.18 139.7 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "a4415e74-f071-513f-b82a-4367af1ec094"))
+		(pin "2" (uuid "458fbe13-a2f4-56fd-9646-ea048460aa25"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "D3") (unit 1))
+			)
+		)
+	)
+	(global_label "ROW_R3"
+		(shape passive)
+		(at 39.37 139.7 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "fa368a88-251f-5279-8aeb-81e7b5fe8878")
+	)
+	(symbol
+		(lib_id "keyboard:SK6812MINI-E")
+		(at 48.26 165.1 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "c32fdeed-810e-57e8-80b5-26b68b7b396f")
+		(property "Reference" "LED3"
+			(at 58.42 156.21 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "SK6812MINI-E (optional)"
+			(at 60.96 173.99 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "LED_SMD:LED_SK6812MINI-E_3.2x2.8mm_P1.5mm_ReverseMount"
+			(at 48.26 165.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 48.26 165.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 48.26 165.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "430726e9-7e89-510a-b451-3d4c0c6cd17c"))
+		(pin "2" (uuid "2ec7cbf0-57cd-5969-bfe0-06ea0e365da2"))
+		(pin "3" (uuid "207e6d3c-7f3c-5fbd-bb2a-842d356a6611"))
+		(pin "4" (uuid "6c485fce-1dd9-5071-b928-9e2651308c26"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "LED3") (unit 1))
+			)
+		)
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 48.26 172.72 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "a0ce076e-9ee5-57b4-8ccb-580a767b451d")
+	)
+	(global_label "LED_D22"
+		(shape passive)
+		(at 40.64 165.1 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "b8119894-4ec4-5e56-b941-497b763ec3cb")
+	)
+	(global_label "VLED"
+		(shape passive)
+		(at 48.26 157.48 90)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "0b490dce-f7e1-578b-9c77-2952d36b4624")
+	)
+	(global_label "LED_D23"
+		(shape passive)
+		(at 55.88 165.1 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "2d794655-9329-5a7f-b429-a37814dee0bf")
+	)
+	(symbol
+		(lib_id "keyboard:SW_Push")
+		(at 52.07 190.5 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "f4d61a06-12e8-5bcc-976b-0074d6ca73a4")
+		(property "Reference" "SW4"
+			(at 52.07 182.88 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "C0R4"
+			(at 52.07 185.42 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "marbastlib-mx:SW_MX_HS_CPG151101S11_1u"
+			(at 52.07 190.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 52.07 190.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 52.07 190.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "ee092cc6-da70-5aa4-92f5-2dd98331b256"))
+		(pin "2" (uuid "326626a9-4f50-5fed-adc3-96eeb42a1ff3"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "SW4") (unit 1))
+			)
+		)
+	)
+	(global_label "K_C0R4"
+		(shape passive)
+		(at 46.99 190.5 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "e0cc8c13-edff-516c-b352-c29e1080860d")
+	)
+	(global_label "COL_C0"
+		(shape passive)
+		(at 57.15 190.5 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "abbf9d2a-ddc0-5bea-8f03-fddace745b9e")
+	)
+	(symbol
+		(lib_id "keyboard:D")
+		(at 43.18 190.5 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "025cbfcb-0bab-5fda-b0fc-119413209726")
+		(property "Reference" "D4"
+			(at 41.91 186.69 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "1N4148W"
+			(at 41.91 194.31 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "Diode_SMD:D_SOD-123"
+			(at 43.18 190.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 43.18 190.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 43.18 190.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "87d6daed-c2a1-56d6-93ae-5a7c5d18b618"))
+		(pin "2" (uuid "befa0ef8-bb09-5a63-82e5-4f20bff338b5"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "D4") (unit 1))
+			)
+		)
+	)
+	(global_label "ROW_R4"
+		(shape passive)
+		(at 39.37 190.5 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "2a30e7f6-8331-57e0-b6be-b40a41d69a56")
+	)
+	(symbol
+		(lib_id "keyboard:SK6812MINI-E")
+		(at 48.26 215.9 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "904da7ce-1c2f-5156-b102-84fe9a5cf809")
+		(property "Reference" "LED4"
+			(at 58.42 207.01 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "SK6812MINI-E (optional)"
+			(at 60.96 224.79 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "LED_SMD:LED_SK6812MINI-E_3.2x2.8mm_P1.5mm_ReverseMount"
+			(at 48.26 215.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 48.26 215.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 48.26 215.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "98c4f5f9-7cba-50e4-a181-55961977512f"))
+		(pin "2" (uuid "f1bb280d-e090-5d4e-8c49-cc0e0936875f"))
+		(pin "3" (uuid "2075c658-2b59-5942-bb85-0ffb4ed7fcd1"))
+		(pin "4" (uuid "0d3ceb26-dcfd-5aad-adbe-b14e6eae0854"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "LED4") (unit 1))
+			)
+		)
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 48.26 223.52 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "ecbabd55-84d6-5c3b-bfba-f75bf6a0aebd")
+	)
+	(global_label "LED_D23"
+		(shape passive)
+		(at 40.64 215.9 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "33bb9149-b91d-59ab-8260-bd9048087052")
+	)
+	(global_label "VLED"
+		(shape passive)
+		(at 48.26 208.28 90)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "9485ed82-774c-5090-bdb4-7a21b201a8d3")
+	)
+	(global_label "LED_D24"
+		(shape passive)
+		(at 55.88 215.9 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "03469fab-b451-5e75-8b59-65a741bda3a7")
+	)
+	(symbol
+		(lib_id "keyboard:SW_Push")
+		(at 102.87 38.1 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "3b685ea1-e738-5e0a-93b4-3a3ecb1132fc")
+		(property "Reference" "SW5"
+			(at 102.87 30.48 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "C1R1"
+			(at 102.87 33.02 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "marbastlib-mx:SW_MX_HS_CPG151101S11_1u"
+			(at 102.87 38.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 102.87 38.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 102.87 38.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "9720a1f4-d594-5694-838c-0179a12e8a56"))
+		(pin "2" (uuid "be7342f2-ebf1-52f7-8d63-ce6c71605bdd"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "SW5") (unit 1))
+			)
+		)
+	)
+	(global_label "K_C1R1"
+		(shape passive)
+		(at 97.79 38.1 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "20ae543c-5d86-5949-b12f-5275f5b84cf6")
+	)
+	(global_label "COL_C1"
+		(shape passive)
+		(at 107.95 38.1 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "932a7da4-d00b-55cd-8a1e-9b46069bce13")
+	)
+	(symbol
+		(lib_id "keyboard:D")
+		(at 93.98 38.1 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "8b615be7-b43b-55f5-9aa8-1786d371ce64")
+		(property "Reference" "D5"
+			(at 92.71 34.29 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "1N4148W"
+			(at 92.71 41.91 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "Diode_SMD:D_SOD-123"
+			(at 93.98 38.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 93.98 38.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 93.98 38.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "cec84294-2394-5235-884c-39af4f4b6a26"))
+		(pin "2" (uuid "d182a5af-a60c-5f24-886f-fcf4d82177cf"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "D5") (unit 1))
+			)
+		)
+	)
+	(global_label "ROW_R1"
+		(shape passive)
+		(at 90.17 38.1 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "b823e20a-1ce1-54a0-8f50-0052cdfe5805")
+	)
+	(symbol
+		(lib_id "keyboard:SK6812MINI-E")
+		(at 99.06 63.5 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "20c64a91-a1d9-5dc4-951f-4b2dc1b95cd2")
+		(property "Reference" "LED5"
+			(at 109.22 54.61 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "SK6812MINI-E (optional)"
+			(at 111.76 72.39 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "LED_SMD:LED_SK6812MINI-E_3.2x2.8mm_P1.5mm_ReverseMount"
+			(at 99.06 63.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 99.06 63.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 99.06 63.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "8c3047ee-d280-5a17-856a-0da991ac96ea"))
+		(pin "2" (uuid "6a09a1a9-4ebd-50e5-b357-c9b19dbbfccf"))
+		(pin "3" (uuid "4617d138-c232-5ac9-b2c2-343011cd2e1b"))
+		(pin "4" (uuid "a3fe6627-b49f-5f1e-a693-94874b9d2c07"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "LED5") (unit 1))
+			)
+		)
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 99.06 71.12 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "b2192a9d-4710-52f0-bc8e-592c93a190fc")
+	)
+	(global_label "LED_D19"
+		(shape passive)
+		(at 91.44 63.5 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "ffb9ff72-2ea2-5bdc-be5b-e328706edb6e")
+	)
+	(global_label "VLED"
+		(shape passive)
+		(at 99.06 55.88 90)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "b424fda5-60f7-5a59-81e6-c78c53d820f7")
+	)
+	(global_label "LED_D20"
+		(shape passive)
+		(at 106.68 63.5 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "6ee3d6c8-46f9-56f1-9361-721d365a8ff9")
+	)
+	(symbol
+		(lib_id "keyboard:SW_Push")
+		(at 102.87 88.9 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "b79a1c14-db73-5541-b8ce-c1024b9621ff")
+		(property "Reference" "SW6"
+			(at 102.87 81.28 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "C1R2"
+			(at 102.87 83.82 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "marbastlib-mx:SW_MX_HS_CPG151101S11_1u"
+			(at 102.87 88.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 102.87 88.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 102.87 88.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "2c85c7b7-4b0e-56e5-89ae-a6a2e73cfc72"))
+		(pin "2" (uuid "5e35ca12-b7bd-5634-8dd9-08b75c01a90f"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "SW6") (unit 1))
+			)
+		)
+	)
+	(global_label "K_C1R2"
+		(shape passive)
+		(at 97.79 88.9 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "b96df49c-f6af-5f81-a2a2-6c5083484a3f")
+	)
+	(global_label "COL_C1"
+		(shape passive)
+		(at 107.95 88.9 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "9244c6c4-1326-5d41-a4d2-87a0b8902fca")
+	)
+	(symbol
+		(lib_id "keyboard:D")
+		(at 93.98 88.9 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "f1244153-2bd3-51b1-8b4b-268c0f4eada8")
+		(property "Reference" "D6"
+			(at 92.71 85.09 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "1N4148W"
+			(at 92.71 92.71 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "Diode_SMD:D_SOD-123"
+			(at 93.98 88.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 93.98 88.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 93.98 88.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "71cc379c-20b2-5eab-a096-9410a35f8f9f"))
+		(pin "2" (uuid "18e9432c-b460-57f9-b8dc-da2ab24e073d"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "D6") (unit 1))
+			)
+		)
+	)
+	(global_label "ROW_R2"
+		(shape passive)
+		(at 90.17 88.9 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "e5cec056-7639-5e12-8777-25bc647e582a")
+	)
+	(symbol
+		(lib_id "keyboard:SK6812MINI-E")
+		(at 99.06 114.3 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "fa34e819-ec6e-58d8-ac73-6fb90a166b1b")
+		(property "Reference" "LED6"
+			(at 109.22 105.41 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "SK6812MINI-E (optional)"
+			(at 111.76 123.19 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "LED_SMD:LED_SK6812MINI-E_3.2x2.8mm_P1.5mm_ReverseMount"
+			(at 99.06 114.3 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 99.06 114.3 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 99.06 114.3 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "5cb3d148-9e1a-5671-8a69-a57bb6c4d19b"))
+		(pin "2" (uuid "69dee506-c862-5c8e-abb8-d09388c5c4e8"))
+		(pin "3" (uuid "b6f01101-2779-540e-a995-9307e6448dee"))
+		(pin "4" (uuid "e3a1b46d-07c6-502f-8a72-81612915f2b0"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "LED6") (unit 1))
+			)
+		)
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 99.06 121.92 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "b3608bf3-b92f-5a28-b8db-31bdbc573f77")
+	)
+	(global_label "LED_D18"
+		(shape passive)
+		(at 91.44 114.3 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "27148547-b9aa-53d6-8631-fd01f21f2c37")
+	)
+	(global_label "VLED"
+		(shape passive)
+		(at 99.06 106.68 90)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "b99dd525-b4c6-5a00-a218-cd10def2391e")
+	)
+	(global_label "LED_D19"
+		(shape passive)
+		(at 106.68 114.3 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "6be6e8b3-fc29-5324-abf5-c6b39e108352")
+	)
+	(symbol
+		(lib_id "keyboard:SW_Push")
+		(at 102.87 139.7 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "9757c5d4-7466-59b1-a41b-4f3cb59407ee")
+		(property "Reference" "SW7"
+			(at 102.87 132.08 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "C1R3"
+			(at 102.87 134.62 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "marbastlib-mx:SW_MX_HS_CPG151101S11_1u"
+			(at 102.87 139.7 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 102.87 139.7 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 102.87 139.7 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "a89fdc71-b484-53a3-a473-9755fc64fbdd"))
+		(pin "2" (uuid "88ea3ca9-6be8-5d98-be73-131b9cb63223"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "SW7") (unit 1))
+			)
+		)
+	)
+	(global_label "K_C1R3"
+		(shape passive)
+		(at 97.79 139.7 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "599a4f31-0da3-590c-a951-58579c84c3aa")
+	)
+	(global_label "COL_C1"
+		(shape passive)
+		(at 107.95 139.7 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "b4f86c61-ce22-5b55-9fb2-353bff7ff090")
+	)
+	(symbol
+		(lib_id "keyboard:D")
+		(at 93.98 139.7 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "becbab88-3c45-51cf-8638-06614b473755")
+		(property "Reference" "D7"
+			(at 92.71 135.89 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "1N4148W"
+			(at 92.71 143.51 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "Diode_SMD:D_SOD-123"
+			(at 93.98 139.7 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 93.98 139.7 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 93.98 139.7 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "88232472-c883-536c-bc8f-57d3b1ac610b"))
+		(pin "2" (uuid "ce5e6a06-6f2a-57cd-8875-083346a6a121"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "D7") (unit 1))
+			)
+		)
+	)
+	(global_label "ROW_R3"
+		(shape passive)
+		(at 90.17 139.7 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "da1a525e-5c35-5bdc-9019-10f0c28a977b")
+	)
+	(symbol
+		(lib_id "keyboard:SK6812MINI-E")
+		(at 99.06 165.1 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "27c21f6a-b50f-5afc-902e-cacaabf9d0a5")
+		(property "Reference" "LED7"
+			(at 109.22 156.21 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "SK6812MINI-E (optional)"
+			(at 111.76 173.99 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "LED_SMD:LED_SK6812MINI-E_3.2x2.8mm_P1.5mm_ReverseMount"
+			(at 99.06 165.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 99.06 165.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 99.06 165.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "f1363f8f-d9e3-50ef-bfd0-d98b2fbbf5d2"))
+		(pin "2" (uuid "4b20df1b-436a-5254-93ca-6c642a24e4b7"))
+		(pin "3" (uuid "3fb62023-83b9-59fa-a208-484f9e3f978c"))
+		(pin "4" (uuid "8200478e-422f-5a43-98bd-f2674492ddbc"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "LED7") (unit 1))
+			)
+		)
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 99.06 172.72 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "8f750e2e-305b-5c1e-8800-6e66905b8412")
+	)
+	(global_label "LED_D17"
+		(shape passive)
+		(at 91.44 165.1 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "dc70544e-058d-5a39-a63a-f16d49304ff3")
+	)
+	(global_label "VLED"
+		(shape passive)
+		(at 99.06 157.48 90)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "c634b386-5ca2-599d-b24b-5133d6da79b9")
+	)
+	(global_label "LED_D18"
+		(shape passive)
+		(at 106.68 165.1 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "01a51513-2017-5d33-8fc3-4be7f421b16a")
+	)
+	(symbol
+		(lib_id "keyboard:SW_Push")
+		(at 102.87 190.5 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "39ee41b9-e0a9-57ec-859a-fcadd5cb6e90")
+		(property "Reference" "SW8"
+			(at 102.87 182.88 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "C1R4"
+			(at 102.87 185.42 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "marbastlib-mx:SW_MX_HS_CPG151101S11_1u"
+			(at 102.87 190.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 102.87 190.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 102.87 190.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "d6ab7997-897c-5367-be58-19593b528117"))
+		(pin "2" (uuid "e196d48c-d0bb-539c-bbff-a3c5bd9f7d77"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "SW8") (unit 1))
+			)
+		)
+	)
+	(global_label "K_C1R4"
+		(shape passive)
+		(at 97.79 190.5 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "3345bff3-d7a7-59db-a156-98548f02e92f")
+	)
+	(global_label "COL_C1"
+		(shape passive)
+		(at 107.95 190.5 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "0fd0b584-82a9-569a-958e-183dce2d85e0")
+	)
+	(symbol
+		(lib_id "keyboard:D")
+		(at 93.98 190.5 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "5c21afd2-4248-5459-9926-1df1f731643e")
+		(property "Reference" "D8"
+			(at 92.71 186.69 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "1N4148W"
+			(at 92.71 194.31 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "Diode_SMD:D_SOD-123"
+			(at 93.98 190.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 93.98 190.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 93.98 190.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "7ca41630-060c-544f-91fe-0cc7f688c20b"))
+		(pin "2" (uuid "f03639bb-55b0-5635-809d-b7826938acf0"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "D8") (unit 1))
+			)
+		)
+	)
+	(global_label "ROW_R4"
+		(shape passive)
+		(at 90.17 190.5 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "6e3624db-5f35-5ab0-9c05-0af54d534ea3")
+	)
+	(symbol
+		(lib_id "keyboard:SK6812MINI-E")
+		(at 99.06 215.9 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "31112520-4afc-5155-9717-8acdf1dd60a0")
+		(property "Reference" "LED8"
+			(at 109.22 207.01 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "SK6812MINI-E (optional)"
+			(at 111.76 224.79 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "LED_SMD:LED_SK6812MINI-E_3.2x2.8mm_P1.5mm_ReverseMount"
+			(at 99.06 215.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 99.06 215.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 99.06 215.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "0bf8e6e3-7c17-51f5-b350-0e2fb2236df6"))
+		(pin "2" (uuid "46b12a4f-7696-5b5a-b8ec-2b83057ecef9"))
+		(pin "3" (uuid "0c9b1cad-c3a8-5d62-bd3c-ef290b40e353"))
+		(pin "4" (uuid "743c0c01-5f66-5cd9-9fb9-1711da6b20a8"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "LED8") (unit 1))
+			)
+		)
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 99.06 223.52 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "b07266a1-6084-5a5c-868a-c12040b7cc64")
+	)
+	(global_label "LED_D16"
+		(shape passive)
+		(at 91.44 215.9 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "c7789405-80e7-5630-a085-84b1b8b0efaf")
+	)
+	(global_label "VLED"
+		(shape passive)
+		(at 99.06 208.28 90)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "3d5455d9-9d4c-5f20-836d-d59863825e24")
+	)
+	(global_label "LED_D17"
+		(shape passive)
+		(at 106.68 215.9 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "f17cacc7-eb50-5fc0-ac81-9edfaeeef087")
+	)
+	(symbol
+		(lib_id "keyboard:SW_Push")
+		(at 153.67 38.1 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "d3d879f9-80c8-5911-87ab-80bd3fdf68f4")
+		(property "Reference" "SW9"
+			(at 153.67 30.48 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "C2R1"
+			(at 153.67 33.02 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "marbastlib-mx:SW_MX_HS_CPG151101S11_1u"
+			(at 153.67 38.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 153.67 38.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 153.67 38.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "4e0f924e-1673-58f0-9e0a-4e0604e76154"))
+		(pin "2" (uuid "79f8ec29-c2b8-546e-98af-e9cfb4939e97"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "SW9") (unit 1))
+			)
+		)
+	)
+	(global_label "K_C2R1"
+		(shape passive)
+		(at 148.59 38.1 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "3a13efd2-5210-5748-b102-527fdd72bc1d")
+	)
+	(global_label "COL_C2"
+		(shape passive)
+		(at 158.75 38.1 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "e5ca04e6-f6d8-551b-8a64-bfbb091b3945")
+	)
+	(symbol
+		(lib_id "keyboard:D")
+		(at 144.78 38.1 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "b8b8309b-dea2-5fc7-ab47-c92a0b0d6732")
+		(property "Reference" "D9"
+			(at 143.51 34.29 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "1N4148W"
+			(at 143.51 41.91 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "Diode_SMD:D_SOD-123"
+			(at 144.78 38.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 144.78 38.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 144.78 38.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "e1f8fe29-2e76-5f62-b9d0-ff046c93c991"))
+		(pin "2" (uuid "89a29158-8d5b-5dd2-98f6-e7fb2b815a66"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "D9") (unit 1))
+			)
+		)
+	)
+	(global_label "ROW_R1"
+		(shape passive)
+		(at 140.97 38.1 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "286c7478-7d25-5ef3-80d3-f2a8bbbd9616")
+	)
+	(symbol
+		(lib_id "keyboard:SK6812MINI-E")
+		(at 149.86 63.5 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "945321d9-935c-5e52-bc03-32283d56cde8")
+		(property "Reference" "LED9"
+			(at 160.02 54.61 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "SK6812MINI-E (optional)"
+			(at 162.56 72.39 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "LED_SMD:LED_SK6812MINI-E_3.2x2.8mm_P1.5mm_ReverseMount"
+			(at 149.86 63.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 149.86 63.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 149.86 63.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "5fcfa93c-3d4b-5cb8-b8cc-966bae404461"))
+		(pin "2" (uuid "37bc01db-78a5-521b-96eb-3e3151110602"))
+		(pin "3" (uuid "9ad8ab8e-9764-5b78-bd3a-f78496731783"))
+		(pin "4" (uuid "11e6e122-4e7e-52d9-959a-f575a1cdf2d0"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "LED9") (unit 1))
+			)
+		)
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 149.86 71.12 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "e2824a42-4af0-59fa-a8e9-0267b359a7b6")
+	)
+	(global_label "LED_D12"
+		(shape passive)
+		(at 142.24 63.5 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "976e0fef-921c-584c-95bd-59fa40760382")
+	)
+	(global_label "VLED"
+		(shape passive)
+		(at 149.86 55.88 90)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "46a9d651-43a0-589d-b72d-3c46096421c8")
+	)
+	(global_label "LED_D13"
+		(shape passive)
+		(at 157.48 63.5 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "c6d43591-2829-5ff1-a491-e9ebdf202e43")
+	)
+	(symbol
+		(lib_id "keyboard:SW_Push")
+		(at 153.67 88.9 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "2623036b-644a-5844-9fa2-ae554d954c4e")
+		(property "Reference" "SW10"
+			(at 153.67 81.28 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "C2R2"
+			(at 153.67 83.82 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "marbastlib-mx:SW_MX_HS_CPG151101S11_1u"
+			(at 153.67 88.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 153.67 88.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 153.67 88.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "c3618527-3cb2-5a9f-8f30-2d393e7e477a"))
+		(pin "2" (uuid "0331c5b8-21e3-54c3-b203-f09793bf28cf"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "SW10") (unit 1))
+			)
+		)
+	)
+	(global_label "K_C2R2"
+		(shape passive)
+		(at 148.59 88.9 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "49749f0b-e45d-5c4f-a416-0a499ba03393")
+	)
+	(global_label "COL_C2"
+		(shape passive)
+		(at 158.75 88.9 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "11c67540-5fde-57b6-912e-816cd60cc860")
+	)
+	(symbol
+		(lib_id "keyboard:D")
+		(at 144.78 88.9 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "07beffc1-d690-5d38-8e82-32aaa22d5958")
+		(property "Reference" "D10"
+			(at 143.51 85.09 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "1N4148W"
+			(at 143.51 92.71 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "Diode_SMD:D_SOD-123"
+			(at 144.78 88.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 144.78 88.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 144.78 88.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "c8494362-9535-5bab-8d34-b42b6b11cb46"))
+		(pin "2" (uuid "1c852cda-f680-5c93-840c-b59b2807af77"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "D10") (unit 1))
+			)
+		)
+	)
+	(global_label "ROW_R2"
+		(shape passive)
+		(at 140.97 88.9 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "ea7da504-5e0b-57ac-8c54-dfdced33f516")
+	)
+	(symbol
+		(lib_id "keyboard:SK6812MINI-E")
+		(at 149.86 114.3 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "b67005ed-60c8-552f-a5fe-ff56b729449b")
+		(property "Reference" "LED10"
+			(at 160.02 105.41 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "SK6812MINI-E (optional)"
+			(at 162.56 123.19 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "LED_SMD:LED_SK6812MINI-E_3.2x2.8mm_P1.5mm_ReverseMount"
+			(at 149.86 114.3 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 149.86 114.3 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 149.86 114.3 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "dc57c8ee-b4e2-5399-86e9-23d231e973c5"))
+		(pin "2" (uuid "cc33e3e5-a242-5e28-96e3-50c57837c164"))
+		(pin "3" (uuid "9cee8498-0822-5b41-9887-d4712a2d89fa"))
+		(pin "4" (uuid "bc724086-d522-58bb-bc8b-aa8656fd2bf9"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "LED10") (unit 1))
+			)
+		)
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 149.86 121.92 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "b6678d1a-cb6b-5b24-bdb2-bfe57ffd3bc3")
+	)
+	(global_label "LED_D13"
+		(shape passive)
+		(at 142.24 114.3 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "9146cf28-148a-510f-b32f-dec4dce767a5")
+	)
+	(global_label "VLED"
+		(shape passive)
+		(at 149.86 106.68 90)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "3ec36925-29b3-53af-91a4-130c79281c5b")
+	)
+	(global_label "LED_D14"
+		(shape passive)
+		(at 157.48 114.3 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "174d03a9-9a26-5cd9-8d8a-bd3dcc31794f")
+	)
+	(symbol
+		(lib_id "keyboard:SW_Push")
+		(at 153.67 139.7 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "f6a88457-f360-5096-ab97-a50751bde713")
+		(property "Reference" "SW11"
+			(at 153.67 132.08 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "C2R3"
+			(at 153.67 134.62 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "marbastlib-mx:SW_MX_HS_CPG151101S11_1u"
+			(at 153.67 139.7 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 153.67 139.7 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 153.67 139.7 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "4087f038-a754-5352-9127-6de8672fb565"))
+		(pin "2" (uuid "ab6fb00b-8693-5cab-9a01-4bb5c76e9596"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "SW11") (unit 1))
+			)
+		)
+	)
+	(global_label "K_C2R3"
+		(shape passive)
+		(at 148.59 139.7 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "07b1f0f0-a6fb-5997-a2fb-3e075877f6e6")
+	)
+	(global_label "COL_C2"
+		(shape passive)
+		(at 158.75 139.7 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "4d394343-826f-5532-ac2c-680a8ee56cae")
+	)
+	(symbol
+		(lib_id "keyboard:D")
+		(at 144.78 139.7 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "c6293dbe-2ebc-5e1c-83f7-ad540b3822ae")
+		(property "Reference" "D11"
+			(at 143.51 135.89 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "1N4148W"
+			(at 143.51 143.51 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "Diode_SMD:D_SOD-123"
+			(at 144.78 139.7 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 144.78 139.7 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 144.78 139.7 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "44ade848-6c29-53dc-b432-f4e7545b526b"))
+		(pin "2" (uuid "862a675d-e8d8-5e05-9273-ba7e39893d5c"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "D11") (unit 1))
+			)
+		)
+	)
+	(global_label "ROW_R3"
+		(shape passive)
+		(at 140.97 139.7 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "50c87c87-861d-551d-98d3-47959dbe4265")
+	)
+	(symbol
+		(lib_id "keyboard:SK6812MINI-E")
+		(at 149.86 165.1 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "fd05f231-64e6-5696-b09e-1c0c8fec4645")
+		(property "Reference" "LED11"
+			(at 160.02 156.21 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "SK6812MINI-E (optional)"
+			(at 162.56 173.99 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "LED_SMD:LED_SK6812MINI-E_3.2x2.8mm_P1.5mm_ReverseMount"
+			(at 149.86 165.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 149.86 165.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 149.86 165.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "68d38ed5-81a1-5b59-b261-23f73efe1232"))
+		(pin "2" (uuid "0252f36a-be07-5464-9dd3-3f7973c2a63e"))
+		(pin "3" (uuid "5531924d-aaaf-55f2-a60b-6dccd6f27e82"))
+		(pin "4" (uuid "06be0995-11c0-5892-b989-49e095dec978"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "LED11") (unit 1))
+			)
+		)
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 149.86 172.72 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "5462140b-0832-5e48-ac5d-f4aae3be50ad")
+	)
+	(global_label "LED_D14"
+		(shape passive)
+		(at 142.24 165.1 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "7902b20c-8007-54fa-aa37-84a8549e7d6e")
+	)
+	(global_label "VLED"
+		(shape passive)
+		(at 149.86 157.48 90)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "fbd8d124-ef50-58e3-b800-4e5197dd7d30")
+	)
+	(global_label "LED_D15"
+		(shape passive)
+		(at 157.48 165.1 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "f2789388-cc9b-583a-92a4-40e993fc6bb8")
+	)
+	(symbol
+		(lib_id "keyboard:SW_Push")
+		(at 153.67 190.5 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "26843c7f-165c-5ae2-846e-5721ba6135fb")
+		(property "Reference" "SW12"
+			(at 153.67 182.88 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "C2R4"
+			(at 153.67 185.42 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "marbastlib-mx:SW_MX_HS_CPG151101S11_1u"
+			(at 153.67 190.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 153.67 190.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 153.67 190.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "13b5306c-4872-5e2b-be33-81b0821b702f"))
+		(pin "2" (uuid "b974d81e-e92d-5c86-9a21-8cd98f456d3a"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "SW12") (unit 1))
+			)
+		)
+	)
+	(global_label "K_C2R4"
+		(shape passive)
+		(at 148.59 190.5 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "0d55814e-6cfe-52ab-957b-bfefd8a579cb")
+	)
+	(global_label "COL_C2"
+		(shape passive)
+		(at 158.75 190.5 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "8f9bbc3c-0c9d-54b2-aaa9-eeb4e3cec474")
+	)
+	(symbol
+		(lib_id "keyboard:D")
+		(at 144.78 190.5 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "dbce4c9b-33f5-5daa-8bf4-62d7cb29a609")
+		(property "Reference" "D12"
+			(at 143.51 186.69 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "1N4148W"
+			(at 143.51 194.31 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "Diode_SMD:D_SOD-123"
+			(at 144.78 190.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 144.78 190.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 144.78 190.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "57a23bc7-c80a-569c-96d9-652bc52b5a2f"))
+		(pin "2" (uuid "102c3d8d-612c-5898-b8c2-0e75f79491d6"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "D12") (unit 1))
+			)
+		)
+	)
+	(global_label "ROW_R4"
+		(shape passive)
+		(at 140.97 190.5 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "70d9d4a5-d782-5ebc-8e70-3aed3c8b3440")
+	)
+	(symbol
+		(lib_id "keyboard:SK6812MINI-E")
+		(at 149.86 215.9 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "3976828a-335f-5f01-9c23-44b1e45a8dc4")
+		(property "Reference" "LED12"
+			(at 160.02 207.01 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "SK6812MINI-E (optional)"
+			(at 162.56 224.79 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "LED_SMD:LED_SK6812MINI-E_3.2x2.8mm_P1.5mm_ReverseMount"
+			(at 149.86 215.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 149.86 215.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 149.86 215.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "5b1173f6-18c4-5ff9-8127-303ca4c7a70c"))
+		(pin "2" (uuid "f0f3c5a7-cfe3-5e0e-9ade-3f27b4409dbd"))
+		(pin "3" (uuid "2a68cd4d-1508-5fea-85c1-0df4d28dae90"))
+		(pin "4" (uuid "d68d83de-8077-5e8a-8c1e-f8a9ffcd1513"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "LED12") (unit 1))
+			)
+		)
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 149.86 223.52 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "535bada5-14ca-52e1-ab90-b1ccbac9db91")
+	)
+	(global_label "LED_D15"
+		(shape passive)
+		(at 142.24 215.9 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "5c531806-f78f-53cd-b253-5509e876d683")
+	)
+	(global_label "VLED"
+		(shape passive)
+		(at 149.86 208.28 90)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "c5f013ae-2849-565a-8f73-7b9ee98f05ff")
+	)
+	(global_label "LED_D16"
+		(shape passive)
+		(at 157.48 215.9 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "39905dae-1f7c-5b4a-9b2a-3689dff74e07")
+	)
+	(symbol
+		(lib_id "keyboard:SW_Push")
+		(at 204.47 38.1 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "7722e2a4-c1ce-5675-9dc4-32a7a937e666")
+		(property "Reference" "SW13"
+			(at 204.47 30.48 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "C3R1"
+			(at 204.47 33.02 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "marbastlib-mx:SW_MX_HS_CPG151101S11_1u"
+			(at 204.47 38.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 204.47 38.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 204.47 38.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "fbb314d4-0a0c-5dcf-8907-e93fd2f0a057"))
+		(pin "2" (uuid "e9de4bb1-2a6b-5dfb-80cf-c620face5986"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "SW13") (unit 1))
+			)
+		)
+	)
+	(global_label "K_C3R1"
+		(shape passive)
+		(at 199.39 38.1 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "03a06e86-11d0-549c-b21d-6d69e8790e1c")
+	)
+	(global_label "COL_C3"
+		(shape passive)
+		(at 209.55 38.1 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "e4cd8959-44d2-56e0-a911-3b531af16565")
+	)
+	(symbol
+		(lib_id "keyboard:D")
+		(at 195.58 38.1 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "222470ce-1430-54f7-8aa3-ee9161a1b266")
+		(property "Reference" "D13"
+			(at 194.31 34.29 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "1N4148W"
+			(at 194.31 41.91 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "Diode_SMD:D_SOD-123"
+			(at 195.58 38.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 195.58 38.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 195.58 38.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "604f0bc6-fda8-50f8-8f8b-9253c39173b0"))
+		(pin "2" (uuid "6ddc1707-8a13-5403-979d-6928117007c1"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "D13") (unit 1))
+			)
+		)
+	)
+	(global_label "ROW_R1"
+		(shape passive)
+		(at 191.77 38.1 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "dc6dea76-0fd2-5731-9a03-edb662a8491c")
+	)
+	(symbol
+		(lib_id "keyboard:SK6812MINI-E")
+		(at 200.66 63.5 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "918270de-733b-5bae-94e9-66345aa87d32")
+		(property "Reference" "LED13"
+			(at 210.82 54.61 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "SK6812MINI-E (optional)"
+			(at 213.36 72.39 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "LED_SMD:LED_SK6812MINI-E_3.2x2.8mm_P1.5mm_ReverseMount"
+			(at 200.66 63.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 200.66 63.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 200.66 63.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "eb00dacb-a4b8-5151-a096-626a97367384"))
+		(pin "2" (uuid "5a59da03-f564-544b-a3e8-4ee9d6ab0064"))
+		(pin "3" (uuid "efcc8d9a-ddb2-517f-87e1-70e506753170"))
+		(pin "4" (uuid "99ba3769-4427-503c-b0fe-18fbaa416b70"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "LED13") (unit 1))
+			)
+		)
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 200.66 71.12 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "61ab50d0-833d-5fe0-81bf-532e4d6f6675")
+	)
+	(global_label "LED_D11"
+		(shape passive)
+		(at 193.04 63.5 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "6dfff393-66b9-5dae-baf4-c137286a6d63")
+	)
+	(global_label "VLED"
+		(shape passive)
+		(at 200.66 55.88 90)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "02655b51-9ec8-5dee-9214-f1b1dc15bbc6")
+	)
+	(global_label "LED_D12"
+		(shape passive)
+		(at 208.28 63.5 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "c012444b-c532-52c9-8308-ada44a8864ce")
+	)
+	(symbol
+		(lib_id "keyboard:SW_Push")
+		(at 204.47 88.9 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "2a4e7071-b238-5dc6-976e-f2abb35ca726")
+		(property "Reference" "SW14"
+			(at 204.47 81.28 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "C3R2"
+			(at 204.47 83.82 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "marbastlib-mx:SW_MX_HS_CPG151101S11_1u"
+			(at 204.47 88.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 204.47 88.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 204.47 88.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "6312f823-e9bc-5b9e-afbf-2ae9ed1e5a86"))
+		(pin "2" (uuid "ee19ba1a-a97a-5558-ab46-8e9e20f38791"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "SW14") (unit 1))
+			)
+		)
+	)
+	(global_label "K_C3R2"
+		(shape passive)
+		(at 199.39 88.9 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "3c6c6658-5e97-5522-b038-c88724311fcf")
+	)
+	(global_label "COL_C3"
+		(shape passive)
+		(at 209.55 88.9 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "421e2c45-3d29-5d14-b146-9e0a294ae8e2")
+	)
+	(symbol
+		(lib_id "keyboard:D")
+		(at 195.58 88.9 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "6c42d791-c3a2-53e2-a84a-f30d2957f36d")
+		(property "Reference" "D14"
+			(at 194.31 85.09 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "1N4148W"
+			(at 194.31 92.71 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "Diode_SMD:D_SOD-123"
+			(at 195.58 88.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 195.58 88.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 195.58 88.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "d2026876-88b6-54b9-9485-39e167346446"))
+		(pin "2" (uuid "50280bcf-c870-5f6d-b20c-6c671b1f9a71"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "D14") (unit 1))
+			)
+		)
+	)
+	(global_label "ROW_R2"
+		(shape passive)
+		(at 191.77 88.9 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "5611ff19-0ecd-5db8-a9b7-c67f84ea465a")
+	)
+	(symbol
+		(lib_id "keyboard:SK6812MINI-E")
+		(at 200.66 114.3 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "83d0763f-759b-5a6d-9e0f-6117730eec16")
+		(property "Reference" "LED14"
+			(at 210.82 105.41 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "SK6812MINI-E (optional)"
+			(at 213.36 123.19 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "LED_SMD:LED_SK6812MINI-E_3.2x2.8mm_P1.5mm_ReverseMount"
+			(at 200.66 114.3 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 200.66 114.3 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 200.66 114.3 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "9ebb6a50-936f-5fb9-bcaf-8f83ac11ddf8"))
+		(pin "2" (uuid "0d5ea66c-11af-546b-9927-7e328c896a49"))
+		(pin "3" (uuid "655c9dc2-4892-57c8-81a8-968abf1ce9c8"))
+		(pin "4" (uuid "9109f8bd-6843-52f5-94eb-4cb9e8bc4fd4"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "LED14") (unit 1))
+			)
+		)
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 200.66 121.92 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "bf7878b2-71e9-568d-b519-a14c79cccde7")
+	)
+	(global_label "LED_D10"
+		(shape passive)
+		(at 193.04 114.3 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "a25f23e2-68dc-53e1-b311-ad5481fc18b2")
+	)
+	(global_label "VLED"
+		(shape passive)
+		(at 200.66 106.68 90)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "4a6cca60-4bed-54de-8f87-64f08d805a24")
+	)
+	(global_label "LED_D11"
+		(shape passive)
+		(at 208.28 114.3 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "2ad64965-7702-5a64-a65b-cc9f3a1ddf78")
+	)
+	(symbol
+		(lib_id "keyboard:SW_Push")
+		(at 204.47 139.7 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "2894d982-0472-5c57-8f6b-d498869c342e")
+		(property "Reference" "SW15"
+			(at 204.47 132.08 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "C3R3"
+			(at 204.47 134.62 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "marbastlib-mx:SW_MX_HS_CPG151101S11_1u"
+			(at 204.47 139.7 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 204.47 139.7 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 204.47 139.7 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "e5bdc743-e0dc-5e4f-b20a-d86a02efd79a"))
+		(pin "2" (uuid "d4d272a6-dedb-5379-9eec-f56458b8780e"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "SW15") (unit 1))
+			)
+		)
+	)
+	(global_label "K_C3R3"
+		(shape passive)
+		(at 199.39 139.7 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "902b8a8c-d3d8-5e60-a56e-d9f9dd6337a1")
+	)
+	(global_label "COL_C3"
+		(shape passive)
+		(at 209.55 139.7 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "69790a5c-e3af-5da5-8749-694df92e8e4f")
+	)
+	(symbol
+		(lib_id "keyboard:D")
+		(at 195.58 139.7 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "7f0e5e3d-a77a-5f0d-bf8e-c42a41da1416")
+		(property "Reference" "D15"
+			(at 194.31 135.89 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "1N4148W"
+			(at 194.31 143.51 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "Diode_SMD:D_SOD-123"
+			(at 195.58 139.7 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 195.58 139.7 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 195.58 139.7 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "c1d1728e-a62b-56d8-a503-10127ec47080"))
+		(pin "2" (uuid "9731a676-ebe4-5c42-946d-b5c7ebbd9a09"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "D15") (unit 1))
+			)
+		)
+	)
+	(global_label "ROW_R3"
+		(shape passive)
+		(at 191.77 139.7 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "e91b6bc2-e9ac-5e4b-a24a-987c39dea231")
+	)
+	(symbol
+		(lib_id "keyboard:SK6812MINI-E")
+		(at 200.66 165.1 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "669d8b17-12d4-52d7-9886-0c2a9e6fd481")
+		(property "Reference" "LED15"
+			(at 210.82 156.21 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "SK6812MINI-E (optional)"
+			(at 213.36 173.99 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "LED_SMD:LED_SK6812MINI-E_3.2x2.8mm_P1.5mm_ReverseMount"
+			(at 200.66 165.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 200.66 165.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 200.66 165.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "caca9a6b-1c16-5fbd-80a2-bce09eabd8fd"))
+		(pin "2" (uuid "932fc232-3bf7-5cd3-ab23-8e8f8204c9eb"))
+		(pin "3" (uuid "7bbef40e-d2e0-52a0-878c-f901ceb0e901"))
+		(pin "4" (uuid "1408e8a3-8038-5259-ac74-ff0fa434d12a"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "LED15") (unit 1))
+			)
+		)
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 200.66 172.72 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "42cbfebe-b8ce-5017-9ec5-d9cbf69aa6c6")
+	)
+	(global_label "LED_D9"
+		(shape passive)
+		(at 193.04 165.1 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "6a2dbd41-a4e0-59df-9a83-d7a6d77d790f")
+	)
+	(global_label "VLED"
+		(shape passive)
+		(at 200.66 157.48 90)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "9bec7000-2477-50a8-a1de-14a9d37282d6")
+	)
+	(global_label "LED_D10"
+		(shape passive)
+		(at 208.28 165.1 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "46ea79c7-f3f6-58f7-a21f-3b9819404d51")
+	)
+	(symbol
+		(lib_id "keyboard:SW_Push")
+		(at 204.47 190.5 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "d4f7b345-4ee7-5949-8e59-529af3fedf11")
+		(property "Reference" "SW16"
+			(at 204.47 182.88 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "C3R4"
+			(at 204.47 185.42 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "marbastlib-mx:SW_MX_HS_CPG151101S11_1u"
+			(at 204.47 190.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 204.47 190.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 204.47 190.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "69fa0952-e763-5d43-bbd5-00d4e6afa902"))
+		(pin "2" (uuid "d2495b32-6af1-5436-94a8-ae3577558483"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "SW16") (unit 1))
+			)
+		)
+	)
+	(global_label "K_C3R4"
+		(shape passive)
+		(at 199.39 190.5 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "7b18a006-c13c-5b79-af16-4550bd11b032")
+	)
+	(global_label "COL_C3"
+		(shape passive)
+		(at 209.55 190.5 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "edb82787-95e6-5114-a3ad-48bbd6631a3f")
+	)
+	(symbol
+		(lib_id "keyboard:D")
+		(at 195.58 190.5 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "510063e1-9f9a-5c59-8fb8-0eededaa0fca")
+		(property "Reference" "D16"
+			(at 194.31 186.69 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "1N4148W"
+			(at 194.31 194.31 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "Diode_SMD:D_SOD-123"
+			(at 195.58 190.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 195.58 190.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 195.58 190.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "4b0a7f6b-6454-574c-a00b-7bf76f23e386"))
+		(pin "2" (uuid "46d4001d-b4cb-5d64-a767-7a1a1f984cf6"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "D16") (unit 1))
+			)
+		)
+	)
+	(global_label "ROW_R4"
+		(shape passive)
+		(at 191.77 190.5 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "0c003891-048e-54b2-a904-0f9370935d7e")
+	)
+	(symbol
+		(lib_id "keyboard:SK6812MINI-E")
+		(at 200.66 215.9 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "1ced632e-bd6b-550f-84cb-3575ed63d5f1")
+		(property "Reference" "LED16"
+			(at 210.82 207.01 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "SK6812MINI-E (optional)"
+			(at 213.36 224.79 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "LED_SMD:LED_SK6812MINI-E_3.2x2.8mm_P1.5mm_ReverseMount"
+			(at 200.66 215.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 200.66 215.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 200.66 215.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "b2d8a2ab-e49a-51b1-9495-2e458398951d"))
+		(pin "2" (uuid "8d79cce1-f9fe-57d5-bcec-9dd927a100e0"))
+		(pin "3" (uuid "efc6b9ec-da79-5f6b-a61b-deb40e3c0535"))
+		(pin "4" (uuid "ce31a3e6-7d13-54e4-bb51-ea8840f7ec3b"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "LED16") (unit 1))
+			)
+		)
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 200.66 223.52 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "c0c473c9-c509-5c09-af8c-cd362902487d")
+	)
+	(global_label "LED_D8"
+		(shape passive)
+		(at 193.04 215.9 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "413f9995-d044-5c8e-a5b5-01a3ef7b516f")
+	)
+	(global_label "VLED"
+		(shape passive)
+		(at 200.66 208.28 90)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "3d5d4229-663e-5e74-be58-8ee33ef715bc")
+	)
+	(global_label "LED_D9"
+		(shape passive)
+		(at 208.28 215.9 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "9fff198e-07e7-5156-bc7f-54864e71d288")
+	)
+	(symbol
+		(lib_id "keyboard:SW_Push")
+		(at 255.27 38.1 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "bcb062c7-eb93-5857-bfcd-2304c7c43490")
+		(property "Reference" "SW17"
+			(at 255.27 30.48 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "C4R1"
+			(at 255.27 33.02 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "marbastlib-mx:SW_MX_HS_CPG151101S11_1u"
+			(at 255.27 38.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 255.27 38.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 255.27 38.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "8a9216b6-0271-5417-a396-470e24299ec0"))
+		(pin "2" (uuid "5250dea0-a8e8-54bb-bbd5-d2f32ee788c8"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "SW17") (unit 1))
+			)
+		)
+	)
+	(global_label "K_C4R1"
+		(shape passive)
+		(at 250.19 38.1 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "d0cc5ae0-ce77-56af-b0c9-968947b34d7d")
+	)
+	(global_label "COL_C4"
+		(shape passive)
+		(at 260.35 38.1 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "72bf8da9-85ec-541a-994f-84f9f0ec4cfb")
+	)
+	(symbol
+		(lib_id "keyboard:D")
+		(at 246.38 38.1 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "fe2b15b0-cd9c-54b8-9b6e-b7fa3a71711b")
+		(property "Reference" "D17"
+			(at 245.11 34.29 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "1N4148W"
+			(at 245.11 41.91 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "Diode_SMD:D_SOD-123"
+			(at 246.38 38.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 246.38 38.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 246.38 38.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "d1b490dd-d3bd-598e-8eac-e65d969c9689"))
+		(pin "2" (uuid "98072713-45bf-5b77-8ac6-b64bc407c858"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "D17") (unit 1))
+			)
+		)
+	)
+	(global_label "ROW_R1"
+		(shape passive)
+		(at 242.57 38.1 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "56a9ab48-c945-54b1-b05a-83e41d7c17f5")
+	)
+	(symbol
+		(lib_id "keyboard:SK6812MINI-E")
+		(at 251.46 63.5 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "85756a58-1152-570b-8340-d905a9b8ffdf")
+		(property "Reference" "LED17"
+			(at 261.62 54.61 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "SK6812MINI-E (optional)"
+			(at 264.16 72.39 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "LED_SMD:LED_SK6812MINI-E_3.2x2.8mm_P1.5mm_ReverseMount"
+			(at 251.46 63.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 251.46 63.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 251.46 63.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "8c47d858-9a25-52c1-9b8d-565352400421"))
+		(pin "2" (uuid "765e01eb-73c0-52c3-a4eb-41f372c1e134"))
+		(pin "3" (uuid "7bcbe6e8-0de0-59ec-abb3-a596668b7648"))
+		(pin "4" (uuid "3e42ba61-5556-58ed-a70c-8ca52a430337"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "LED17") (unit 1))
+			)
+		)
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 251.46 71.12 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "b62c9ca3-ff0d-5a11-a8a0-ca7f1c78488f")
+	)
+	(global_label "LED_D4"
+		(shape passive)
+		(at 243.84 63.5 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "996565d8-ce7d-5b82-8888-bc830196615a")
+	)
+	(global_label "VLED"
+		(shape passive)
+		(at 251.46 55.88 90)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "f5a3c94e-ca1f-5dd0-9fb1-918181f20ea8")
+	)
+	(global_label "LED_D5"
+		(shape passive)
+		(at 259.08 63.5 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "35786f1c-e92b-57ae-8e15-2ee59036b298")
+	)
+	(symbol
+		(lib_id "keyboard:SW_Push")
+		(at 255.27 88.9 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "1fc47784-87df-59f6-b5dc-e6024e1f5abc")
+		(property "Reference" "SW18"
+			(at 255.27 81.28 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "C4R2"
+			(at 255.27 83.82 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "marbastlib-mx:SW_MX_HS_CPG151101S11_1u"
+			(at 255.27 88.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 255.27 88.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 255.27 88.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "0fddc4dc-d94e-51fb-8e30-87c0aba8b3f1"))
+		(pin "2" (uuid "fe288232-09d5-5058-b83f-8ae9aef721a5"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "SW18") (unit 1))
+			)
+		)
+	)
+	(global_label "K_C4R2"
+		(shape passive)
+		(at 250.19 88.9 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "45fded32-f755-5eff-9c7b-c4acb43a168a")
+	)
+	(global_label "COL_C4"
+		(shape passive)
+		(at 260.35 88.9 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "5b02b302-53c0-59a7-a376-a3a139d35b4c")
+	)
+	(symbol
+		(lib_id "keyboard:D")
+		(at 246.38 88.9 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "bf8f9704-3b92-5ad6-8bc5-ea6705aa5714")
+		(property "Reference" "D18"
+			(at 245.11 85.09 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "1N4148W"
+			(at 245.11 92.71 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "Diode_SMD:D_SOD-123"
+			(at 246.38 88.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 246.38 88.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 246.38 88.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "32290500-e1b1-5424-ad3c-e2e487367391"))
+		(pin "2" (uuid "d765bb82-b664-5268-a3d2-aaa039e69ec4"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "D18") (unit 1))
+			)
+		)
+	)
+	(global_label "ROW_R2"
+		(shape passive)
+		(at 242.57 88.9 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "1c3aced1-9bf9-5997-81ba-b9aeba09d5a9")
+	)
+	(symbol
+		(lib_id "keyboard:SK6812MINI-E")
+		(at 251.46 114.3 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "c7371fc6-8404-5298-a65d-ee622b59463a")
+		(property "Reference" "LED18"
+			(at 261.62 105.41 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "SK6812MINI-E (optional)"
+			(at 264.16 123.19 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "LED_SMD:LED_SK6812MINI-E_3.2x2.8mm_P1.5mm_ReverseMount"
+			(at 251.46 114.3 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 251.46 114.3 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 251.46 114.3 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "2e905ee7-238a-5bdc-90bc-ddbf49073401"))
+		(pin "2" (uuid "6a1ff50f-7905-5904-9204-2f9342da00a9"))
+		(pin "3" (uuid "d816dd92-f027-58b9-a2dd-0c8e7f64dff5"))
+		(pin "4" (uuid "8d0e859f-49f5-5e60-b88f-66a2f0547fef"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "LED18") (unit 1))
+			)
+		)
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 251.46 121.92 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "938570bc-7e67-5866-bbfa-ed93c1a24658")
+	)
+	(global_label "LED_D5"
+		(shape passive)
+		(at 243.84 114.3 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "824ccb6a-53cb-53d0-9791-f130ed85ebaa")
+	)
+	(global_label "VLED"
+		(shape passive)
+		(at 251.46 106.68 90)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "ae4f65de-807f-53fa-8053-cfd296d2febe")
+	)
+	(global_label "LED_D6"
+		(shape passive)
+		(at 259.08 114.3 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "ac811e60-cc5b-5a63-8735-6c0d7d076364")
+	)
+	(symbol
+		(lib_id "keyboard:SW_Push")
+		(at 255.27 139.7 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "6b620244-20b9-5237-8ea2-dd268d6a8b09")
+		(property "Reference" "SW19"
+			(at 255.27 132.08 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "C4R3"
+			(at 255.27 134.62 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "marbastlib-mx:SW_MX_HS_CPG151101S11_1u"
+			(at 255.27 139.7 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 255.27 139.7 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 255.27 139.7 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "dc6575ed-43a4-5e9a-bac1-a4800edde93b"))
+		(pin "2" (uuid "8369ec97-9074-52a6-9889-80d8b6eec813"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "SW19") (unit 1))
+			)
+		)
+	)
+	(global_label "K_C4R3"
+		(shape passive)
+		(at 250.19 139.7 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "cef1b9a5-1ff9-54f3-bc2b-58f545d81fbb")
+	)
+	(global_label "COL_C4"
+		(shape passive)
+		(at 260.35 139.7 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "acfb71dc-471a-5bdb-8a0f-066056160773")
+	)
+	(symbol
+		(lib_id "keyboard:D")
+		(at 246.38 139.7 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "3bf37e0b-e7ac-56a6-a68c-3991876110ad")
+		(property "Reference" "D19"
+			(at 245.11 135.89 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "1N4148W"
+			(at 245.11 143.51 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "Diode_SMD:D_SOD-123"
+			(at 246.38 139.7 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 246.38 139.7 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 246.38 139.7 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "d38b47f4-ef22-5a6f-85d8-de7d67aab49e"))
+		(pin "2" (uuid "96d7abfb-2588-5957-b61e-1b4094098db7"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "D19") (unit 1))
+			)
+		)
+	)
+	(global_label "ROW_R3"
+		(shape passive)
+		(at 242.57 139.7 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "a2dc73ed-27a2-502e-a553-ee4b543c31b0")
+	)
+	(symbol
+		(lib_id "keyboard:SK6812MINI-E")
+		(at 251.46 165.1 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "e4ae30f0-4dc0-5880-b97e-32ad70719535")
+		(property "Reference" "LED19"
+			(at 261.62 156.21 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "SK6812MINI-E (optional)"
+			(at 264.16 173.99 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "LED_SMD:LED_SK6812MINI-E_3.2x2.8mm_P1.5mm_ReverseMount"
+			(at 251.46 165.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 251.46 165.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 251.46 165.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "1af333e7-ad3e-5003-a2d3-8c7b7e4b7bde"))
+		(pin "2" (uuid "c5db3d2d-8d4b-55a3-ad79-6de5f50aec69"))
+		(pin "3" (uuid "d37376c8-a19e-5de5-9347-f22018f4fb87"))
+		(pin "4" (uuid "e4ecbc1f-5b0c-5bc9-9cff-c323693a3caa"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "LED19") (unit 1))
+			)
+		)
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 251.46 172.72 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "ff955c67-ed34-5611-8e1f-423b1b9d7223")
+	)
+	(global_label "LED_D6"
+		(shape passive)
+		(at 243.84 165.1 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "2f751a8e-db00-533c-b3fc-54c88c3306e7")
+	)
+	(global_label "VLED"
+		(shape passive)
+		(at 251.46 157.48 90)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "e6bc9511-4280-5e0f-8596-c1355d162693")
+	)
+	(global_label "LED_D7"
+		(shape passive)
+		(at 259.08 165.1 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "f53d6aca-108c-53d0-93ed-1d1c43439d44")
+	)
+	(symbol
+		(lib_id "keyboard:SW_Push")
+		(at 255.27 190.5 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "f41a20d3-bbf7-5c5f-98c9-480d27dc7da9")
+		(property "Reference" "SW20"
+			(at 255.27 182.88 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "C4R4"
+			(at 255.27 185.42 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "marbastlib-mx:SW_MX_HS_CPG151101S11_1u"
+			(at 255.27 190.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 255.27 190.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 255.27 190.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "ccb70b9e-c8d8-599f-984f-99fcbd7f05c0"))
+		(pin "2" (uuid "8ba04ff2-4b9d-59b4-b6ab-cddaed8836ac"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "SW20") (unit 1))
+			)
+		)
+	)
+	(global_label "K_C4R4"
+		(shape passive)
+		(at 250.19 190.5 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "caac376b-f1e5-59f1-bbea-93a1f619b80e")
+	)
+	(global_label "COL_C4"
+		(shape passive)
+		(at 260.35 190.5 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "c90034dc-0e6e-5399-beee-674d48607734")
+	)
+	(symbol
+		(lib_id "keyboard:D")
+		(at 246.38 190.5 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "b2b6b2ef-3d10-500f-8b53-af59d5514008")
+		(property "Reference" "D20"
+			(at 245.11 186.69 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "1N4148W"
+			(at 245.11 194.31 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "Diode_SMD:D_SOD-123"
+			(at 246.38 190.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 246.38 190.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 246.38 190.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "f35c58fd-73d3-592e-8e94-eb2131111365"))
+		(pin "2" (uuid "f002ccee-fd88-5f75-9b90-894940c89c64"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "D20") (unit 1))
+			)
+		)
+	)
+	(global_label "ROW_R4"
+		(shape passive)
+		(at 242.57 190.5 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "6f6ea180-8c2f-5290-8073-fbf00652ab93")
+	)
+	(symbol
+		(lib_id "keyboard:SK6812MINI-E")
+		(at 251.46 215.9 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "0d7cb514-78a8-5b5c-8914-ed4b93785f54")
+		(property "Reference" "LED20"
+			(at 261.62 207.01 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "SK6812MINI-E (optional)"
+			(at 264.16 224.79 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "LED_SMD:LED_SK6812MINI-E_3.2x2.8mm_P1.5mm_ReverseMount"
+			(at 251.46 215.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 251.46 215.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 251.46 215.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "02ad85db-3030-5f1d-b09a-a84a5aa90efe"))
+		(pin "2" (uuid "f9caaf7e-fe8b-5322-8031-3450baa15969"))
+		(pin "3" (uuid "cdc235ed-46ed-5ec2-90fa-6ae6726b635d"))
+		(pin "4" (uuid "8bad6218-7608-5761-bd51-8fb73ca470d7"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "LED20") (unit 1))
+			)
+		)
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 251.46 223.52 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "3d2b454a-3b8b-575d-bd0c-410db2cbe0c6")
+	)
+	(global_label "LED_D7"
+		(shape passive)
+		(at 243.84 215.9 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "756e38eb-10b9-5f16-bfc0-c1adc15f95c7")
+	)
+	(global_label "VLED"
+		(shape passive)
+		(at 251.46 208.28 90)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "e7d697c0-1cfe-5c3f-84f9-eaa4b53ca51a")
+	)
+	(global_label "LED_D8"
+		(shape passive)
+		(at 259.08 215.9 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "72ee7f13-4e86-5ac0-a75e-24f67723cb48")
+	)
+	(symbol
+		(lib_id "keyboard:SW_Push")
+		(at 306.07 38.1 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "e4ddf0f2-29cc-5aeb-84e8-4104b5d796a6")
+		(property "Reference" "SW21"
+			(at 306.07 30.48 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "C5R1"
+			(at 306.07 33.02 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "marbastlib-mx:SW_MX_HS_CPG151101S11_1u"
+			(at 306.07 38.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 306.07 38.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 306.07 38.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "98607250-37dc-5d3b-adc5-2c345eeab447"))
+		(pin "2" (uuid "0d76d3ed-99c8-59c9-accc-e444ca294739"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "SW21") (unit 1))
+			)
+		)
+	)
+	(global_label "K_C5R1"
+		(shape passive)
+		(at 300.99 38.1 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "727c6656-81ed-5e94-bbb1-71d0302b8a69")
+	)
+	(global_label "COL_C5"
+		(shape passive)
+		(at 311.15 38.1 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "62161d32-059a-5ae0-814b-273946da1b1a")
+	)
+	(symbol
+		(lib_id "keyboard:D")
+		(at 297.18 38.1 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "f3cf43c9-307b-5ec8-b0ae-404c6d0a74bc")
+		(property "Reference" "D21"
+			(at 295.91 34.29 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "1N4148W"
+			(at 295.91 41.91 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "Diode_SMD:D_SOD-123"
+			(at 297.18 38.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 297.18 38.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 297.18 38.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "ef492b9f-bbfd-5d43-b9d8-8b90e9d8f366"))
+		(pin "2" (uuid "0c482432-6a39-5ee2-9e4a-295e65a75bae"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "D21") (unit 1))
+			)
+		)
+	)
+	(global_label "ROW_R1"
+		(shape passive)
+		(at 293.37 38.1 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "4f27de6e-ddf0-5a9b-9096-45fb3037a02e")
+	)
+	(symbol
+		(lib_id "keyboard:SK6812MINI-E")
+		(at 302.26 63.5 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "6088962a-6d21-56ea-82ca-2a3f7f3adbd2")
+		(property "Reference" "LED21"
+			(at 312.42 54.61 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "SK6812MINI-E (optional)"
+			(at 314.96 72.39 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "LED_SMD:LED_SK6812MINI-E_3.2x2.8mm_P1.5mm_ReverseMount"
+			(at 302.26 63.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 302.26 63.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 302.26 63.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "487a6868-5511-530c-bbe5-f0df3b1f6eed"))
+		(pin "2" (uuid "ea8d7aa3-12bd-5540-8080-702eaf66048a"))
+		(pin "3" (uuid "3df6fd05-769f-5428-8d53-2c1de8f1a8c1"))
+		(pin "4" (uuid "8a361393-f7d0-5748-b138-3f4d924dcc8e"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "LED21") (unit 1))
+			)
+		)
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 302.26 71.12 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "b751666c-ded6-5834-af8d-2bd2546acc76")
+	)
+	(global_label "LED_D3"
+		(shape passive)
+		(at 294.64 63.5 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "ac892e08-85e6-5676-9328-c6b27c028845")
+	)
+	(global_label "VLED"
+		(shape passive)
+		(at 302.26 55.88 90)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "77c78a32-f21c-5b81-a1b8-d9143a26dce5")
+	)
+	(global_label "LED_D4"
+		(shape passive)
+		(at 309.88 63.5 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "8a51bdc6-c65e-588f-b54d-d6c7776faccd")
+	)
+	(symbol
+		(lib_id "keyboard:SW_Push")
+		(at 306.07 88.9 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "3e255e09-338a-5c90-9d4d-72a6b3b074ae")
+		(property "Reference" "SW22"
+			(at 306.07 81.28 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "C5R2"
+			(at 306.07 83.82 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "marbastlib-mx:SW_MX_HS_CPG151101S11_1u"
+			(at 306.07 88.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 306.07 88.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 306.07 88.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "b17e3351-c9b8-50de-8119-136aba926620"))
+		(pin "2" (uuid "ed3a8f80-8837-5f21-a0aa-09139f42bf02"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "SW22") (unit 1))
+			)
+		)
+	)
+	(global_label "K_C5R2"
+		(shape passive)
+		(at 300.99 88.9 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "4a5e9862-7d64-582b-87d1-800df52008fc")
+	)
+	(global_label "COL_C5"
+		(shape passive)
+		(at 311.15 88.9 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "bee2ed69-a30a-575a-ab34-ab4e6e4059cc")
+	)
+	(symbol
+		(lib_id "keyboard:D")
+		(at 297.18 88.9 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "753179c8-ae07-5a51-beb6-c22662a574dc")
+		(property "Reference" "D22"
+			(at 295.91 85.09 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "1N4148W"
+			(at 295.91 92.71 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "Diode_SMD:D_SOD-123"
+			(at 297.18 88.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 297.18 88.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 297.18 88.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "6b02c465-bb99-53cc-b162-2ceba17ccc57"))
+		(pin "2" (uuid "17101495-0068-59b8-a7fb-aa6aa940c40c"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "D22") (unit 1))
+			)
+		)
+	)
+	(global_label "ROW_R2"
+		(shape passive)
+		(at 293.37 88.9 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "80fad4a1-0627-525e-867d-5bd4d01b8f1e")
+	)
+	(symbol
+		(lib_id "keyboard:SK6812MINI-E")
+		(at 302.26 114.3 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "7cfd60fd-11c9-5110-9649-538867dd7e55")
+		(property "Reference" "LED22"
+			(at 312.42 105.41 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "SK6812MINI-E (optional)"
+			(at 314.96 123.19 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "LED_SMD:LED_SK6812MINI-E_3.2x2.8mm_P1.5mm_ReverseMount"
+			(at 302.26 114.3 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 302.26 114.3 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 302.26 114.3 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "a2cad5bf-81c5-5e1f-9ad7-712d73e113a8"))
+		(pin "2" (uuid "42a6323c-c301-5db7-9e47-febdd396b783"))
+		(pin "3" (uuid "6a9d11cd-0a36-5728-b257-d524d742e049"))
+		(pin "4" (uuid "f186afd8-0090-58e1-a85b-fbaa5bf0474d"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "LED22") (unit 1))
+			)
+		)
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 302.26 121.92 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "5c29e891-60be-5a75-80a6-63ea96f04d1a")
+	)
+	(global_label "LED_D2"
+		(shape passive)
+		(at 294.64 114.3 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "ffa46cba-bf68-5cd1-927d-f67c77335a85")
+	)
+	(global_label "VLED"
+		(shape passive)
+		(at 302.26 106.68 90)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "7a5f0d1d-f480-513f-a575-7c4a23c3a327")
+	)
+	(global_label "LED_D3"
+		(shape passive)
+		(at 309.88 114.3 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "95ae718b-f834-53cb-80dd-d650f5003e66")
+	)
+	(symbol
+		(lib_id "keyboard:SW_Push")
+		(at 306.07 139.7 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "5b91a419-57e8-5232-8c0c-7fbbc774373b")
+		(property "Reference" "SW23"
+			(at 306.07 132.08 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "C5R3"
+			(at 306.07 134.62 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "marbastlib-mx:SW_MX_HS_CPG151101S11_1u"
+			(at 306.07 139.7 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 306.07 139.7 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 306.07 139.7 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "7cdb2530-e319-5aaf-bf5a-3b9825ea76a1"))
+		(pin "2" (uuid "1c1b65b5-675c-5218-9195-5615bf236d04"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "SW23") (unit 1))
+			)
+		)
+	)
+	(global_label "K_C5R3"
+		(shape passive)
+		(at 300.99 139.7 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "612a998e-711e-5879-af6e-f0c3c6965b90")
+	)
+	(global_label "COL_C5"
+		(shape passive)
+		(at 311.15 139.7 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "2cbb018b-18cc-5cb7-8419-f9fda7580315")
+	)
+	(symbol
+		(lib_id "keyboard:D")
+		(at 297.18 139.7 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "30a12030-c0a1-58f4-b6f1-234a92812851")
+		(property "Reference" "D23"
+			(at 295.91 135.89 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "1N4148W"
+			(at 295.91 143.51 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "Diode_SMD:D_SOD-123"
+			(at 297.18 139.7 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 297.18 139.7 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 297.18 139.7 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "4498241e-c420-567d-b464-3202dd295efd"))
+		(pin "2" (uuid "acc34b1c-f6be-53f4-9b05-90e4ba6c59f2"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "D23") (unit 1))
+			)
+		)
+	)
+	(global_label "ROW_R3"
+		(shape passive)
+		(at 293.37 139.7 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "1fb4dc2a-906f-5ac0-9394-4021955b50dd")
+	)
+	(symbol
+		(lib_id "keyboard:SK6812MINI-E")
+		(at 302.26 165.1 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "f3d069bf-a111-5277-90a2-cbd67006554e")
+		(property "Reference" "LED23"
+			(at 312.42 156.21 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "SK6812MINI-E (optional)"
+			(at 314.96 173.99 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "LED_SMD:LED_SK6812MINI-E_3.2x2.8mm_P1.5mm_ReverseMount"
+			(at 302.26 165.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 302.26 165.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 302.26 165.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "da4d13bf-8ed8-5f14-9458-81342b0eea9f"))
+		(pin "2" (uuid "1aee69c9-4461-5c2f-979d-cd8cdf530edd"))
+		(pin "3" (uuid "960a70d6-b8a6-5e70-a44a-b60d4147d237"))
+		(pin "4" (uuid "1dc2b56d-54dd-517b-9794-401299bfcda1"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "LED23") (unit 1))
+			)
+		)
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 302.26 172.72 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "875c3089-6283-5d4d-8a44-d450f8493102")
+	)
+	(global_label "LED_D1"
+		(shape passive)
+		(at 294.64 165.1 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "5088a94f-2348-5b78-8041-213b700af6f0")
+	)
+	(global_label "VLED"
+		(shape passive)
+		(at 302.26 157.48 90)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "623ef63d-b919-5699-a9aa-0850bfe8cb02")
+	)
+	(global_label "LED_D2"
+		(shape passive)
+		(at 309.88 165.1 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "78d55e71-7a2d-5f16-84c9-4c30a4d48aea")
+	)
+	(symbol
+		(lib_id "keyboard:SW_Push")
+		(at 306.07 190.5 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "c5ea41e0-b83d-5fa0-941b-4071d63c207f")
+		(property "Reference" "SW24"
+			(at 306.07 182.88 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "C5R4"
+			(at 306.07 185.42 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "marbastlib-mx:SW_MX_HS_CPG151101S11_1u"
+			(at 306.07 190.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 306.07 190.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 306.07 190.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "04658787-684a-5dab-b8fe-dd0d7bf6ff7d"))
+		(pin "2" (uuid "bc6cfb8c-4d0d-5ae5-882e-ae7ce35e8c25"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "SW24") (unit 1))
+			)
+		)
+	)
+	(global_label "K_C5R4"
+		(shape passive)
+		(at 300.99 190.5 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "e66bf625-eb81-5351-a332-184d6f4114a3")
+	)
+	(global_label "COL_C5"
+		(shape passive)
+		(at 311.15 190.5 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "ec663e59-a278-5da8-95f7-1f63645df856")
+	)
+	(symbol
+		(lib_id "keyboard:D")
+		(at 297.18 190.5 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "698bea54-1e20-5d73-bda0-fad5dda354b6")
+		(property "Reference" "D24"
+			(at 295.91 186.69 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "1N4148W"
+			(at 295.91 194.31 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "Diode_SMD:D_SOD-123"
+			(at 297.18 190.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 297.18 190.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 297.18 190.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "e0c6bc12-d6e7-5c0e-9d19-574c3fa144b0"))
+		(pin "2" (uuid "b7f0f067-0ad8-54cf-a7b0-ae2849de5851"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "D24") (unit 1))
+			)
+		)
+	)
+	(global_label "ROW_R4"
+		(shape passive)
+		(at 293.37 190.5 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "6439e7bd-b19b-5a5f-8901-6bf728ab5735")
+	)
+	(symbol
+		(lib_id "keyboard:SK6812MINI-E")
+		(at 302.26 215.9 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "3e2a2894-fa57-53ed-a09a-6f6903522b9e")
+		(property "Reference" "LED24"
+			(at 312.42 207.01 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "SK6812MINI-E (optional)"
+			(at 314.96 224.79 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "LED_SMD:LED_SK6812MINI-E_3.2x2.8mm_P1.5mm_ReverseMount"
+			(at 302.26 215.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 302.26 215.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 302.26 215.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "fafe92d4-952d-5329-9a44-faefcd640023"))
+		(pin "2" (uuid "9cd7d2fc-3bc2-5215-b5b1-ad208b953c13"))
+		(pin "3" (uuid "6fb6db7c-8e24-5513-a1ed-b03f8e09e7d1"))
+		(pin "4" (uuid "791909ee-b022-5241-8981-2ab46dee4a80"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "LED24") (unit 1))
+			)
+		)
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 302.26 223.52 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "741ad05c-d533-54e0-b72d-6a47dddcbef1")
+	)
+	(global_label "LED_DIN"
+		(shape passive)
+		(at 294.64 215.9 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "6a5ebf9b-f682-5a87-acb9-456d24e5e7ef")
+	)
+	(global_label "VLED"
+		(shape passive)
+		(at 302.26 208.28 90)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "3cda7989-01a3-5c40-91f8-f67bec4df298")
+	)
+	(global_label "LED_D1"
+		(shape passive)
+		(at 309.88 215.9 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "55fcbc42-e3db-594c-8902-64659f7ed937")
+	)
+	(symbol
+		(lib_id "keyboard:SW_Push")
+		(at 356.87 38.1 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "27de7648-f7dc-566d-a31e-78b74368084f")
+		(property "Reference" "SW25"
+			(at 356.87 30.48 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "T0"
+			(at 356.87 33.02 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "marbastlib-mx:SW_MX_HS_CPG151101S11_1u"
+			(at 356.87 38.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 356.87 38.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 356.87 38.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "18588569-d4b6-50a2-b162-cfb1f8e911e1"))
+		(pin "2" (uuid "f21fed4b-c2cc-59fb-a334-70e22978ee72"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "SW25") (unit 1))
+			)
+		)
+	)
+	(global_label "K_T0"
+		(shape passive)
+		(at 351.79 38.1 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "feddd3d9-28c8-58aa-9817-f6bfd2939a4a")
+	)
+	(global_label "COL_T"
+		(shape passive)
+		(at 361.95 38.1 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "187793a6-ba2d-57cd-a56b-7037a7eef173")
+	)
+	(symbol
+		(lib_id "keyboard:D")
+		(at 347.98 38.1 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "a443f1ae-43ac-5d99-8d76-f8f7a352c488")
+		(property "Reference" "D25"
+			(at 346.71 34.29 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "1N4148W"
+			(at 346.71 41.91 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "Diode_SMD:D_SOD-123"
+			(at 347.98 38.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 347.98 38.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 347.98 38.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "26fa8f58-4237-5e94-8e21-16dce8d90287"))
+		(pin "2" (uuid "1380b6a1-164b-5a35-8d0a-99281ebe0acf"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "D25") (unit 1))
+			)
+		)
+	)
+	(global_label "ROW_R1"
+		(shape passive)
+		(at 344.17 38.1 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "31d54692-89c5-566f-a9db-7ff431f4a7b0")
+	)
+	(symbol
+		(lib_id "keyboard:SK6812MINI-E")
+		(at 353.06 63.5 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "8091e264-f7b8-5e39-8a44-cffdf5fa7202")
+		(property "Reference" "LED25"
+			(at 363.22 54.61 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "SK6812MINI-E (optional)"
+			(at 365.76 72.39 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "LED_SMD:LED_SK6812MINI-E_3.2x2.8mm_P1.5mm_ReverseMount"
+			(at 353.06 63.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 353.06 63.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 353.06 63.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "b1336240-9b8f-5f37-ab95-0b389625f752"))
+		(pin "2" (uuid "0528fb86-d44c-5c3e-a3e7-cbb1cf454446"))
+		(pin "3" (uuid "4bfcfde1-2316-5b83-b8ed-faa36b0640b1"))
+		(pin "4" (uuid "27f16d56-29a9-5781-9a0c-2f2d66dd28e8"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "LED25") (unit 1))
+			)
+		)
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 353.06 71.12 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "e2730971-2aeb-5e03-b741-14444c0461f6")
+	)
+	(global_label "LED_D24"
+		(shape passive)
+		(at 345.44 63.5 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "30f5b5a5-5fe2-57fc-8f54-346547f9b044")
+	)
+	(global_label "VLED"
+		(shape passive)
+		(at 353.06 55.88 90)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "6af9a0cd-5b99-5125-9b24-472cdddba6f7")
+	)
+	(global_label "LED_D25"
+		(shape passive)
+		(at 360.68 63.5 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "aa2cac11-ac38-5156-93b7-9af53d8b55e7")
+	)
+	(symbol
+		(lib_id "keyboard:SW_Push")
+		(at 356.87 88.9 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "f5ac458f-65c4-51ad-b047-90ee862f67ee")
+		(property "Reference" "SW26"
+			(at 356.87 81.28 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "T1"
+			(at 356.87 83.82 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "marbastlib-mx:SW_MX_HS_CPG151101S11_1u"
+			(at 356.87 88.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 356.87 88.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 356.87 88.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "2dc7d089-ea5e-5cea-80d2-c13de79e06c8"))
+		(pin "2" (uuid "482a1f96-debe-5406-ae6f-331014981f9a"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "SW26") (unit 1))
+			)
+		)
+	)
+	(global_label "K_T1"
+		(shape passive)
+		(at 351.79 88.9 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "3daee77c-4f4c-51fe-821f-c0277c6aaa56")
+	)
+	(global_label "COL_T"
+		(shape passive)
+		(at 361.95 88.9 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "a3ec592f-8456-58b1-8f7e-9e840b161d11")
+	)
+	(symbol
+		(lib_id "keyboard:D")
+		(at 347.98 88.9 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "50b791e8-046c-539f-9847-7596729c673b")
+		(property "Reference" "D26"
+			(at 346.71 85.09 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "1N4148W"
+			(at 346.71 92.71 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "Diode_SMD:D_SOD-123"
+			(at 347.98 88.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 347.98 88.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 347.98 88.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "25f6846c-4f34-56d5-8839-b3c690145caf"))
+		(pin "2" (uuid "c95edf9f-cefa-5c41-9f7a-5e913ff10de3"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "D26") (unit 1))
+			)
+		)
+	)
+	(global_label "ROW_R2"
+		(shape passive)
+		(at 344.17 88.9 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "b2638cc6-4da5-5ebb-84cc-910571df45df")
+	)
+	(symbol
+		(lib_id "keyboard:SK6812MINI-E")
+		(at 353.06 114.3 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "5f44bf3c-32f3-5bf7-95f6-be87b3631517")
+		(property "Reference" "LED26"
+			(at 363.22 105.41 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "SK6812MINI-E (optional)"
+			(at 365.76 123.19 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "LED_SMD:LED_SK6812MINI-E_3.2x2.8mm_P1.5mm_ReverseMount"
+			(at 353.06 114.3 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 353.06 114.3 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 353.06 114.3 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "0e9d0d93-e4c9-5617-836c-89c8bf3fccbe"))
+		(pin "2" (uuid "a8156133-8b79-5984-8304-dd3d8b0c6142"))
+		(pin "3" (uuid "dd6e939f-505f-529d-bdb3-0ac070f29c8d"))
+		(pin "4" (uuid "7f835a36-556c-5238-a626-4765b57df785"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "LED26") (unit 1))
+			)
+		)
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 353.06 121.92 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "b2e57fda-3ea0-5229-8cc0-fb7e74c0769d")
+	)
+	(global_label "LED_D25"
+		(shape passive)
+		(at 345.44 114.3 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "9f3faedc-468d-52ca-854e-bba7239ada42")
+	)
+	(global_label "VLED"
+		(shape passive)
+		(at 353.06 106.68 90)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "e38f49f9-f6dd-5c41-91f6-e450b50c9030")
+	)
+	(global_label "LED_D26"
+		(shape passive)
+		(at 360.68 114.3 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "24c4ebc3-fc3e-5dba-8aea-87c7a5ade0a9")
+	)
+	(symbol
+		(lib_id "keyboard:SW_Push")
+		(at 356.87 139.7 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "6f5029d2-593c-5f3b-9709-b25f9306ce71")
+		(property "Reference" "SW27"
+			(at 356.87 132.08 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "T2"
+			(at 356.87 134.62 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "marbastlib-mx:SW_MX_HS_CPG151101S11_1u"
+			(at 356.87 139.7 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 356.87 139.7 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 356.87 139.7 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "ac2771ab-823d-5f38-bdcc-7a2f2de4330f"))
+		(pin "2" (uuid "0e391b60-9a0b-5861-8d48-d49874931aa7"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "SW27") (unit 1))
+			)
+		)
+	)
+	(global_label "K_T2"
+		(shape passive)
+		(at 351.79 139.7 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "6a14f70f-7338-57b3-b2cd-66dd52cd16d8")
+	)
+	(global_label "COL_T"
+		(shape passive)
+		(at 361.95 139.7 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "9b3183b2-081b-54c7-85ec-fd613c3ca38c")
+	)
+	(symbol
+		(lib_id "keyboard:D")
+		(at 347.98 139.7 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "b95d2e19-eb30-5756-9d7c-b22c6e4fd10b")
+		(property "Reference" "D27"
+			(at 346.71 135.89 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "1N4148W"
+			(at 346.71 143.51 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "Diode_SMD:D_SOD-123"
+			(at 347.98 139.7 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 347.98 139.7 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 347.98 139.7 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "048145df-9e37-591b-85d7-b09ed64e39ef"))
+		(pin "2" (uuid "c5449bdf-6292-588a-9c36-63a07b26fafc"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "D27") (unit 1))
+			)
+		)
+	)
+	(global_label "ROW_R3"
+		(shape passive)
+		(at 344.17 139.7 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "41aa6ed9-2c07-5233-bf3f-686cdeec8f4f")
+	)
+	(symbol
+		(lib_id "keyboard:SK6812MINI-E")
+		(at 353.06 165.1 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "f18d129f-d130-570c-b171-e1b1414abcce")
+		(property "Reference" "LED27"
+			(at 363.22 156.21 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "SK6812MINI-E (optional)"
+			(at 365.76 173.99 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "LED_SMD:LED_SK6812MINI-E_3.2x2.8mm_P1.5mm_ReverseMount"
+			(at 353.06 165.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 353.06 165.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 353.06 165.1 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "b6dc5da3-00a1-56c5-a058-5c743f408f79"))
+		(pin "2" (uuid "4364b675-f5ff-56c2-87f2-9c74725a209b"))
+		(pin "3" (uuid "632a062d-12db-51a5-b33d-05cfda16bc4a"))
+		(pin "4" (uuid "3a2b4274-a995-5c27-a255-f15bde9c01a8"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "LED27") (unit 1))
+			)
+		)
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 353.06 172.72 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "6ad3286b-346e-59e6-8640-e4f9cd480665")
+	)
+	(global_label "LED_D26"
+		(shape passive)
+		(at 345.44 165.1 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "1c392d67-e6c1-55a1-9748-f5eb7c5ec127")
+	)
+	(global_label "VLED"
+		(shape passive)
+		(at 353.06 157.48 90)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "dc2061e8-430a-54c2-8d30-d5654a8e3659")
+	)
+	(global_label "LED_D27"
+		(shape passive)
+		(at 360.68 165.1 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "46d2c092-cec5-515f-a6fc-9cfad2fa5c8a")
+	)
+	(symbol
+		(lib_id "keyboard:SW_Push")
+		(at 356.87 190.5 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "84eab9c5-f1e1-57d8-960a-e99581593875")
+		(property "Reference" "SW28"
+			(at 356.87 182.88 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "T3"
+			(at 356.87 185.42 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "marbastlib-mx:SW_MX_HS_CPG151101S11_1u"
+			(at 356.87 190.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 356.87 190.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 356.87 190.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "379a517d-0e71-5de3-9914-3f4c7f83fcf0"))
+		(pin "2" (uuid "91911771-ebdc-5ef5-aa67-dedd3fd7b339"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "SW28") (unit 1))
+			)
+		)
+	)
+	(global_label "K_T3"
+		(shape passive)
+		(at 351.79 190.5 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "07f76ccc-3cca-59e5-8d32-b84394827e02")
+	)
+	(global_label "COL_T"
+		(shape passive)
+		(at 361.95 190.5 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "cceac674-8a2b-5aaf-975a-67b06000b73e")
+	)
+	(symbol
+		(lib_id "keyboard:D")
+		(at 347.98 190.5 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "338789df-6c4e-510a-a5df-1b918297547e")
+		(property "Reference" "D28"
+			(at 346.71 186.69 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "1N4148W"
+			(at 346.71 194.31 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "Diode_SMD:D_SOD-123"
+			(at 347.98 190.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 347.98 190.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 347.98 190.5 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "9fe08fbc-098a-5014-a476-922f71962bac"))
+		(pin "2" (uuid "3755148e-374a-5ce8-a469-c85124088d1a"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "D28") (unit 1))
+			)
+		)
+	)
+	(global_label "ROW_R4"
+		(shape passive)
+		(at 344.17 190.5 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "56f2061e-41bf-5830-8dc4-8d0e4865d845")
+	)
+	(symbol
+		(lib_id "keyboard:SK6812MINI-E")
+		(at 353.06 215.9 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "c4372dee-d757-5ef0-88ce-f9af618d5fb4")
+		(property "Reference" "LED28"
+			(at 363.22 207.01 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "SK6812MINI-E (optional)"
+			(at 365.76 224.79 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "LED_SMD:LED_SK6812MINI-E_3.2x2.8mm_P1.5mm_ReverseMount"
+			(at 353.06 215.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 353.06 215.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 353.06 215.9 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "7bcd5223-4c74-5da0-ba23-00f2f7b29105"))
+		(pin "2" (uuid "b9d913f2-5f05-59b7-a44a-65244ec999a7"))
+		(pin "3" (uuid "5be14b2e-4624-5510-9f46-414bcb000447"))
+		(pin "4" (uuid "650ffd0f-93af-5183-b332-fa513c5d916a"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "LED28") (unit 1))
+			)
+		)
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 353.06 223.52 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "b9a5ea64-f898-50de-8286-f4413c3269b0")
+	)
+	(global_label "LED_D27"
+		(shape passive)
+		(at 345.44 215.9 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "85a2a8b9-a40e-512c-9560-9107efb65a68")
+	)
+	(global_label "VLED"
+		(shape passive)
+		(at 353.06 208.28 90)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "7d1b0ba5-72f3-5246-b9df-46c96db60cd0")
+	)
+	(no_connect (at 360.68 215.9) (uuid "8daf3804-5fa3-5e86-8b10-492e5c456e83"))
+	(text "Controller (socketed nice!nano v2). Unused pins are marked."
+		(exclude_from_sim no)
+		(at 406.4 20.32 0)
+		(effects
+			(font (size 2.5 2.5))
+			(justify left)
+		)
+		(uuid "8418a4dd-cb11-57af-a45b-d21bdbde2286")
+	)
+	(symbol
+		(lib_id "keyboard:nice_nano_v2")
+		(at 457.2 55.88 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board yes)
+		(in_pos_files no)
+		(dnp no)
+		(uuid "898f1839-0254-542e-b9f1-23e2bd5615b6")
+		(property "Reference" "U1"
+			(at 457.2 36.83 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "nice!nano v2 (socketed)"
+			(at 457.2 74.93 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "marbastlib-xp-promicroish:ProMicro_Reversible_Single"
+			(at 457.2 55.88 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 457.2 55.88 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 457.2 55.88 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "9b0d7290-e25b-5093-bca3-b0245519f9c1"))
+		(pin "2" (uuid "1012daee-5b13-54a6-b474-d7895b10e056"))
+		(pin "3" (uuid "e397e54f-63b5-507a-ac90-a9490fba5267"))
+		(pin "4" (uuid "fac80fb7-e3a4-5835-a5ef-e0b63658df3e"))
+		(pin "5" (uuid "c41bb96b-beae-5b65-8748-b0df133595ff"))
+		(pin "6" (uuid "79c79935-190a-51bf-9818-28108129e21a"))
+		(pin "7" (uuid "1b3b5971-a580-592b-9af7-ef5e6a6e62fb"))
+		(pin "8" (uuid "44136c30-7f85-5740-8765-471fe29d7c6f"))
+		(pin "9" (uuid "43f986be-7607-57b2-b368-d8ffbdd0149d"))
+		(pin "10" (uuid "f1c8d06c-9e4e-561a-870b-3ebb5f399449"))
+		(pin "11" (uuid "d358d548-310c-5eb5-a6f0-ca16f639f6cc"))
+		(pin "12" (uuid "7c0a3b8c-fed9-59e1-b8c5-d32b8d2968de"))
+		(pin "13" (uuid "be4c16dc-3592-5f88-a6b8-747371c395fd"))
+		(pin "14" (uuid "452a91fa-0af9-5579-9dc2-5caa7ba2d4af"))
+		(pin "15" (uuid "42de868d-ef54-5b05-8d0f-a839e825eded"))
+		(pin "16" (uuid "90706000-f8bf-53cc-b5fc-7b711ef9ca63"))
+		(pin "17" (uuid "6098f6ff-0d4f-5407-b3ad-01190b0b7a4e"))
+		(pin "18" (uuid "61b3fd7d-5b2f-5aaa-b65a-8d6c1d8edb7e"))
+		(pin "19" (uuid "9f702373-b26b-5fc0-b431-6ef0951771b5"))
+		(pin "20" (uuid "981460ff-cd9c-5738-951f-467a0bf35ea9"))
+		(pin "21" (uuid "db8c25d6-1da9-5874-b9c2-a2c89f51e1fc"))
+		(pin "22" (uuid "f035f438-69da-5b05-a509-1a8dccd39427"))
+		(pin "23" (uuid "b23a1d32-4c0f-5e83-a728-8ed4d765aa0f"))
+		(pin "24" (uuid "9c029f11-e56f-57d2-9ca1-ca5fec066459"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "U1") (unit 1))
+			)
+		)
+	)
+	(global_label "ROW_R1"
+		(shape passive)
+		(at 441.96 41.91 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "4912fb1f-d6c7-5234-9ab8-5e22696a2158")
+	)
+	(global_label "COL_C2"
+		(shape passive)
+		(at 441.96 44.45 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "5a48aa42-a7ca-5c2f-a2b6-180469c952da")
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 441.96 46.99 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "06e4c0d4-115f-50cd-8f42-1698f7385a19")
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 441.96 49.53 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "4b57afa4-e43a-5350-ad1b-b7ab16e6c8a6")
+	)
+	(global_label "COL_C1"
+		(shape passive)
+		(at 441.96 52.07 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "a680a6cc-82b8-5073-8056-9bb6e55778ef")
+	)
+	(global_label "COL_C0"
+		(shape passive)
+		(at 441.96 54.61 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "b0df8bf0-17fe-5044-99a5-3107765a34d6")
+	)
+	(global_label "ROW_R2"
+		(shape passive)
+		(at 441.96 57.15 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "449f0878-7bcc-53da-8841-9d190bbb1dc0")
+	)
+	(global_label "COL_C4"
+		(shape passive)
+		(at 441.96 59.69 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "7e2c25bd-942f-5ea7-9375-bb48e63999f9")
+	)
+	(global_label "COL_C3"
+		(shape passive)
+		(at 441.96 62.23 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "071a76ae-18e6-56b6-89bb-7b2d0a67620c")
+	)
+	(global_label "LED_DATA"
+		(shape passive)
+		(at 441.96 64.77 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "4f55dca5-c591-5783-add6-82e85a2d6df3")
+	)
+	(global_label "COL_C5"
+		(shape passive)
+		(at 441.96 67.31 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "de6ac05a-fad9-5758-9fd9-2d30a4406549")
+	)
+	(global_label "ROW_R3"
+		(shape passive)
+		(at 441.96 69.85 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "836fa664-d10c-5221-b67b-0baaece8cb46")
+	)
+	(global_label "RAW"
+		(shape passive)
+		(at 472.44 41.91 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "b61b90d7-4e4d-5b6e-b659-dc28cded6db8")
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 472.44 44.45 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "a2d244e0-c9c5-5ee3-888c-905e005861c5")
+	)
+	(global_label "RST"
+		(shape passive)
+		(at 472.44 46.99 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "e6b84809-593a-5a70-ba12-6b8fa3d7fede")
+	)
+	(no_connect (at 472.44 49.53) (uuid "5ef3ebb3-1351-5a64-9e03-73851f8653e0"))
+	(global_label "LED_EN"
+		(shape passive)
+		(at 472.44 52.07 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "cad0d975-2824-5b86-b11c-bd7c34d0aa0a")
+	)
+	(no_connect (at 472.44 54.61) (uuid "52a85c13-94e1-5ed8-af1f-e893a7440452"))
+	(no_connect (at 472.44 57.15) (uuid "1028ad89-c47a-5807-aeaf-dd74ae4ae3cd"))
+	(no_connect (at 472.44 59.69) (uuid "82eeb518-625c-5ffa-bff4-6c284d060dfa"))
+	(global_label "COL_T"
+		(shape passive)
+		(at 472.44 62.23 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "c990b19a-8058-5fb9-9b43-56d9dafb44c5")
+	)
+	(global_label "ROW_R4"
+		(shape passive)
+		(at 472.44 64.77 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "5f9bfc5c-2e09-566b-9e79-9ee1a333642d")
+	)
+	(no_connect (at 472.44 67.31) (uuid "8e5f0ca5-581f-5f74-a374-67d022ee4d71"))
+	(no_connect (at 472.44 69.85) (uuid "9b6d8ed7-0c10-5081-9a6a-85c31ccd9f77"))
+	(symbol
+		(lib_id "keyboard:SW_Push")
+		(at 533.4 43.18 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "528c5520-f596-57c7-af3d-311c7e25c0c5")
+		(property "Reference" "SW_RST"
+			(at 533.4 35.56 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "Reset"
+			(at 533.4 38.1 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "Button_Switch_SMD:SW_SPST_TL3342"
+			(at 533.4 43.18 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 533.4 43.18 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 533.4 43.18 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "8af75751-f654-565e-8c5a-17f028d7578a"))
+		(pin "2" (uuid "b1e36b2c-5f87-5fcf-ba7a-2ad184f76e89"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "SW_RST") (unit 1))
+			)
+		)
+	)
+	(global_label "RST"
+		(shape passive)
+		(at 528.32 43.18 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "f65018af-cb8b-5afe-9f29-6c1015b6d2f6")
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 538.48 43.18 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "a07b23d1-d63e-5a8f-9413-2867aa31d859")
+	)
+	(text "Battery: connector, power switch, then RAW (the module's battery pin)."
+		(exclude_from_sim no)
+		(at 406.4 99.06 0)
+		(effects
+			(font (size 2.5 2.5))
+			(justify left)
+		)
+		(uuid "2487d601-ddd9-553d-b8fa-2cf87af5b3e1")
+	)
+	(symbol
+		(lib_id "keyboard:Conn_01x02")
+		(at 431.8 114.3 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "87ac6e99-cdff-5deb-b7d5-a4625692e1d3")
+		(property "Reference" "J1"
+			(at 433.07 109.22 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "JST-PH battery (check polarity)"
+			(at 433.07 121.92 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "Connector_JST:JST_PH_S2B-PH-K_1x02_P2.00mm_Horizontal"
+			(at 431.8 114.3 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 431.8 114.3 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 431.8 114.3 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "aab9507d-7393-5fdc-8451-13869bbee853"))
+		(pin "2" (uuid "b619d2fa-9b4c-510a-9bb6-b1b796690e62"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "J1") (unit 1))
+			)
+		)
+	)
+	(global_label "BAT_IN"
+		(shape passive)
+		(at 426.72 114.3 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "e63ea674-3cca-5071-91c9-52cd15203404")
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 426.72 116.84 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "9f4acda1-9e90-5712-b5c1-56644e48dfaa")
+	)
+	(symbol
+		(lib_id "keyboard:SW_SPDT")
+		(at 482.6 114.3 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "3003b837-2f2e-52c0-aca4-23710fd79580")
+		(property "Reference" "SW_PWR"
+			(at 482.6 106.68 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "Power"
+			(at 482.6 121.92 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" "Button_Switch_SMD:SW_SPDT_PCM12"
+			(at 482.6 114.3 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 482.6 114.3 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 482.6 114.3 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "d1457551-a71e-5174-8b89-15f984f3cf69"))
+		(pin "2" (uuid "fab3c0ac-bd88-56a1-a8c8-2db802069c0c"))
+		(pin "3" (uuid "ff4966d3-3a20-52bd-a782-883880934bb9"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "SW_PWR") (unit 1))
+			)
+		)
+	)
+	(no_connect (at 487.68 111.76) (uuid "1a0e1f22-ecc8-55c7-991d-5f46dca10f9a"))
+	(global_label "BAT_IN"
+		(shape passive)
+		(at 477.52 114.3 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "23ef63ca-a6d1-5ff3-916d-585c863b44af")
+	)
+	(global_label "RAW"
+		(shape passive)
+		(at 487.68 116.84 0)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "beb412b5-e7af-5060-bf32-d284b529ac17")
+	)
+	(text "LED supply: Q1 switches RAW to VLED; Q2 drives its gate from LED_EN."
+		(exclude_from_sim no)
+		(at 406.4 142.24 0)
+		(effects
+			(font (size 2.5 2.5))
+			(justify left)
+		)
+		(uuid "0e0b7dc7-40d4-5c68-9f86-6016d522fbce")
+	)
+	(text "R3 and C2 slow the turn-on. Q1's source (pin 2) is on RAW."
+		(exclude_from_sim no)
+		(at 406.4 147.32 0)
+		(effects
+			(font (size 2.5 2.5))
+			(justify left)
+		)
+		(uuid "c2c46ae8-c2ef-510c-88cb-1a7a6230276c")
+	)
+	(symbol
+		(lib_id "keyboard:R")
+		(at 419.1 170.18 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "3d91029d-8014-545c-aade-06aa84568f67")
+		(property "Reference" "R1"
+			(at 424.18 168.91 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Value" "100k (Q1 gate pull-up)"
+			(at 424.18 171.45 0)
+			(effects
+				(font (size 1 1))
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_1206_3216Metric_Pad1.30x1.75mm_HandSolder"
+			(at 419.1 170.18 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 419.1 170.18 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 419.1 170.18 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "1be3648a-6b7c-5bfa-8bae-6c18ae9428cd"))
+		(pin "2" (uuid "ff167440-f46a-5751-98de-682478e51463"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "R1") (unit 1))
+			)
+		)
+	)
+	(global_label "RAW"
+		(shape passive)
+		(at 419.1 166.37 90)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "5cf81342-d899-5750-adfb-3dae09d918d1")
+	)
+	(global_label "LED_GATE"
+		(shape passive)
+		(at 419.1 173.99 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "173173a8-1da3-5fc4-84f1-f521eee7b22f")
+	)
+	(symbol
+		(lib_id "keyboard:C")
+		(at 469.9 170.18 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "83901801-0153-5f6c-afbf-f5ba33f1c08a")
+		(property "Reference" "C2"
+			(at 474.98 168.91 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Value" "1uF 16V X7R (Q1 soft start; optional)"
+			(at 474.98 171.45 0)
+			(effects
+				(font (size 1 1))
+				(justify left)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_1206_3216Metric_Pad1.33x1.80mm_HandSolder"
+			(at 469.9 170.18 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 469.9 170.18 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 469.9 170.18 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "53bf901b-6416-5eda-a76b-d5dc321e1487"))
+		(pin "2" (uuid "0c8806c3-c483-52b0-a8ea-130bf7d1399c"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "C2") (unit 1))
+			)
+		)
+	)
+	(global_label "RAW"
+		(shape passive)
+		(at 469.9 166.37 90)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "d726add9-35b3-5879-aa69-9c617940d0aa")
+	)
+	(global_label "LED_GATE"
+		(shape passive)
+		(at 469.9 173.99 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "553a0c56-93e3-5f4a-84ae-3eda31a80d87")
+	)
+	(symbol
+		(lib_id "keyboard:Q_PMOS_GSD")
+		(at 525.78 170.18 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "7da6375e-4e94-5576-8afa-acba5534204c")
+		(property "Reference" "Q1"
+			(at 530.86 168.91 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Value" "DMG2305UX-7 (P-MOSFET)"
+			(at 530.86 171.45 0)
+			(effects
+				(font (size 1 1))
+				(justify left)
+			)
+		)
+		(property "Footprint" "Package_TO_SOT_SMD:SOT-23_Handsoldering"
+			(at 525.78 170.18 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 525.78 170.18 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 525.78 170.18 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "91ea0b7a-1cdd-5aff-b1a3-d97b25fe1ac6"))
+		(pin "2" (uuid "ab86ff89-13ff-5ad0-b181-63cadc2e4edc"))
+		(pin "3" (uuid "1dc0c5c8-3161-510d-8dc1-ee9895acff30"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "Q1") (unit 1))
+			)
+		)
+	)
+	(global_label "LED_GATE"
+		(shape passive)
+		(at 520.7 170.18 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "ab046941-687c-58fa-a364-56f330320746")
+	)
+	(global_label "RAW"
+		(shape passive)
+		(at 528.32 175.26 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "65feb6df-112d-5a0a-880a-14badf818a44")
+	)
+	(global_label "VLED"
+		(shape passive)
+		(at 528.32 165.1 90)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "51e5f404-b727-5b7d-ab44-1b3c83b0622f")
+	)
+	(symbol
+		(lib_id "keyboard:C")
+		(at 419.1 205.74 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "28f2ff23-daa9-52bd-86bc-b450107e5b26")
+		(property "Reference" "C1"
+			(at 424.18 204.47 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Value" "10uF 10V X5R (VLED bulk)"
+			(at 424.18 207.01 0)
+			(effects
+				(font (size 1 1))
+				(justify left)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_1206_3216Metric_Pad1.33x1.80mm_HandSolder"
+			(at 419.1 205.74 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 419.1 205.74 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 419.1 205.74 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "2b75f0d8-9e66-53c1-a755-631d1ae6b71a"))
+		(pin "2" (uuid "a280d39b-4a18-54b5-8954-5eedfb771541"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "C1") (unit 1))
+			)
+		)
+	)
+	(global_label "VLED"
+		(shape passive)
+		(at 419.1 201.93 90)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "8a012a5e-7aa4-5552-818b-963284883d41")
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 419.1 209.55 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "a2e4ba63-1a5c-5c0c-bdd0-7c15a880d90f")
+	)
+	(symbol
+		(lib_id "keyboard:R")
+		(at 469.9 205.74 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "2ad2b670-d664-5cc3-8128-f42c4e834afd")
+		(property "Reference" "R3"
+			(at 474.98 204.47 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Value" "10k (Q1 soft start; 0R without)"
+			(at 474.98 207.01 0)
+			(effects
+				(font (size 1 1))
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_1206_3216Metric_Pad1.30x1.75mm_HandSolder"
+			(at 469.9 205.74 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 469.9 205.74 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 469.9 205.74 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "c367792c-703c-5016-abcf-6577e9fdf67b"))
+		(pin "2" (uuid "2033b7f0-c4ac-5765-9aea-caa132a224d5"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "R3") (unit 1))
+			)
+		)
+	)
+	(global_label "LED_GATE"
+		(shape passive)
+		(at 469.9 201.93 90)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "53167464-80cb-50c8-ae5d-f462728df393")
+	)
+	(global_label "LED_GATE_DRV"
+		(shape passive)
+		(at 469.9 209.55 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "d828a65f-7538-50ea-bc71-9d67de34eba3")
+	)
+	(symbol
+		(lib_id "keyboard:Q_NMOS_GSD")
+		(at 525.78 205.74 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "c2e2e424-9a2c-5f9e-b5a8-c2a853344acc")
+		(property "Reference" "Q2"
+			(at 530.86 204.47 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Value" "BSS138 (N-MOSFET)"
+			(at 530.86 207.01 0)
+			(effects
+				(font (size 1 1))
+				(justify left)
+			)
+		)
+		(property "Footprint" "Package_TO_SOT_SMD:SOT-23_Handsoldering"
+			(at 525.78 205.74 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 525.78 205.74 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 525.78 205.74 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "c292e691-8f9f-55c1-a54e-ec959dbd8a4c"))
+		(pin "2" (uuid "5b4cee87-7f9a-5fe7-b3df-eb95a76d2ffa"))
+		(pin "3" (uuid "43305169-6b36-5848-aa21-9ec7bc1d77cb"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "Q2") (unit 1))
+			)
+		)
+	)
+	(global_label "LED_EN"
+		(shape passive)
+		(at 520.7 205.74 180)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "57fd5c7e-70db-50ac-896f-507db88aa3c5")
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 528.32 210.82 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "2ffe9f6b-e765-54a8-af52-2b880671ae94")
+	)
+	(global_label "LED_GATE_DRV"
+		(shape passive)
+		(at 528.32 200.66 90)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "0c15c60c-ff6f-55c1-9403-441a939a5d19")
+	)
+	(symbol
+		(lib_id "keyboard:R")
+		(at 419.1 241.3 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "db6979d8-4c64-538a-95b0-870a81ace6cd")
+		(property "Reference" "R2"
+			(at 424.18 240.03 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Value" "100k (LED_EN pull-down)"
+			(at 424.18 242.57 0)
+			(effects
+				(font (size 1 1))
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_1206_3216Metric_Pad1.30x1.75mm_HandSolder"
+			(at 419.1 241.3 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 419.1 241.3 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 419.1 241.3 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "1d284298-31f5-580c-a1a0-a1552887514a"))
+		(pin "2" (uuid "6c795314-2590-57ef-b54e-15565c4d8915"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "R2") (unit 1))
+			)
+		)
+	)
+	(global_label "LED_EN"
+		(shape passive)
+		(at 419.1 237.49 90)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "73fd4e87-f888-54f1-83a1-98a7e9003973")
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 419.1 245.11 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "9b006edb-5a6c-5e68-8df9-50d90bdb3495")
+	)
+	(text "LED data: R4 in series, controller to the first LED."
+		(exclude_from_sim no)
+		(at 457.2 231.14 0)
+		(effects
+			(font (size 2.5 2.5))
+			(justify left)
+		)
+		(uuid "2ba00230-9f5f-5552-960c-2ec1024287e6")
+	)
+	(symbol
+		(lib_id "keyboard:R")
+		(at 469.9 248.92 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "9f645c09-302f-5576-b3d0-8ba210fa6d36")
+		(property "Reference" "R4"
+			(at 474.98 247.65 0)
+			(effects
+				(font (size 1.27 1.27))
+				(justify left)
+			)
+		)
+		(property "Value" "470R (LED data)"
+			(at 474.98 250.19 0)
+			(effects
+				(font (size 1 1))
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_1206_3216Metric_Pad1.30x1.75mm_HandSolder"
+			(at 469.9 248.92 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 469.9 248.92 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 469.9 248.92 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "4c7ffd79-c6ec-5b4b-a419-ad718b49127e"))
+		(pin "2" (uuid "fec69ebf-3f97-519f-a739-37017d2786bf"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "R4") (unit 1))
+			)
+		)
+	)
+	(global_label "LED_DATA"
+		(shape passive)
+		(at 469.9 245.11 90)
+		(effects
+			(font (size 1 1))
+			(justify left)
+		)
+		(uuid "a5e2c348-4aa6-5a69-b61d-15b2bb3b5a8c")
+	)
+	(global_label "LED_DIN"
+		(shape passive)
+		(at 469.9 252.73 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "b0507bcf-dcbc-5b13-879d-de9429cb6d68")
+	)
+	(text "Supplies that come from outside this drawing (the battery; VLED through Q1)."
+		(exclude_from_sim no)
+		(at 406.4 276.86 0)
+		(effects
+			(font (size 2.5 2.5))
+			(justify left)
+		)
+		(uuid "169732ff-0e00-5c5f-a8c1-f2e2c9142b51")
+	)
+	(symbol
+		(lib_id "keyboard:PWR_FLAG")
+		(at 431.8 297.18 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "ab18b355-65d5-5e7c-abbc-b72e50697a23")
+		(property "Reference" "#FLG01"
+			(at 431.8 293.37 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "PWR_FLAG"
+			(at 431.8 290.83 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" ""
+			(at 431.8 297.18 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 431.8 297.18 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 431.8 297.18 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "1336cc77-46bf-54b9-8e42-380a13497133"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "#FLG01") (unit 1))
+			)
+		)
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 431.8 297.18 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "23024b3d-8064-5d66-b2a4-8515502dd156")
+	)
+	(symbol
+		(lib_id "keyboard:PWR_FLAG")
+		(at 469.9 297.18 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "7d8c8755-4a08-5b68-ac11-51bf723aff0f")
+		(property "Reference" "#FLG02"
+			(at 469.9 293.37 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "PWR_FLAG"
+			(at 469.9 290.83 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" ""
+			(at 469.9 297.18 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 469.9 297.18 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 469.9 297.18 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "a14ba6f3-dca5-5cf2-be05-b6b0541bc018"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "#FLG02") (unit 1))
+			)
+		)
+	)
+	(global_label "RAW"
+		(shape passive)
+		(at 469.9 297.18 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "74924aec-fd1b-52e5-bbfb-98d90a6999c6")
+	)
+	(symbol
+		(lib_id "keyboard:PWR_FLAG")
+		(at 508 297.18 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "fa35b08e-1e0b-55be-b630-344d3cf3160b")
+		(property "Reference" "#FLG03"
+			(at 508 293.37 0)
+			(effects
+				(font (size 1.27 1.27))
+			)
+		)
+		(property "Value" "PWR_FLAG"
+			(at 508 290.83 0)
+			(effects
+				(font (size 1 1))
+			)
+		)
+		(property "Footprint" ""
+			(at 508 297.18 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 508 297.18 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 508 297.18 0)
+			(effects
+				(font (size 1.27 1.27))
+				(hide yes)
+			)
+		)
+		(pin "1" (uuid "30237c09-552e-59b9-bd92-9d2c5f97fffa"))
+		(instances
+			(project "right"
+				(path "/a56c5a24-dfa8-5e3b-8457-2a1cdbf04cb9" (reference "#FLG03") (unit 1))
+			)
+		)
+	)
+	(global_label "VLED"
+		(shape passive)
+		(at 508 297.18 270)
+		(effects
+			(font (size 1 1))
+			(justify right)
+		)
+		(uuid "877afed2-2738-5823-b0fa-e11446bfc26a")
+	)
+	(sheet_instances
+		(path "/" (page "1"))
+	)
+	(embedded_fonts no)
+)

@@ -2,7 +2,7 @@
 
 A personal keyboard project based on an accepted left-hand switch-position prototype. The goal is two mirrored, rechargeable keyboard halves communicating over Bluetooth Low Energy (BLE) with a separate desk controller connected to the PC by USB. The owner intends to print the cases on a Bambu Labs X2D.
 
-**Status (2026-11-23):** design in progress. Both PCB halves are generated and fully routed by script, and pass KiCad's design rule check; the firmware for both halves and the dongle compiles ([firmware](firmware/README.md)). Nothing has been fabricated or flashed, and there is no schematic or final case yet. Nothing here is verified on hardware.
+**Status (2026-11-23):** design in progress. Both PCB halves are generated and fully routed by script, and pass KiCad's design rule check; the firmware for both halves and the dongle compiles ([firmware](firmware/README.md)). Each half has a schematic drawn from its board, with KiCad's electrical rules check clean. Nothing has been fabricated or flashed, and there is no final case yet. Nothing here is verified on hardware.
 
 ## Prototype
 
@@ -29,4 +29,4 @@ The geometry, switch count, dimensions, and relationships between the source and
 
 ## Starting With Claude
 
-Open this directory as the project and select the desired available model in your Claude-enabled client. In Claude Code, the root `CLAUDE.md` imports the shared instructions. Ask the agent to start with the prototype inspection and decision review in the development plan. The PCB commands are `python tools/pcb_generate.py` and `python tools/pcb_check.py` (see [PCB design](docs/pcb.md#running-the-tools)). Claude's instruction-file loading can be checked with `/context all` where supported.
+Open this directory as the project and select the desired available model in your Claude-enabled client. In Claude Code, the root `CLAUDE.md` imports the shared instructions. Ask the agent to start with the prototype inspection and decision review in the development plan. The PCB commands are `python tools/pcb_generate.py` (boards and schematics) and `python tools/pcb_check.py` (see [PCB design](docs/pcb.md#running-the-tools)). Claude's instruction-file loading can be checked with `/context all` where supported.
