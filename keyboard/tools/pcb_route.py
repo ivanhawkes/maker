@@ -24,7 +24,10 @@ from pathlib import Path
 import pcbnew
 
 ROOT = Path(__file__).resolve().parent.parent
-MAX_PASSES = int(os.environ.get("FREEROUTING_PASSES", "60"))
+MAX_PASSES = int(os.environ.get("FREEROUTING_PASSES", "8"))
+# A second round on the routed board, starting afresh, finishes a few more links (2026-11-23:
+# left 11 -> 8, right 10 -> 9 unconnected); more passes in one round do not.
+ROUNDS = int(os.environ.get("FREEROUTING_ROUNDS", "2"))
 
 
 def route(side: str) -> int:
@@ -60,9 +63,24 @@ def route(side: str) -> int:
         if not pcbnew.ImportSpecctraSES(board, str(ses)):
             raise SystemExit(f"{side}: SES import failed")
     board.BuildConnectivity()
-    if not pcbnew.ZONE_FILLER(board).Fill(board.Zones()):  # refill the GND pours around the new tracks
+    if not pcbnew.ZONE_FILLER(board).Fill(board.Zones()):  # refill the planes around the new tracks
         raise SystemExit(f"{side}: zone refill failed")
     pcbnew.SaveBoard(str(board_path), board)
+    # Freerouting leaves vias that connect to nothing on one side. Remove them (not the
+    # generator's locked plane vias) from the saved board, reloaded: in the process that
+    # imported the session, the connectivity check misses them.
+    board = pcbnew.LoadBoard(str(board_path))
+    board.BuildConnectivity()
+    conn = board.GetConnectivity()
+    dangling = [t for t in board.GetTracks()
+                if t.GetClass() == "PCB_VIA" and not t.IsLocked() and conn.TestTrackEndpointDangling(t, False)]
+    for v in dangling:
+        board.Remove(v)
+    board.BuildConnectivity()
+    if not pcbnew.ZONE_FILLER(board).Fill(board.Zones()):
+        raise SystemExit(f"{side}: zone refill failed")
+    pcbnew.SaveBoard(str(board_path), board)
+    print(f"{side}: removed {len(dangling)} dangling vias")
     tracks = [t for t in board.GetTracks() if t.GetClass() == "PCB_TRACK"]
     vias = [t for t in board.GetTracks() if t.GetClass() == "PCB_VIA"]
     print(f"{side}: saved {board_path.relative_to(ROOT)} with {len(tracks)} track segments, {len(vias)} vias")
@@ -71,7 +89,8 @@ def route(side: str) -> int:
 
 def main(argv: list[str]) -> int:
     for side in argv or ["left", "right"]:
-        route(side)
+        for _ in range(ROUNDS):
+            route(side)
     return 0
 
 

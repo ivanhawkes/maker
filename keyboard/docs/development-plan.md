@@ -46,10 +46,11 @@ and 52 on the right, plus track-width errors from Freerouting's neck-downs below
 minimum. Details are in [pcb.md](pcb.md#v1-routing-results-2026-11-23). Next, in order:
 
 1. Partly done 2026-11-23: the finger columns are scripted, option B (load switch) is on the
-   board, and the board is four layers with GND and VLED planes (owner's choice). Freerouting
-   leaves 22 (left) and 19 (right) unconnected items, mostly one matrix row and the thumb
-   cluster ([results](pcb.md#v2-four-layers-2026-11-23)). Next: remove Freerouting's dangling
-   vias, then work on the thumb cluster and the unrouted row (placement or scripted segments).
+   board, and the board is four layers with GND and VLED planes (owner's choice). Rows and thumb
+   key-to-diode links are scripted too. Freerouting leaves 8 (left) and 9 (right) unconnected
+   items, all in the thumb cluster apart from RST and one key link on the right
+   ([results](pcb.md#v21-scripted-rows-and-thumb-links-2026-11-23)). Next: script the thumb LED
+   chain, then clear the right board's small Freerouting errors.
    A provisional parts list is in [pcb.md](pcb.md#provisional-parts-list-2026-11-23).
 2. Done 2026-11-23: the board rules are the stricter of JLCPCB's and PCBWay's limits, so either
    can make it ([fab house design rules](pcb.md#fab-house-design-rules-2026-11-23)). The 0.127 mm

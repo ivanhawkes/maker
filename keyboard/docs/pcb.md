@@ -3,7 +3,7 @@
 Status: design started 2026-11-23. **v2 (4-layer) generated and auto-routed; routing incomplete.**
 Generate with `python tools/pcb_generate.py` and route with `python tools/pcb_route.py`; the boards
 are written to `pcb/left/left.kicad_pcb` and `pcb/right/right.kicad_pcb`. Nothing is fully routed,
-checked for fabrication, or ordered. Results are in [v2: four layers](#v2-four-layers-2026-11-23).
+checked for fabrication, or ordered. Results are in [v2.1](#v21-scripted-rows-and-thumb-links-2026-11-23).
 This brief collects
 the owner's decisions, the proposed electrical design, and how the boards will be generated
 and checked. Decisions are marked **Decided**; everything else is a proposal until reviewed.
@@ -48,13 +48,13 @@ frequency up to 10 kHz") and ZMK's Pro Micro pin map:
 | Pro Micro pin | GPIO | Restriction | Proposed use |
 | --- | --- | --- | --- |
 | D0 | P0.08 | — | Spare |
-| D1 | P0.06 | — | **LED data** (about 800 kHz needs an unrestricted pin) |
+| D1 | P0.06 | — | Matrix (C4; was LED data until 2026-11-23) |
 | D2 | P0.17 | — | Spare |
 | D3 | P0.20 | — | Spare |
 | D4 | P0.22 | — | Spare |
 | D5 | P0.24 | — | Spare |
 | D6 | P1.00 | — | Spare |
-| D7 | P0.11 | — | Matrix if needed, otherwise spare |
+| D7 | P0.11 | — | **LED data** (about 800 kHz needs an unrestricted pin; pad 10, at the thumb end) |
 | D8 | P1.04 | ≤ 10 kHz | Matrix |
 | D9 | P1.06 | ≤ 10 kHz | Matrix |
 | D10 | P0.09 | ≤ 10 kHz, NFC1 | Avoid (see above) |
@@ -288,6 +288,28 @@ beyond the USB end now); script the regular parts (straight column tracks on F.C
 plan-local x = 2.54 through each column, the LED chain and VLED) and leave only the fan-in to
 the controller to Freerouting; route VLED at signal width, since LED current per key is small
 (to check against the LED supply design).
+
+## v2.1: Scripted Rows And Thumb Links (2026-11-23)
+
+Changes from v2: the finger rows are locked B.Cu tracks at key-local y = −2.35 mm (cathode to
+x = 8.6, a jog to the next column's x = −10.45, then to its cathode; columns ordered by board
+position so the mirrored half works); the thumb key-to-diode links are locked B.Cu tracks (pin 1
+down to y = −2.65, across to x = 5.5, down, to the anode); the LED chain runs from the controller
+up C5, across to C0, then to the thumbs T0–T3, with LED data on pad 10 (P0.11) and C4 on pad 1;
+`tools/pcb_route.py` removes Freerouting's dangling vias and routes in two rounds.
+
+| Check | Left | Right |
+| --- | --- | --- |
+| Unconnected before routing | 80 | 80 |
+| DRC after routing: unconnected | **8** | **9** |
+| DRC after routing: errors | 1 `starved_thermal` | 2 `starved_thermal`, 2 `track_width` (0.125 mm neck-down), 1 `annular_width` (RAW via, 0.1 mm ring) |
+
+- **Still unrouted, both boards:** the thumb LED chain (C0R4 to T0, T0–T1, T1–T2, T2–T3), the
+  thumb column (2) and one thumb row. Right board also: RST and K_C0R1.
+- Freerouting leaves the thumb links open even with 25 passes and an empty area around them; the
+  short key-to-diode links there had to be scripted.
+- Next: script the thumb LED chain (below the LEDs, on B.Cu); on the right board the chain runs
+  the other way, so its thumb LEDs may need turning 180°. Then the right board's small errors.
 
 ## v2: Four Layers (2026-11-23)
 

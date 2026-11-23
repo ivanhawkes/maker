@@ -59,7 +59,7 @@ columns:         # C0 (outer pinky) .. C5, then T (thumb keys T0..T3 on rows R1.
   C1: 6          # D3  P0.20
   C2: 7          # D4  P0.22
   C3: 9          # D6  P1.00
-  C4: 10         # D7  P0.11
+  C4: 1          # D1  P0.06 (swapped with LED data, 2026-11-23)
   C5: 11         # D8  P1.04 (low frequency only)
   T:  21         # D15 P1.13 (low frequency only)
 thumb_rows:      # which row each thumb key uses
@@ -68,7 +68,9 @@ thumb_rows:      # which row each thumb key uses
   T2: R3
   T3: R4
 
-led_data: 1      # P0.06; unrestricted pin, needed for about 800 kHz LED data
+# LED data: an unrestricted pin (about 800 kHz). Pad 10, at the thumb end of the inner row,
+# since the chain now starts at C5R4 (2026-11-23; was pad 1).
+led_data: 10     # D7  P0.11
 # LED supply enable (option B load switch), active high, pulled down on the board. A static
 # level, so a low-frequency pin is fine. Firmware: ZMK's ext-power control GPIO (to verify).
 led_power_enable: 17   # D21 P0.31

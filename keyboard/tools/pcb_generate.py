@@ -10,8 +10,8 @@ kicad-base's site-packages) and PyYAML. Inputs:
     pcb/lib/marbastlib/...                   pinned third-party footprints
     $KICAD10_FOOTPRINT_DIR                   KiCad stock footprints
 
-Stage: v1 placement, ready for tools/pcb_route.py. The finger columns are pre-routed (straight
-F.Cu tracks, locked); everything else is left to Freerouting.
+Stage: v2, ready for tools/pcb_route.py. The finger columns (F.Cu) and finger rows (B.Cu) are
+pre-routed as locked tracks; everything else is left to Freerouting.
 
 LED supply (option B, owner 2026-11-23): VLED is RAW (the battery, 3.0-4.2 V) through a
 high-side P-MOSFET, Q1, driven by a small N-MOSFET, Q2, from the LED_EN pin (pins.yaml).
@@ -400,6 +400,8 @@ def build(side: str) -> Board:
     # Switches, diodes and LEDs.
     led_order = []
     col_pins: dict[str, list] = {}  # finger column -> pin 2 plated holes, by row
+    row_cells: dict[str, dict] = {}  # finger row -> {column: (x, y, r, cathode pad)}
+    thumb_links: list = []  # thumb keys: (x, y, r, switch pin 1 hole, diode anode)
     for i, k in enumerate(keys, start=1):
         x, y, r = float(k["x_mm"]), float(k["y_mm"]), float(k["rotation_deg"])
         kid = k["id"]
@@ -418,7 +420,12 @@ def build(side: str) -> Board:
         dx, dy = rot(*DIODE_OFFSET, r)
         d = B.place(load(STOCK / "Diode_SMD.pretty", "D_SOD-123"), f"D{i}", x + dx, y + dy, r + 90.0, True, "1N4148W")
         B.connect(d, "1", f"ROW_{row}")  # cathode to row (col2row)
+        if col != "T":
+            row_cells.setdefault(row, {})[col] = (x, y, r, next(p for p in d.Pads() if p.GetNumber() == "1"))
         B.connect(d, "2", f"K_{kid}")
+        if col == "T":
+            thumb_links.append((x, y, r, next(p for p in sw.Pads() if p.GetNumber() == "1" and p.GetAttribute() == pcbnew.PAD_ATTRIB_PTH),
+                                next(p for p in d.Pads() if p.GetNumber() == "2")))
         lx, ly = rot(*LED_OFFSET, r)
         led = B.place(load_led(), f"LED{i}", x + lx, y + ly, r, True, "SK6812MINI-E (optional)")
         led_order.append((col, row, kid, led))
@@ -444,12 +451,58 @@ def build(side: str) -> Board:
             t.SetLocked(True)
             B.b.Add(t)
 
-    # LED chain: serpentine down/up the finger columns, then the thumb keys.
-    col_order = ["C0", "C1", "C2", "C3", "C4", "C5", "T"]
+    # Finger rows: one locked B.Cu track per row, at key-local y = -2.35 mm (the cathode's
+    # height): it clears the stem hole by 0.225 mm and the LED cut-out keep-out by 0.7 mm. It
+    # leaves each cathode to key-local x = 8.6, between the diode and the next column's socket,
+    # jogs to the next column's x = -10.45 (19.05 mm on) and runs to that column's cathode.
+    for row, cells in row_cells.items():
+        # Left to right on the board: C0 first on the left half, C5 first on the mirrored right.
+        cols = sorted(cells, key=lambda c: cells[c][0])
+        for a, b in zip(cols, cols[1:]):
+            ax, ay, ar, apad = cells[a]
+            bx, by, br, bpad = cells[b]
+            ox, oy = rot(8.6, -2.35, ar)
+            ix, iy = rot(-10.45, -2.35, br)
+            pts = [apad.GetPosition(), to_board(ax + ox, ay + oy), to_board(bx + ix, by + iy), bpad.GetPosition()]
+            for s, e in zip(pts, pts[1:]):
+                if math.hypot(s.x - e.x, s.y - e.y) < mm(0.001):
+                    continue
+                t = pcbnew.PCB_TRACK(B.b)
+                t.SetStart(s)
+                t.SetEnd(e)
+                t.SetWidth(mm(RULES["track"]))
+                t.SetLayer(pcbnew.B_Cu)
+                t.SetNet(apad.GetNet())
+                t.SetLocked(True)
+                B.b.Add(t)
+
+    # Thumb key-to-diode links, which Freerouting leaves open (it routes the finger keys' own).
+    # B.Cu, key-local: pin 1 straight down to y = -2.65 (0.2 mm under the stem hole, clear of
+    # the LED cut-out keep-out), across above the LED pads to x = 5.5, down, then to the anode.
+    for x, y, r, pin, anode in thumb_links:
+        pts = [pin.GetPosition()]
+        for lx_, ly_ in ((-3.81, -2.65), (5.5, -2.65), (5.5, -4.6)):
+            ox, oy = rot(lx_, ly_, r)
+            pts.append(to_board(x + ox, y + oy))
+        pts.append(anode.GetPosition())
+        for s, e in zip(pts, pts[1:]):
+            t = pcbnew.PCB_TRACK(B.b)
+            t.SetStart(s)
+            t.SetEnd(e)
+            t.SetWidth(mm(RULES["track"]))
+            t.SetLayer(pcbnew.B_Cu)
+            t.SetNet(pin.GetNet())
+            t.SetLocked(True)
+            B.b.Add(t)
+
+    # LED chain: from the controller's thumb end, up C5, serpentine across to C0 (ending at
+    # C0R4, bottom left), then along the bottom edge to the thumb keys T0..T3. Each link is
+    # short except C0R4 to T0, which has free board along the bottom edge.
+    col_order = ["C5", "C4", "C3", "C2", "C1", "C0", "T"]
     chain = []
     for ci, col in enumerate(col_order):
         items = [t for t in led_order if t[0] == col]
-        items.sort(key=lambda t: t[1], reverse=(ci % 2 == 1))
+        items.sort(key=lambda t: t[1] if col != "T" else t[2], reverse=(col != "T" and ci % 2 == 0))
         chain.extend(items)
     prev = "LED_DIN"
     for n, (_, _, kid, led) in enumerate(chain):
