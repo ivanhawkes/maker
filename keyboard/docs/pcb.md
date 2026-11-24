@@ -851,7 +851,8 @@ The 1:1 prints in `pcb/print/` and the case in `cad/case/` are regenerated from 
 ## Charger Check Against The Datasheet (2026-11-24)
 
 Desk check only: TI's datasheet (SLUS810N, Rev. N, October 2021;
-`parts/datasheets/TI_BQ2407x_charger_SLUS810N.pdf`) read against the nice!nano's published schematic
+`parts/datasheets/TI_BQ2407x_charger_SLUS810N.pdf`; kept locally and not yet in the repository, which
+is public, until the owner says so: its address and checksum are in `SOURCES.tsv`) read against the nice!nano's published schematic
 (`nice-nano_v2_schematic.png`). Nothing is measured, and the charger is on the module, so
 nothing here can be changed on these boards. It settles point 6 of the
 [electrical review](#electrical-review-2026-11-23), which was written from memory.
@@ -971,6 +972,10 @@ own small parsers and compared with the board as `pcbnew` reads it:
 - F.Paste has only SW_PWR's and SW_RST's pads (11 openings); the other 242 are on the bottom.
   A stencil for the bottom alone covers all but those two parts.
 - The Gerbers' project line reads `rev?`: the boards have no revision in their title block.
+- C1's value on the board reads 10 V; the part in the buying list is rated 25 V, which is
+  the same or better. The text could be brought into line in the generator. Not changed.
+- Each board is over 100 mm both ways and has four layers, so it is outside the houses'
+  cheapest size band. Prices are not looked up.
 - The inner layers' file names end `.g1` and `.g2`. Say the stack order on the order form
   all the same: F.Cu, In1 (GND), In2 (VLED), B.Cu.
 

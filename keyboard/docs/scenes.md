@@ -97,6 +97,10 @@ carry that credit wherever they are shown. The switch model is from kiswitch (MI
 ## Limits
 
 - The keycaps are the published models; the moulded set may differ. To check when measured.
+- Since 2026-11-24 `tools/scene_build.py` reads which cap goes where from
+  `layout/layout.yaml`. The table was compared with the script's old one for all 28 keys and
+  is the same, and Blender loads it, but the `.blend` files and stills have not been rebuilt
+  since: they are from the old copy.
 - Colours are picked by eye, not matched to Bambu Lab filaments or to the caps.
 - The prints are shown smooth, with a fine grain: no layer lines or bed texture.
 - No power switch is shown, so its slot shows the controller's USB connector behind it as a

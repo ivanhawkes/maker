@@ -21,6 +21,51 @@ This is a planned checklist, not evidence that any test has passed. Record the d
 - Test charging and use while connected only if the selected power path supports it. Inspect cell retention, insulation, connectors, battery access, and cable strain relief.
 - Verify flat and tented stability, clearances throughout the chosen adjustment range, switch fit, fasteners, and the owner's hand comfort. Check charging and USB cable access in normal use.
 
+## Checks The Design Work Has Asked For
+
+Specific checks that the design work to date has left for the bench. Each links to where the
+question arose. None is done.
+
+- **Charge time against the charger's safety timer.** Charge the chosen cell from its
+  protection cut-off on the nice!nano, LEDs off, and time it. Note whether the orange LED goes
+  out (done) or flashes at about 2 Hz (timer fault), and whether replugging USB restarts the
+  charge. Expected from the datasheet: about 5 h for a 400 mAh cell, at the timer's limit
+  ([pcb.md](pcb.md#charger-check-against-the-datasheet-2026-11-24)).
+- **Charging with the lighting on.** With VLED on and the LEDs dark, confirm the charge does
+  not finish; with the lighting idle (VLED off), confirm it does (same section).
+- **Cell current at the brightness cap.** All 28 LEDs at white, 20 %: about 0.23 A expected,
+  under the power switch's 0.3 A ([pcb.md](pcb.md#electrical-review-2026-11-23)).
+- **The lighting's fades** ([firmware/README.md](../firmware/README.md#lighting)): lit for 60 s
+  after the last key press, black 5 s later, supply off within a second of that; 50 ms to
+  light up; a key during the fade-out brings it back. Judge whether the straight-line
+  fade-out looks even, and how visible its steps are near black.
+- **LED data against the supply:** with a scope, that the data pin rests low after the
+  lighting goes off, and what RAW does when the LED supply switches on (soft start, R3 and C2).
+- **The idle half:** switch the lighting on from one half while the other is idle; the idle
+  half should stay dark until a key is pressed on it. Measure its current meanwhile (about
+  28 mA expected, the dark LEDs).
+- **The moulded keycaps against the published models:** measure a 1u and a 1.5u cap, and the
+  gap between T2 and T3 on the plate (0.56 mm from the models;
+  [layout/README.md](../layout/README.md#keycap-outlines-in-the-check-2026-11-24)).
+- **The bought parts against the 1:1 prints** in `pcb/print/`, one real LED's pinout with a
+  meter, the antenna's extent on the module and a socket's seated height
+  ([pcb.md](pcb.md#open-items)).
+- **Before an order:** `tools/pcb_check.py`, `tools/fab_generate.py` and its `--check`, then
+  each zip in the board house's own viewer
+  ([pcb.md](pcb.md#fabrication-outputs-2026-11-24)).
+
+## Digital Results So Far
+
+Computer checks only, each repeatable with the command given in the linked document.
+
+| Date | Check | Result |
+| --- | --- | --- |
+| 2026-11-24 | `tools/layout.py check`, with the keycaps' real outlines | 0 failures; tightest caps T2–T3, 0.56 mm ([layout/README.md](../layout/README.md#keycap-outlines-in-the-check-2026-11-24)) |
+| 2026-11-24 | `tools/pcb_check.py` | Both boards: 0 unconnected, 0 errors, parity and ERC clean ([pcb.md](pcb.md#fabrication-outputs-2026-11-24)) |
+| 2026-11-24 | `tools/fab_generate.py`, and gerbonara reading the zips | Both boards pass every check ([pcb.md](pcb.md#fabrication-outputs-2026-11-24)) |
+| 2026-11-24 | Firmware: four images built, `tools/zmk_generate.py --check-build`, the fade's test | All pass; compile only ([firmware/README.md](../firmware/README.md#checks)) |
+| 2026-11-24 | Charger against TI's datasheet | On paper ([pcb.md](pcb.md#charger-check-against-the-datasheet-2026-11-24)) |
+
 ## Acceptance Record
 
 No results recorded yet. The future implementation should add a dated test report with actual results and outstanding issues, and obtain the owner's comfort and usability approval before calling the design complete.

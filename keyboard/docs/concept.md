@@ -94,7 +94,10 @@ has no power constraint and handles the keymap, the display and USB.
   timeout (`CONFIG_ZMK_IDLE_TIMEOUT`, set to 60000 ms). A gradual fade rather
   than an instant cut may need a small custom change or module. Check the
   pinned release. Each half tracks its own activity, so a half that isn't
-  being typed on may go dark independently.
+  being typed on may go dark independently. **Done 2026-11-24, compile only:** a small driver
+  in the firmware module fades the lighting out over 5 s from 60 s after the last key press,
+  and in over 50 ms (owner's times; [firmware/README.md](../firmware/README.md#lighting)).
+  Each half still goes dark on its own.
 - Hosts are Linux and Windows. macOS is not a target.
 
 ## Mechanics

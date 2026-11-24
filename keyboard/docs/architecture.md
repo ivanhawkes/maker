@@ -48,7 +48,15 @@ flashed or measured.
   **Resolved for the pinned `main` commit, 2026-11-23:** all images build with GCC 15.3.1 on
   Zephyr 4.1 ([firmware/README.md](../firmware/README.md)). Compile only.
 - **Gradual fade:** neither ref has a built-in fade-to-black. `AUTO_OFF_IDLE` switches the
-  lighting off when the keyboard goes idle.
+  lighting off when the keyboard goes idle. **Written 2026-11-24** as a led strip driver in
+  this project's firmware module, with no change to ZMK
+  ([firmware/README.md](../firmware/README.md#lighting)). Compile only.
+- **Settings precedence, found 2026-11-24:** ZMK merges `config/<shield>.conf` after the
+  shield's own `.conf`, so a user setting overrides the shield's. A limit the board depends
+  on (the 20 % LED cap) therefore needs a build-time check, which the fade driver has.
+- **Module name, found 2026-11-24:** a ZMK module with a `CMakeLists.txt` needs `name:` in
+  its `zephyr/module.yml` when it is passed as `workspace/..`: Zephyr otherwise names it
+  `..` and the build directories collide.
 
 **Dongle display.** [englmaxi/zmk-dongle-display](https://github.com/englmaxi/zmk-dongle-display)
 (MIT; last push 2026-02-21) replaces the status screen on a ZMK dongle.
