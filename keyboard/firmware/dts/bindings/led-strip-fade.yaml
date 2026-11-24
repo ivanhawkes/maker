@@ -1,0 +1,23 @@
+# A led strip that fades another one in and out: firmware/src/led_strip_fade.c.
+
+description: Passes frames on to another led strip, faded in when lit and out before ZMK's idle timeout
+
+compatible: "led-strip-fade"
+
+properties:
+  led-strip:
+    type: phandle
+    required: true
+    description: The strip that has the LEDs
+  chain-length:
+    type: int
+    required: true
+    description: The number of LEDs, as on that strip (ZMK reads it from its chosen strip)
+  fade-in-ms:
+    type: int
+    required: true
+    description: Black to full when the lighting starts or a key ends a fade-out
+  fade-out-ms:
+    type: int
+    required: true
+    description: Full to black, ending at CONFIG_ZMK_IDLE_TIMEOUT

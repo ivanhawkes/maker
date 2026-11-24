@@ -8,7 +8,7 @@
 / {
     chosen {
         zmk,kscan = &kscan0;
-        zmk,underglow = &led_strip;
+        zmk,underglow = &led_fade;
     };
 
     kscan0: kscan {
@@ -40,6 +40,19 @@
      */
     EXT_POWER {
         control-gpios = <&pro_micro 21 GPIO_ACTIVE_HIGH>, <&gpio0 13 GPIO_ACTIVE_HIGH>;
+    };
+
+    /*
+     * The lighting goes through this to the LED chain (firmware/src/led_strip_fade.c): black
+     * to full over fade-in-ms when it lights, and full to black over the last fade-out-ms
+     * before ZMK's idle timeout, which then switches the lighting and its supply off.
+     */
+    led_fade: led_fade {
+        compatible = "led-strip-fade";
+        led-strip = <&led_strip>;
+        chain-length = <28>;
+        fade-in-ms = <50>;
+        fade-out-ms = <5000>;
     };
 };
 

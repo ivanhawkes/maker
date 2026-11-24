@@ -1,4 +1,9 @@
-# Makes firmware/ a Zephyr module, so its boards/shields/ are found (pass it as ZMK_EXTRA_MODULES).
+# Makes firmware/ a Zephyr module, so its boards/shields/, its dts/bindings/ and its driver
+# (CMakeLists.txt) are found (pass it as ZMK_EXTRA_MODULES). It has a name because the builds
+# pass the directory as "workspace/..", from which Zephyr would take the name "..".
+name: keyboard-firmware
 build:
+  cmake: .
   settings:
     board_root: .
+    dts_root: .
