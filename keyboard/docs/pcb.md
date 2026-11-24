@@ -199,26 +199,62 @@ with spares. Distributor numbers are from a search on 2026-11-23 (not live stock
 "unverified" ones need checking on the distributor's site. Mouser is the default, DigiKey the
 fallback.
 
-| Part | Qty | MPN | Mouser | DigiKey | Notes |
-| --- | --- | --- | --- | --- | --- |
-| Diode, SOD-123 | 100 | Diodes 1N4148W-7-F | 621-1N4148W-F | 1N4148W-FDICT-ND | 56 used |
-| Hot-swap socket, Kailh MX | — | Kailh CPG151101S11 | — | — | **Ordered by the owner from AliExpress** ("quick connects", read as these sockets; to confirm). Fallback: Adafruit 4958 (DigiKey 1528-4958-ND) |
-| LED, SK6812MINI-E (optional) | 6 × 10 | Adafruit 4960 | unverified (485-4960?) | 1528-4960-ND | 56 used. Adafruit's forum reports a pin-label mismatch: check the pinout against the footprint before ordering boards |
-| P-MOSFET, SOT-23 (Q1) | 5 | Diodes DMG2305UX-7 | 621-DMG2305UX-7 | DMG2305UX-7DICT-ND | −20 V, −4.2 A, Vgs(th) −0.5 to −0.9 V, Vgs ±8 V. Chosen over AO3401A, which Mouser does not list. Pinout G-S-D confirmed from the datasheet (2026-11-23) |
-| N-MOSFET, SOT-23 (Q2) | 5 | onsemi BSS138 | unverified (512-BSS138?) | unverified | Threshold 0.8–1.5 V and pinout G-S-D, both from the datasheet (2026-11-23). Chosen over 2N7002, whose 2.5 V maximum threshold is marginal from a 3.3 V pin |
-| Resistor 100 kΩ 1 % 1206 (R1, R2) | 10 | Yageo RC1206FR-07100KL | 603-RC1206FR-07100KL (unverified) | 311-100KFRTR-ND (reel) | |
-| Capacitor 10 µF 25 V X5R 1206 (C1) | 10 | Samsung CL31A106KAHNNNE | 187-CL31A106KAHNNNE | unverified | |
-| Resistor 10 kΩ 1 % 1206 (R3) | 10 | Yageo RC1206FR-0710KL (unverified) | unverified | unverified | Soft start. Value to settle on the bench; 0 Ω removes it |
-| Resistor 470 Ω 1 % 1206 (R4) | 10 | Yageo RC1206FR-07470RL (unverified) | unverified | unverified | LED data |
-| Capacitor 1 µF 16 V or more, X7R, 1206 (C2) | 10 | To choose | — | — | Soft start; optional |
-| JST-PH 2-pin side entry (J1) | 4 | JST S2B-PH-K-S(LF)(SN) | 306-S2BPHKSLFSNPP | 455-1719-ND | |
-| Slide switch SPDT (SW_PWR) | 4 | C&K PCM12SMTR | 611-PCM12SMTR | Obsolete there | Buy at Mouser. DigiKey's suggested replacement does not fit the footprint |
-| Tactile switch (SW_RST) | 4 | E-Switch TL3342F160QG | 612-TL3342F160 | EG2531CT-ND | |
-| Low-profile socket, 12 pin | 5 | Mill-Max 315-43-112-41-003000 | 575-3154311241003000 | No longer carried | Two per controller |
-| Low-profile pins | 60 | Mill-Max 3320-0-00-15-00-00-03-0 | 575-3320000150000030 | ED1134-ND | 24 per controller |
-| Controller | — | Tenstar Robot "ProMicro NRF52840", a nice!nano v2 clone | Not sold | Not sold | **Bought by the owner from AliExpress; the target controller subject to testing (owner, 2026-11-24).** Not a genuine nice!nano v2: check RAW against B+ with a meter before any cell is connected ([controller.md](controller.md)) |
-| Key switches | — | Kailh Speed Bronze | Not sold | Not sold | **Ordered by the owner from AliExpress** |
-| Battery | 2 | 1S LiPo with protection circuit and JST-PH lead | See below | See below | Battery design still deferred |
+**How many to buy (owner, 2026-11-24).** The boards come five of each half. Two keyboards are
+built first, each a left and a right: the modern one and the retro one.
+
+- **The cheaper Mouser parts, and the LEDs and Mill-Max sockets and pins, bought in bulk:**
+  enough to populate all five of each board, so ten boards.
+- **Everything else:** enough for the two keyboards, so four boards, unless the extra comes to
+  under a few dollars a keyboard.
+- **Cells:** for the two keyboards only.
+
+"To buy" applies that, with no spares. Which parts count as cheaper is Claude's reading, without
+prices: the diodes, transistors, resistors, capacitors, connectors and the two small switches.
+"Qty" is still the first keyboard's, with spares, and is not an order.
+
+| Part | Qty | To buy | MPN | Mouser | DigiKey | Notes |
+| --- | --- | --- | --- | --- | --- | --- |
+| Diode, SOD-123 | 100 | 280 | Diodes 1N4148W-7-F | 621-1N4148W-F | 1N4148W-FDICT-ND | 56 used |
+| Hot-swap socket, Kailh MX | — | 112 | Kailh CPG151101S11 | — | — | **Ordered by the owner from AliExpress** ("quick connects", read as these sockets; to confirm). Fallback: Adafruit 4958 (DigiKey 1528-4958-ND) |
+| LED, SK6812MINI-E (optional) | 6 × 10 | 280 | Adafruit 4960 | unverified (485-4960?) | 1528-4960-ND | 56 used. Adafruit's forum reports a pin-label mismatch: check the pinout against the footprint before ordering boards. Bought in bulk: see below |
+| P-MOSFET, SOT-23 (Q1) | 5 | 10 | Diodes DMG2305UX-7 | 621-DMG2305UX-7 | DMG2305UX-7DICT-ND | −20 V, −4.2 A, Vgs(th) −0.5 to −0.9 V, Vgs ±8 V. Chosen over AO3401A, which Mouser does not list. Pinout G-S-D confirmed from the datasheet (2026-11-23) |
+| N-MOSFET, SOT-23 (Q2) | 5 | 10 | onsemi BSS138 | unverified (512-BSS138?) | unverified | Threshold 0.8–1.5 V and pinout G-S-D, both from the datasheet (2026-11-23). Chosen over 2N7002, whose 2.5 V maximum threshold is marginal from a 3.3 V pin |
+| Resistor 100 kΩ 1 % 1206 (R1, R2) | 10 | 20 | Yageo RC1206FR-07100KL | 603-RC1206FR-07100KL (unverified) | 311-100KFRTR-ND (reel) | |
+| Capacitor 10 µF 25 V X5R 1206 (C1) | 10 | 10 | Samsung CL31A106KAHNNNE | 187-CL31A106KAHNNNE | unverified | |
+| Resistor 10 kΩ 1 % 1206 (R3) | 10 | 10 | Yageo RC1206FR-0710KL (unverified) | unverified | unverified | Soft start. Value to settle on the bench; 0 Ω removes it |
+| Resistor 470 Ω 1 % 1206 (R4) | 10 | 10 | Yageo RC1206FR-07470RL (unverified) | unverified | unverified | LED data |
+| Capacitor 1 µF 16 V or more, X7R, 1206 (C2) | 10 | 10 | To choose | — | — | Soft start; optional |
+| JST-PH 2-pin side entry (J1) | 4 | 10 | JST S2B-PH-K-S(LF)(SN) | 306-S2BPHKSLFSNPP | 455-1719-ND | |
+| Slide switch SPDT (SW_PWR) | 4 | 10 | C&K PCM12SMTR | 611-PCM12SMTR | Obsolete there | Buy at Mouser. DigiKey's suggested replacement does not fit the footprint |
+| Tactile switch (SW_RST) | 4 | 10, and 1 a dongle | E-Switch TL3342F160QG | 612-TL3342F160 | EG2531CT-ND | One of the four is the dongle's reset ([dongle-case.md](dongle-case.md)), which leaves one spare |
+| Low-profile socket, 12 pin | 5 | 20 | Mill-Max 315-43-112-41-003000 | 575-3154311241003000 | No longer carried | Two per controller |
+| Low-profile pins | 60 | 240 | Mill-Max 3320-0-00-15-00-00-03-0 | 575-3320000150000030 | ED1134-ND | 24 per controller |
+| Controller | — | 4, and 1 a dongle | Tenstar Robot "ProMicro NRF52840", a nice!nano v2 clone | Not sold | Not sold | **Bought by the owner from AliExpress; the target controller subject to testing (owner, 2026-11-24).** Not a genuine nice!nano v2: check RAW against B+ with a meter before any cell is connected ([controller.md](controller.md)) |
+| Key switches | — | 112 | Kailh Speed Bronze | Not sold | Not sold | **Ordered by the owner from AliExpress** |
+| Battery | 2 | 4 | 1S LiPo with protection circuit and JST-PH lead | See below | See below | Battery design still deferred |
+
+**LEDs in bulk (2026-11-24).** The owner asked who sells the SK6812MINI-E in packs of 100, 200
+or 500. Read from web search results, which are snapshots: only Adafruit's page was read
+directly. Prices are in US dollars unless marked, and none includes shipping. Nothing is
+ordered.
+
+| Seller | How sold | Price | For 280 |
+| --- | --- | --- | --- |
+| LCSC, part C5149201 (OPSCO) | Any quantity; no fixed packs | About $0.07 each at 50 or more, about $0.055 at 500 or more, about $0.05 on a reel of 2,000 | About $21; about $27 to $30 for 500 |
+| AliExpress, two listings | Packs of 100 | $15.16 and $16.39 a pack | About $45 to $50 for 300 |
+| AliExpress, other listings | 20, 50 or 200; 10 to 2,000 | Only the smallest option's price was shown | Not read |
+| Keeb.io | Packs of 25 | $5.99 a pack | About $72 for 300 |
+| Adafruit 4960 (read directly) | Packs of 10 | $2.95 a pack; $2.66 at 10 packs or more; $2.36 at 100 or more | $74 for 28 packs |
+| Core Electronics, Little Bird | Packs of 10 | A$5.90 and A$6.45; both out of stock | — |
+
+- **Recommended, for the owner to decide: LCSC, 300 pieces.** It is the cheapest, and OPSCO is
+  the maker of the datasheet in `parts/` that the footprint was checked against. The extra 20
+  are spares, for about a dollar.
+- **Not confirmed:** LCSC's page loaded without its prices, and the snapshots of it differ by
+  about 10 %. Its postage to Australia was not looked up and may add noticeably to a $21 order.
+- **AliExpress parts are unbranded,** and some listings offer the 3 mA SK6803MINI-E beside the
+  SK6812MINI-E: pick the variant with care.
+- The Mill-Max sockets and pins were not looked up.
 
 **Batteries.** The owner is in Australia. Lithium cells are hard to post, and DigiKey (and
 probably Mouser) ships lithium by ground only, so not to Australia. Options, sources read
