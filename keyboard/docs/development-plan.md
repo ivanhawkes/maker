@@ -164,7 +164,8 @@ then the charging check.
   - **Done 2026-11-24:** the retro case's filament. Bambu's ranges were matched to the
     approved colours, and the owner then chose from what is on hand: PETG Basic Dark Beige
     with Orange ([case-retro.md](case-retro.md), [filament-on-hand.md](filament-on-hand.md)).
-  - The position of the nice!nano's reset button, so the dongle's case can have a pen hole
+  - **Done 2026-11-24, on the computer only:** the dongle's reset. The controller has no reset
+    button, so a hand-wired TL3342 lies in the base, pressed from below with a paper clip
     ([dongle-case.md](dongle-case.md)).
   - **Done 2026-11-24, an estimate only:** the power budget
     ([architecture.md](architecture.md#power-budget-2026-11-24)). About 27 weeks per charge

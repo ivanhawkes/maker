@@ -104,9 +104,9 @@ Results on 2026-11-23 (compile-time checks only):
 
 ## Flashing And Pairing (From ZMK's Documentation; Not Yet Done)
 
-1. Put a nice!nano into its bootloader: double-press reset (on the PCB, or bridge RST to GND
-   twice on a bare dongle). It appears as a USB drive. Copy the `.uf2` onto it; it restarts
-   by itself.
+1. Put a nice!nano into its bootloader: double-press reset (on the PCB; on the dongle, a
+   paper clip in the hole underneath; on a bare board, bridge RST to GND twice). It appears
+   as a USB drive. Copy the `.uf2` onto it; it restarts by itself.
 2. First flash `reset/zephyr/zmk.uf2` to each of the three boards. This clears old bonds.
 3. Then flash each board's own image: left, right, dongle.
 4. Power all three. The halves bond to the dongle by themselves the first time all are on. If

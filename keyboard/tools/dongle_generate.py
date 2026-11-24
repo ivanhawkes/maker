@@ -64,6 +64,16 @@ SCREWS = ((13.6, -42.5), (13.6, -3.1))     # and mirrored
 BLOCK_Z = 9.0
 FEET = ((5.6, -38.5), (5.6, -7.5))         # and mirrored
 
+# Reset: an E-Switch TL3342F160QG on its back, actuator down, in a tunnel through the pad the
+# controller lies on, pressed from below with a paper clip (owner, 2026-11-24). Drawing P010632
+# rev J in parts/datasheets/: body 5.1 square and 1.2 high, 6.6 over the leads, a 2.0 actuator
+# to 1.5 high, each +/- 0.25. The press pushes the switch up against the tunnel's roof.
+RST_Y = -18.0                              # between the feet, the guides and the display's pillars
+RST_BODY, RST_LEADS, RST_H, RST_ACT_R, RST_ACT_H, RST_TOL = 5.1, 6.6, 1.2, 1.0, 1.5, 0.25
+RST_W, RST_Z = 5.8, 2.4                    # the tunnel: across the body, and high enough for wire soldered on the leads
+RST_HOLE_R = 1.4                           # the actuator drops into it, so it is never held pressed
+assert RST_W >= RST_BODY + 2 * RST_TOL and RST_Z >= RST_ACT_H + RST_TOL and RST_HOLE_R > RST_ACT_R + RST_TOL / 2
+
 
 def box(x0, x1, y0, y1, z0, z1):
     return Part.makeBox(x1 - x0, y1 - y0, z1 - z0, V(x0, y0, z0))
@@ -131,7 +141,9 @@ def build():
     ] + both([box(NANO_HW + 0.2, NANO_HW + 2.2, -30.0, -22.0, -0.1, NANO_Z + NANO_T + 0.5)]) + pillars)
     base = carve(base, both([cyl(p, cg.HEAD_R, -PLATE_T - 0.1, SEAT) for p in SCREWS]
                             + [cyl(p, cg.CLEAR_R, SEAT + cg.SKIN, 0.1) for p in SCREWS]
-                            + [cyl(p, cg.FOOT_R, -PLATE_T - 0.1, -PLATE_T + cg.FOOT_Z) for p in FEET]))
+                            + [cyl(p, cg.FOOT_R, -PLATE_T - 0.1, -PLATE_T + cg.FOOT_Z) for p in FEET])
+                 + [box(-6.0, 6.0, RST_Y - RST_W / 2, RST_Y + RST_W / 2, 0, RST_Z),     # open at both ends, for the wires
+                    cyl((0, RST_Y), RST_HOLE_R, -PLATE_T - 0.1, 0.1)])
 
     # What goes inside, as blocks.
     env = {
@@ -140,6 +152,8 @@ def build():
         "USB connector": box(-4.6, 4.6, -7.0, 1.5, NANO_Z - 0.8, NANO_Z + NANO_T + 0.8),
         "USB plug": box(-6.25, 6.25, 0.0, 20.0, NANO_Z + NANO_T / 2 - 3.5, NANO_Z + NANO_T / 2 + 3.5),
         "display": sloped(-OLED / 2, OLED / 2, OLED_V, OLED_V + OLED, -OLED_T, -0.05),
+        "reset switch": box(-RST_LEADS / 2, RST_LEADS / 2, RST_Y - RST_BODY / 2, RST_Y + RST_BODY / 2, 0, RST_H).fuse(
+            cyl((0, RST_Y), RST_ACT_R, RST_H - RST_ACT_H, 0.01)),   # at rest: on the floor, the actuator in the hole
         "display header": sloped(-5.1, 5.1, OLED_V + OLED - 3.0, OLED_V + OLED - 0.4, -OLED_T - 8.5, -OLED_T),
     }
     return {"base": base, "top": top}, env
@@ -175,6 +189,13 @@ def main():
     lifted = env["controller board"].copy()
     lifted.translate(V(0, 0, 1.0))
     check(parts["top"].common(lifted).Volume > 1e-3, "the top's ledges hold the controller's USB end down")
+    pressed = env["reset switch"].copy()
+    pressed.translate(V(0, 0, RST_Z - RST_H + 0.1))
+    roof = NANO_Z - RST_Z
+    check(parts["base"].common(pressed).Volume > 1e-3 and roof >= 1.0,
+          "the reset switch is pressed against a %.1f mm roof, after %.1f mm of lift" % (roof, RST_Z - RST_H))
+    clear = min(math.dist(p, (0, RST_Y)) for p in FEET) - cg.FOOT_R - RST_HOLE_R   # the hole is on the centre line
+    check(clear > 1.0, "the paper clip hole is %.1f mm from the nearest foot recess" % clear)
     pulled = env["controller board"].copy()
     pulled.translate(V(0, 1.0, 0))
     check(parts["top"].common(pulled).Volume > 1e-3, "the back wall takes the pull of unplugging")

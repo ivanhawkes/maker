@@ -1,4 +1,4 @@
-DONGLE ok   base: one valid solid, 9.1 cm3, 38.0 x 50.3 x 30.3 mm
+DONGLE ok   base: one valid solid, 9.0 cm3, 38.0 x 50.3 x 30.3 mm
 DONGLE ok   base clears the controller, the display and a plug
 DONGLE ok   top: one valid solid, 11.4 cm3, 38.0 x 50.3 x 36.0 mm
 DONGLE ok   top clears the controller, the display and a plug
@@ -7,8 +7,10 @@ DONGLE ok   the display's back is 0.30 mm above the pillars
 DONGLE ok   the stops keep the display from sliding down the slope
 DONGLE ok   the fences keep the display from moving sideways
 DONGLE ok   the top's ledges hold the controller's USB end down
+DONGLE ok   the reset switch is pressed against a 1.0 mm roof, after 1.2 mm of lift
+DONGLE ok   the paper clip hole is 5.4 mm from the nearest foot recess
 DONGLE ok   the back wall takes the pull of unplugging
 DONGLE size: 38.0 x 50.3 mm in plan, 39.4 mm high; face at 30 degrees; window 25 x 16 mm
-DONGLE ok   cad/dongle/print/base.3mf: 7356 facets, volume 9.1 cm3
+DONGLE ok   cad/dongle/print/base.3mf: 7964 facets, volume 9.0 cm3
 DONGLE ok   cad/dongle/print/top.3mf: 2672 facets, volume 11.4 cm3
 DONGLE RESULT: all checks pass

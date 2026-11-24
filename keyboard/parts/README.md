@@ -36,7 +36,7 @@ installed KiCad libraries.
 | J1 | JST S2B-PH-K-S | `kicad/Connector_JST.pretty/JST_PH_S2B-PH-K_1x02_P2.00mm_Horizontal` | `kicad/JST_PH_S2B-PH-K_1x02_P2.00mm_Horizontal.step` | `JST_PH_connector_series.pdf` |
 | H1–4 | Mounting hole, M3 (no part) | `kicad/MountingHole.pretty/MountingHole_3.2mm_M3` | — | — |
 | SW_PWR | C&K PCM12SMTR | `kicad/Button_Switch_SMD.pretty/SW_SPDT_PCM12` | `kicad/SW_SPDT_PCM12.step` | `CK_PCM_series_slide_switch_PCM12.pdf` |
-| SW_RST | E-Switch TL3342F160QG | `kicad/Button_Switch_SMD.pretty/SW_SPST_TL3342` | `kicad/SW_SPST_TL3342.step` | `E-Switch_TL3342_series_tactile_switch.pdf`, `E-Switch_TL3342F160QG_drawing.pdf` |
+| SW_RST, and the dongle's reset | E-Switch TL3342F160QG | `kicad/Button_Switch_SMD.pretty/SW_SPST_TL3342` | `kicad/SW_SPST_TL3342.step` | `E-Switch_TL3342_series_tactile_switch.pdf`, `E-Switch_TL3342F160QG_drawing.pdf` |
 | Q1 | Diodes DMG2305UX-7 (P-MOSFET) | `kicad/Package_TO_SOT_SMD.pretty/SOT-23_Handsoldering` | `kicad/SOT-23.step` | `Diodes_DMG2305UX_P-channel_MOSFET_SOT-23.pdf` |
 | Q2 | onsemi BSS138 (N-MOSFET) | Same | Same | `onsemi_BSS138_N-channel_MOSFET_SOT-23.pdf` |
 | R1, R2 | Yageo RC1206FR-07100KL | `kicad/Resistor_SMD.pretty/R_1206_3216Metric_Pad1.30x1.75mm_HandSolder` | `kicad/R_1206_3216Metric.step` | `Yageo_RC_series_chip_resistors.pdf` |
