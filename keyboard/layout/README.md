@@ -7,9 +7,10 @@ be generated from it or checked against it, never edited by hand to diverge.
 
 | File | Role |
 | --- | --- |
-| `layout.yaml` | Hand-edited source: columns (top key, angle, 19.05 mm pitch), and the thumb arc. One cutout size for every key |
+| `layout.yaml` | Hand-edited source: columns (top key, angle, 19.05 mm pitch), the thumb arc, and which keycap goes on which key. One cutout size for every key |
+| `keycap-outlines.json` | Plan outline of each KLP Lamé keycap model, written by [`../tools/keycap_outlines.py`](../tools/keycap_outlines.py) (FreeCAD). Kept in git so `check` needs no FreeCAD; do not edit |
 | `generated/left-hand.csv`, `generated/right-hand.csv` | Per-key centre, rotation and cutout size. Generated; do not edit |
-| `generated/layout.svg` | Plan view of both halves with cutouts and assumed 18 mm keycaps. Generated |
+| `generated/layout.svg` | Plan view of both halves with the cutouts and the keycaps' real outlines. Generated |
 | [`../tools/layout.py`](../tools/layout.py) | Builds and checks the above |
 | [`../tools/freecad_extract.py`](../tools/freecad_extract.py) | Read-only cutout extraction from a FreeCAD sketch (run by `check-cad`) |
 | [`../cad/left-hand/plate.fcstd`](../cad/left-hand/plate.fcstd) | Corrected working CAD for the left plate (see below) |
@@ -22,6 +23,7 @@ Run these inside the devenv shell (it provides PyYAML and FreeCAD), from `keyboa
 ```sh
 python tools/layout.py build       # regenerate layout/generated/*
 python tools/layout.py check       # 28 keys per half, no overlaps, exact mirror, outputs fresh
+FreeCADCmd tools/keycap_outlines.py   # only when a keycap model in parts/ changes
 python tools/layout.py check-cad   # cad/left-hand/plate.fcstd must match the layout exactly
 ```
 
@@ -164,9 +166,31 @@ sizes and the `adjustments` section (it held one entry, of zero) were removed fr
 - **Owner's estimate:** the visible spacing between caps is closer to 2 mm (eyeballed, not
   measured). The figures above are at the cap base. The caps taper to about 15.75 mm at the
   top, so the gap you see from above is larger.
-- **Deferred (owner, 2026-11-22):** add the real cap outlines and the 1.5u positions to
-  `check`. The prototype proves the caps fit for now. Until this is done, `check` uses
-  17.99 mm squares, which are conservative and report 0.18 mm on the thumb arc.
+- **Done 2026-11-24:** `check` uses the real cap outlines, the 1.5u caps included (below). It
+  had used 17.99 mm squares, which reported 0.18 mm on the thumb arc.
+
+### Keycap Outlines In The Check (2026-11-24)
+
+FreeCAD 1.1.4. Digital check only, on the published models: the moulded caps are still to be
+measured.
+
+- `tools/keycap_outlines.py` writes each model's plan outline to `keycap-outlines.json`: the
+  convex hull of everything the cap covers seen from above, 121 to 126 points a cap, inside
+  the true outline by at most 0.01 mm. Each outline carries its model's sha256, and `check`
+  fails if a model in `parts/` no longer matches.
+- Which cap goes on which key, and how it is turned, is in `layout.yaml` (`keycaps`). The
+  showcase scenes read the same table (`tools/scene_build.py`); it held its own copy before,
+  and the two were compared key by key before that copy was removed: identical for all 28.
+- A cap is not mirrored on the right half; it is the same part, turned. The halves' gaps
+  therefore differ a little where a cap is not symmetric.
+- `check`: 0 failures. The tightest pairs, the same on both halves to 0.01 mm: T2–T3 0.56 mm,
+  C0R4–C1R4 and C0R1–C1R1 1.05 mm, C5R4–T1 and the 1u neighbours in a column 1.06 mm. These
+  agree with the 2026-11-22 calculation above.
+- `check` passes when no two outlines overlap; it sets no least gap. `--keycap`, the assumed
+  square size, is removed.
+- The case generators still use 18 × 18 and 18 × 27 mm blocks for the caps
+  ([case.md](../docs/case.md)). The blocks contain the real outlines, so the lid's clearance
+  there is understated, not overstated.
 
 ## Not Yet Generated
 

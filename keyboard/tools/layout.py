@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import io
 import json
 import math
@@ -35,10 +36,10 @@ POS_TOL = 0.001  # mm
 ROT_TOL = 0.001  # degrees
 SIZE_TOL = 0.001  # mm
 
-# 1u KLP Lame keycap, MX stem and MX size: 17.99 x 17.99 mm at the base,
-# measured from the published STEP model (commit 8e4b89b). 1.5u thumb caps
-# are not modelled yet; see layout/README.md.
-DEFAULT_KEYCAP = 17.99
+# The keycaps' plan outlines, written by tools/keycap_outlines.py from the KLP Lame models.
+OUTLINES = ROOT / "layout" / "keycap-outlines.json"
+KLP = ROOT / "parts" / "3d" / "third-party" / "klp-lame" / "mx-stem-mx-size"
+NEAR = 40.0  # mm between centres; no two caps or cutouts further apart than this can touch
 
 
 @dataclass(frozen=True)
@@ -140,6 +141,19 @@ def square(cx: float, cy: float, size: float, rot_deg: float):
     ]
 
 
+def cap_shapes(src: dict, keys: list[Key]) -> list:
+    """Each key's keycap outline, placed. The right half's caps are turned, not mirrored."""
+    outlines = {kind: v["outline"] for kind, v in json.loads(OUTLINES.read_text()).items()}
+    caps = src["keycaps"]
+    out = []
+    for k in keys:
+        kind, turn = caps["keys"].get(k.id) or caps["rows"][k.row]
+        a = math.radians(k.rotation + turn)
+        c, s = math.cos(a), math.sin(a)
+        out.append([(k.x + c * x - s * y, k.y + s * x + c * y) for x, y in outlines[kind]])
+    return out
+
+
 def _project(poly, axis):
     dots = [p[0] * axis[0] + p[1] * axis[1] for p in poly]
     return min(dots), max(dots)
@@ -180,12 +194,13 @@ def polygon_gap(p, q) -> float:
     return best
 
 
-def min_gaps(keys: list[Key], size_of) -> list[tuple[float, Key, Key]]:
-    shapes = [square(k.x, k.y, size_of(k), k.rotation) for k in keys]
+def min_gaps(keys: list[Key], shapes: list) -> list[tuple[float, Key, Key]]:
+    """The gap between each pair of neighbouring keys' shapes (convex polygons), smallest first."""
     out = []
     for i in range(len(keys)):
         for j in range(i + 1, len(keys)):
-            out.append((polygon_gap(shapes[i], shapes[j]), keys[i], keys[j]))
+            if math.hypot(keys[i].x - keys[j].x, keys[i].y - keys[j].y) < NEAR:
+                out.append((polygon_gap(shapes[i], shapes[j]), keys[i], keys[j]))
     return sorted(out, key=lambda t: t[0])
 
 
@@ -207,7 +222,7 @@ def to_csv(keys: list[Key]) -> str:
     return buf.getvalue()
 
 
-def to_svg(left: list[Key], right: list[Key], keycap: float) -> str:
+def to_svg(src: dict, left: list[Key], right: list[Key]) -> str:
     """Plan view of both halves. Right half is drawn offset to the right."""
     gap = 40.0
     half_w = 170.0
@@ -229,17 +244,19 @@ def to_svg(left: list[Key], right: list[Key], keycap: float) -> str:
             f'<text x="{ox:.2f}" y="-63" font-size="4" text-anchor="middle">'
             f'{"Left" if side == "L" else "Right (mirrored)"}</text>'
         )
-        for k in keys:
+        for k, cap in zip(keys, cap_shapes(src, keys)):
             # SVG y points down, so flip y and rotation.
             cx, cy = ox + k.x, -k.y
-            for size, style in (
-                (keycap, 'fill="#eef3fb" stroke="#7a9cc6" stroke-width="0.25" stroke-dasharray="1 0.6"'),
-                (k.cutout, 'fill="none" stroke="#000" stroke-width="0.3"'),
-            ):
-                parts.append(
-                    f'<rect x="{cx-size/2:.3f}" y="{cy-size/2:.3f}" width="{size:.3f}" '
-                    f'height="{size:.3f}" transform="rotate({-k.rotation:.3f} {cx:.3f} {cy:.3f})" {style}/>'
-                )
+            size = k.cutout
+            parts.append(
+                f'<polygon points="{" ".join(f"{ox + x:.3f},{-y:.3f}" for x, y in cap)}" '
+                f'fill="#eef3fb" stroke="#7a9cc6" stroke-width="0.25" stroke-dasharray="1 0.6"/>'
+            )
+            parts.append(
+                f'<rect x="{cx-size/2:.3f}" y="{cy-size/2:.3f}" width="{size:.3f}" '
+                f'height="{size:.3f}" transform="rotate({-k.rotation:.3f} {cx:.3f} {cy:.3f})" '
+                f'fill="none" stroke="#000" stroke-width="0.3"/>'
+            )
             parts.append(
                 f'<text x="{cx:.3f}" y="{cy+1.2:.3f}" font-size="3" text-anchor="middle">{k.id}</text>'
             )
@@ -247,12 +264,12 @@ def to_svg(left: list[Key], right: list[Key], keycap: float) -> str:
     return "\n".join(parts) + "\n"
 
 
-def generated_files(src: dict, keycap: float) -> dict[Path, str]:
+def generated_files(src: dict) -> dict[Path, str]:
     left, right = all_keys(src)
     return {
         GENERATED / "left-hand.csv": to_csv(left),
         GENERATED / "right-hand.csv": to_csv(right),
-        GENERATED / "layout.svg": to_svg(left, right, keycap),
+        GENERATED / "layout.svg": to_svg(src, left, right),
     }
 
 
@@ -262,7 +279,7 @@ def generated_files(src: dict, keycap: float) -> dict[Path, str]:
 def cmd_build(args) -> int:
     src = load_source()
     GENERATED.mkdir(parents=True, exist_ok=True)
-    for path, text in generated_files(src, args.keycap).items():
+    for path, text in generated_files(src).items():
         path.write_text(text)
         print(f"wrote {path.relative_to(ROOT)}")
     return 0
@@ -283,12 +300,18 @@ def cmd_check(args) -> int:
         names = [k.name for k in keys]
         report(len(set(names)) == len(names), f"{side}: key names unique")
 
-        cut = min_gaps(keys, lambda k: k.cutout)[0]
+        cut = min_gaps(keys, [square(k.x, k.y, k.cutout, k.rotation) for k in keys])[0]
         report(cut[0] > 0, f"{side}: switch cutouts do not overlap "
                f"(min web {cut[0]:.3f} mm, {cut[1].id}-{cut[2].id})")
-        cap = min_gaps(keys, lambda k: args.keycap)[0]
-        report(cap[0] > 0, f"{side}: {args.keycap} mm keycap outlines do not overlap "
-               f"(min gap {cap[0]:.3f} mm, {cap[1].id}-{cap[2].id}; 1u KLP Lame MX size)")
+        gaps = min_gaps(keys, cap_shapes(src, keys))
+        report(gaps[0][0] > 0, f"{side}: KLP Lame keycap outlines do not overlap (tightest: "
+               + ", ".join(f"{a.id}-{b.id} {g:.2f} mm" for g, a, b in gaps[:4]) + ")")
+
+    for kind, v in json.loads(OUTLINES.read_text()).items():
+        model = KLP / f"MX_Stem_MX_Size_{kind}.step"
+        report(hashlib.sha256(model.read_bytes()).hexdigest() == v["sha256"],
+               f"keycap outline {kind} was made from the model in parts/ "
+               "(if not: FreeCADCmd tools/keycap_outlines.py)")
 
     by_id = {k.id: k for k in right}
     mirror_ok = all(
@@ -298,7 +321,7 @@ def cmd_check(args) -> int:
     )
     report(mirror_ok, "right half is the exact mirror of the left about the y axis")
 
-    stale = [p for p, text in generated_files(src, args.keycap).items()
+    stale = [p for p, text in generated_files(src).items()
              if not p.exists() or p.read_text() != text]
     report(not stale, "generated files are up to date"
            + ("" if not stale else f" (stale: {', '.join(str(p.relative_to(ROOT)) for p in stale)}; run build)"))
@@ -361,8 +384,6 @@ def cmd_check_cad(args) -> int:
 
 def main(argv=None) -> int:
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    p.add_argument("--keycap", type=float, default=DEFAULT_KEYCAP,
-                   help=f"assumed keycap base size in mm (default {DEFAULT_KEYCAP})")
     sub = p.add_subparsers(dest="cmd", required=True)
     sub.add_parser("build").set_defaults(func=cmd_build)
     sub.add_parser("check").set_defaults(func=cmd_check)

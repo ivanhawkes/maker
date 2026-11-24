@@ -91,6 +91,25 @@ thumb_arc:
       rotation: -28.0
       note: outermost
 
+# Which keycap goes on which key (owner, 2026-11-23), as [model, turn in degrees]: the KLP
+# Lame models in parts/3d/third-party/klp-lame/mx-stem-mx-size/. `keys` overrides `rows`.
+# The turn is added to the key's rotation. The tilted caps are high at their far edge; on
+# the bottom row they are turned round, so both rows lean towards the home row. The 1.5u
+# caps lie lengthways, their cut edge towards the user. A cap is not mirrored on the right
+# half: it is the same part, turned.
+keycaps:
+  rows:
+    R1: [Saddle_Tilted, 0]
+    R2: [Saddle, 0]
+    R3: [Saddle, 0]
+    R4: [Saddle_Tilted, 180]
+  keys:
+    C4R3: [Saddle_Homing, 0]
+    T0: [Thumb, 0]
+    T1: [Thumb, 0]
+    T2: [1.5U_Thumb_V, -90]
+    T3: [1.5U_Thumb_V, -90]
+
 # The right half is the left half mirrored about the y axis (x -> -x,
 # rotation -> -rotation). Key ids keep their meaning (C0 is the outer pinky
 # column on both halves). The mirror is geometric only: PCB footprints,

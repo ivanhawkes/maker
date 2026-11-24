@@ -27,6 +27,7 @@ import sys
 
 import bmesh
 import bpy
+import yaml
 from bpy_extras.object_utils import world_to_camera_view
 from mathutils import Matrix, Vector
 
@@ -40,12 +41,8 @@ assert SIZE in SIZES, "--size is one of %s" % ", ".join(SIZES)
 with open(BUILD + "/manifest.json") as f:
     MAN = json.load(f)
 
-# Which keycap goes where (owner, 2026-11-23), as (model, turn in degrees). The tilted caps
-# are high at their far edge; on the bottom row they are turned round, so both rows lean
-# towards the home row. The 1.5u caps lie lengthways, their cut edge towards the user.
-ROW_CAP = {"R1": ("Saddle_Tilted", 0), "R2": ("Saddle", 0), "R3": ("Saddle", 0), "R4": ("Saddle_Tilted", 180)}
-HOMING = {"C4R3": "Saddle_Homing"}
-THUMB_CAP = {"T0": ("Thumb", 0), "T1": ("Thumb", 0), "T2": ("1.5U_Thumb_V", -90), "T3": ("1.5U_Thumb_V", -90)}
+with open("layout/layout.yaml") as f:
+    CAPS = yaml.safe_load(f)["keycaps"]   # which keycap goes where, as [model, turn in degrees]
 
 # How far each group lifts in the exploded view, mm along the case's z.
 LIFT = {"plinth": -52, "stripe": -34, "screws": -30, "tray": 0, "cell": 26, "board": 44, "controller": 56,
@@ -228,8 +225,7 @@ def half(kb, side, coll, mats, explode):
     for kid, row, x, y, rot in keys(side):
         for piece in ("bottom", "top", "stem", "metal"):
             put("switches", "switch %s %s" % (kid, piece), load("switch-" + piece, mats["switch " + piece], smooth=30), (x, y, 0), rot)
-        kind, turn = THUMB_CAP[kid] if kid in THUMB_CAP else ROW_CAP[row]
-        kind = HOMING.get(kid, kind)
+        kind, turn = CAPS["keys"].get(kid) or CAPS["rows"][row]
         # the cap sits where its stem hole's end meets the top of the switch's stem
         put("caps", "cap %s" % kid, load("cap-" + kind, mats["caps"], smooth=30), (x, y, stem_top - MAN["caps"][kind]["ceiling"]), rot + turn)
     return root, made
@@ -381,7 +377,7 @@ def build(kb):
                 for g, obs in made.items():
                     groups.setdefault(g, []).extend(obs)
                 if side == "left":
-                    detail = made["lid"] + [o for o in made["caps"] if o.name.split()[-1] in THUMB_CAP]
+                    detail = made["lid"] + [o for o in made["caps"] if o.name.split()[-1][0] == "T"]
         else:
             root, made = half(kb, "left", coll, mats, 1)
             stand(kb, "left", coll, root).location.z += -LIFT["plinth" if kb == "retro" else "screws"] * MM + 0.012

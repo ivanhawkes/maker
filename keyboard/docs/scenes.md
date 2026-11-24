@@ -41,7 +41,8 @@ LEDs, connector or wiring are shown.
 
 ## Keycaps
 
-Arranged as the owner's set is (owner, 2026-11-23), per half:
+Arranged as the owner's set is (owner, 2026-11-23), per half. The table the scenes are built
+from is `keycaps` in [`layout/layout.yaml`](../layout/layout.yaml):
 
 | Keys | Model | Count |
 | --- | --- | --- |
