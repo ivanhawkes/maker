@@ -66,6 +66,8 @@ blender -b --python tools/scene_build.py                         # the two .blen
 blender -b --python tools/scene_build.py -- --render             # and 20 stills at 1920 x 1080
 blender -b --python tools/scene_build.py -- --render --size 2k   # 2560 x 1440
 blender -b --python tools/scene_build.py -- --render --size 4k   # 3840 x 2160
+# a trial of filament colours on the retro case (body, accent; hex codes), hero views only:
+blender -b --python tools/scene_build.py -- --render --colours darkbeige-orange=DBC8B6,FF671F --camera "1 hero"
 ```
 
 `--only kb1` or `--only retro` does one keyboard. `--preview` renders small quick stills into
@@ -99,9 +101,15 @@ carry that credit wherever they are shown. The switch model is from kiswitch (MI
 - The keycaps are the published models; the moulded set may differ. To check when measured.
 - Since 2026-11-24 `tools/scene_build.py` reads which cap goes where from
   `layout/layout.yaml`. The table was compared with the script's old one for all 28 keys and
-  is the same, and Blender loads it, but the `.blend` files and stills have not been rebuilt
-  since: they are from the old copy.
-- Colours are picked by eye, not matched to Bambu Lab filaments or to the caps.
+  is the same, and the script has since built and rendered the retro scene with it (the
+  colour trials of 2026-11-24). The kept `.blend` files and stills have not been rebuilt:
+  they are from the old copy.
+- `--colours` writes its scene file and stills to `cad/scenes/build/` only, so a trial never
+  replaces the kept files. A trial is lit for judging colour, not for mood: white lamps, a
+  grey floor and no colour grading. It shows nominal hex codes, and one finish for every part.
+- Colours are picked by eye, not matched to Bambu Lab filaments or to the caps. The kept
+  retro stills predate the filament choice of 2026-11-24 (Dark Beige with Orange); the colour
+  trials in the build folder show it.
 - The prints are shown smooth, with a fine grain: no layer lines or bed texture.
 - No power switch is shown, so its slot shows the controller's USB connector behind it as a
   bright shape.

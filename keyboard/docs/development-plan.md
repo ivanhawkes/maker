@@ -161,14 +161,15 @@ then the charging check.
     now in `parts/datasheets/` ([pcb.md](pcb.md#charger-check-against-the-datasheet-2026-11-24)).
     The review's point stands. New: a 400 mAh cell charged from flat at the module's 89 mA
     takes about as long as the charger's 5 h safety timer; to time on the bench.
-  - Match off-white, burnt orange, brown and mustard to Bambu Lab's PETG and PLA ranges
-    ([case-retro.md](case-retro.md)).
+  - **Done 2026-11-24:** the retro case's filament. Bambu's ranges were matched to the
+    approved colours, and the owner then chose from what is on hand: PETG Basic Dark Beige
+    with Orange ([case-retro.md](case-retro.md), [filament-on-hand.md](filament-on-hand.md)).
   - The position of the nice!nano's reset button, so the dongle's case can have a pen hole
     ([dongle-case.md](dongle-case.md)).
   - **Done 2026-11-24, an estimate only:** the power budget
     ([architecture.md](architecture.md#power-budget-2026-11-24)). About 27 weeks per charge
-    with the lighting off; a target of 8 weeks and its test are proposed for the owner to
-    decide.
+    with the lighting off. The owner set the target the same day: at least 8 weeks with
+    no LED lighting.
 - For the owner to decide:
   - The keymap: the thumb keys and the Fn layer are still a first proposal
     ([firmware/README.md](../firmware/README.md)).

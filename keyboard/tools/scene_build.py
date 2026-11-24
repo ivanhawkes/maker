@@ -3,13 +3,17 @@
 Run from keyboard/, after tools/scene_export.py has written the meshes:
 
     blender -b --python tools/scene_build.py -- [--render] [--size 1080p|2k|4k] [--only kb1|retro] [--preview]
+                                                [--colours NAME=BODY,ACCENT] [--camera TEXT]
 
 It writes cad/scenes/kb1.blend and cad/scenes/retro.blend. Each file has two scenes,
 "assembled" (both halves on a desk) and "exploded" (the left half taken apart along its
 assembly axis), each with five cameras and its own lighting. The cameras are bound to
 timeline markers: frames 1 to 5 step through them. --render writes a still for each camera to
 cad/scenes/renders/<size>/ (1080p by default; 2k is 2560 x 1440, 4k is 3840 x 2160). --preview
-makes small quick ones in cad/scenes/build/ instead, for trying a change.
+makes small quick ones in cad/scenes/build/ instead, for trying a change. --colours tries a
+pair of filament colours (hex codes) on the retro case: only that case is built, and its file
+and stills (cad/scenes/build/colours/NAME-...) go to the build folder too, so the kept ones are
+left alone. --camera renders only the cameras whose name has the text, as "hero".
 
 Nothing is placed by hand: every position comes from the layout, the case files and the
 manifest, so a regenerated case is shown by running this again. Units: Blender metres; the
@@ -38,6 +42,8 @@ PREVIEW = "--preview" in ARGS
 SIZES = {"1080p": (1920, 1080), "2k": (2560, 1440), "4k": (3840, 2160)}
 SIZE = ARGS[ARGS.index("--size") + 1] if "--size" in ARGS else "1080p"
 assert SIZE in SIZES, "--size is one of %s" % ", ".join(SIZES)
+TRIAL = ARGS[ARGS.index("--colours") + 1] if "--colours" in ARGS else None
+CAMERA = ARGS[ARGS.index("--camera") + 1] if "--camera" in ARGS else ""
 with open(BUILD + "/manifest.json") as f:
     MAN = json.load(f)
 
@@ -75,6 +81,20 @@ LOOKS = {
         ],
     },
 }
+
+
+
+def linear(code):
+    """A hex colour code as the linear RGB that Blender's materials take."""
+    return tuple(((c / 255 + 0.055) / 1.055) ** 2.4 if c > 10 else c / 255 / 12.92 for c in bytes.fromhex(code.lstrip("#")))
+
+
+if TRIAL:   # for judging colour: white lamps, a grey floor and no colour grading. The finishes stay as they are
+    TRIAL, pair = TRIAL.split("=")
+    body, accent = (linear(code) for code in pair.split(","))
+    LOOKS["retro"].update(case=(body, 0.48), plate=(accent, 0.45), accent=(accent, 0.45),
+                          floor=((0.18, 0.18, 0.18), 0.55), world=((0.05, 0.05, 0.05), 1.0),
+                          lights=[(name, off, size, watts, 6500) for name, off, size, watts, _ in LOOKS["retro"]["lights"]])
 
 # Cameras: name, direction the camera stands in (azimuth from the user's side, clockwise seen
 # from above; elevation), lens in mm, f-stop, what to frame, margin.
@@ -322,6 +342,8 @@ def settings(scene):
     scene.cycles.use_denoising = True
     scene.render.image_settings.file_format = "PNG"
     scene.unit_settings.scale_length = 1.0
+    if TRIAL:
+        scene.view_settings.view_transform = "Standard"   # Blender's default one shifts strong colours
     # Every graphics card this Blender can reach, together (owner, 2026-11-24). Otherwise the CPU.
     prefs = bpy.context.preferences.addons["cycles"].preferences
     scene.cycles.device = "CPU"
@@ -404,24 +426,26 @@ def build(kb):
 
     os.makedirs(OUT, exist_ok=True)
     bpy.context.preferences.filepaths.save_version = 0   # no .blend1 beside the file
-    path = os.path.abspath("%s/%s.blend" % (BUILD if PREVIEW else OUT, kb))
+    path = os.path.abspath("%s/%s.blend" % (BUILD if PREVIEW or TRIAL else OUT, kb))
     bpy.ops.wm.save_as_mainfile(filepath=path, compress=True)
     print("SCENE %s: %s, %d objects, %d meshes, device %s" % (kb, path, len(bpy.data.objects), len(bpy.data.meshes),
                                                              scenes["assembled"].cycles.device), flush=True)
     if "--render" in ARGS:
-        folder = os.path.abspath(BUILD + "/preview" if PREVIEW else "%s/renders/%s" % (OUT, SIZE))
+        folder = os.path.abspath(BUILD + "/colours" if TRIAL else BUILD + "/preview" if PREVIEW else "%s/renders/%s" % (OUT, SIZE))
         os.makedirs(folder, exist_ok=True)
         for name, scene in scenes.items():
             if bpy.context.window:
                 bpy.context.window.scene = scene   # markers only switch the camera in the window's scene
             for marker in sorted(scene.timeline_markers, key=lambda m: m.frame):
+                if CAMERA not in marker.name:
+                    continue
                 scene.frame_set(marker.frame)   # the marker at this frame puts its camera in charge
                 scene.camera = marker.camera
-                scene.render.filepath = "%s/%s-%s-%s.png" % (folder, kb, name, marker.name.replace(" ", "-"))
+                scene.render.filepath = "%s/%s-%s-%s.png" % (folder, TRIAL or kb, name, marker.name.replace(" ", "-"))
                 bpy.ops.render.render(write_still=True, scene=scene.name)
                 print("SCENE rendered", scene.render.filepath, flush=True)
 
 
 for kb in ("kb1", "retro"):
-    if "--only" not in ARGS or ARGS[ARGS.index("--only") + 1] == kb:
+    if kb == "retro" if TRIAL else "--only" not in ARGS or ARGS[ARGS.index("--only") + 1] == kb:
         build(kb)

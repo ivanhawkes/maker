@@ -29,8 +29,8 @@ section front to back, near edge on the left
 
 | Part | Colour | What it is |
 | --- | --- | --- |
-| Tray | off-white | Keyboard 1's tray inside a body 6 mm thicker all round, with 10 mm corners and a rolled top edge |
-| Plate | accent | Keyboard 1's plate, unchanged |
+| Tray | off-white (Dark Beige) | Keyboard 1's tray inside a body 6 mm thicker all round, with 10 mm corners and a rolled top edge |
+| Plate | accent (Orange) | Keyboard 1's plate, unchanged |
 | Lid (the hood) | off-white | Keyboard 1's lid inside a taller body, 7 mm high, with a rolled edge and nine louvre grooves over the battery |
 | Plinth | off-white | A raked base under the tray: 6°, far edge high. A stripe 2 mm high and 1.4 mm deep is recessed round its top |
 | Stripe | accent | Optional. A ring 1.2 mm thick that fills the stripe; left out, the stripe is a shadow line |
@@ -45,6 +45,56 @@ chosen yet: the actual colours are to be picked from that range. The case is des
 PETG profile of [decisions.md](decisions.md); if a part is printed in PLA, check its fits again,
 and note that PLA softens at a lower temperature than PETG, which matters beside the battery
 and the charger ([case.md](case.md#limits-and-open-items)).
+
+**Filament candidates (2026-11-24). Nothing is chosen or bought.** Hex codes are Bambu Lab's
+own nominal values, as web search returned them from its hex tables that day (PETG HF: its
+[hex code sheet](https://store.bblcdn.com/s7/default/f9b2b5ac54aa4aabaf2d725e6a830045/PETG_HF_Hex_Code_Table.pdf);
+PLA Matte and PLA Basic: its store's tables, repeated by resellers). Bambu's store could not be
+read directly, so the Australian store's stock and prices are not checked. A hex code is not a
+printed colour: one shop's measured prints of PLA Matte differ from the nominal values (Bone
+White #E4DFD4 against #CBC6B8). For comparison, the showcase renders use about #E7E2D1 for the
+body and #CE7B21 for the accent.
+
+| Use | PETG HF (preferred material) | PLA Matte | PLA Basic |
+| --- | --- | --- | --- |
+| Body, off-white | Cream #F9DFB9; White #FFFFFF | Bone White #CBC6B8; Desert Tan #E8DBB7; Ivory White #FFFFFF | Beige #F7E6DE; Jade White #FFFFFF |
+| Accent, burnt orange | Orange #F75403, a vivid orange, not burnt | **Terracotta #B15533**, the nearest to burnt orange; Mandarin Orange #F99963, pale | Brown #9D432C, a rust; Pumpkin Orange #FF9016; Orange #FF6A13 |
+| Accent, brown | Peanut Brown #875718 | Caramel #AE835B; Dark Brown #7D6556; Dark Chocolate #4D3324 | Cocoa Brown #6F5034 |
+| Accent, mustard | Yellow #FFD00B, a bright yellow, not mustard | Lemon Yellow #F7D959, pale | Gold #E4BD68, the nearest to mustard; Sunflower Yellow #FEC600 |
+
+- PETG HF has 14 colours in all, and no burnt orange or mustard among them; PLA Matte has the
+  period colours.
+- The body parts sit beside the battery and the charger and are designed for PETG. The plate
+  and the stripe are the accent parts: the stripe carries nothing, but the plate holds the
+  switches, and that fit is only tried in PETG
+  ([decisions.md](decisions.md)). A PLA plate needs a switch-retention test first.
+- PETG HF prints glossy and PLA Matte matte: a mixed case mixes finishes.
+- **Decided (owner, 2026-11-24): the body is Cream, and the accent may be a PLA Matte
+  colour.** Which accent is still open; Claude's suggestion is PLA Matte Terracotta if a PLA
+  plate holds the switches, otherwise PETG HF Orange or Peanut Brown. Nothing is bought.
+- **On hand (owner, 2026-11-24):** the list is in [filament-on-hand.md](filament-on-hand.md).
+  The PETG is PETG Basic, not PETG HF, and includes Dark Beige (#DBC8B6), White and Orange
+  (#FF671F), so this case can be printed today with nothing bought. PETG HF Cream and PLA
+  Matte Terracotta would have to be bought.
+- **Owner, 2026-11-24, after the list of what is on hand:** use the colours on hand if
+  possible, and start with only those. So the body is for now Dark Beige or White (PETG
+  Basic), not the Cream chosen earlier, which would be bought; and the accent is PETG Basic
+  Orange or Yellow, or PETG-CF Brick Red. The owner has a hardened steel nozzle, which the
+  carbon-fibre filament needs.
+- **Decided (owner, 2026-11-24): Dark Beige with Orange.** Both are Bambu PETG Basic and on
+  hand: Dark Beige (30403, nominal #DBC8B6) for the tray, hood and plinth, and Orange (30301,
+  nominal #FF671F) for the plate and the stripe. Nothing is bought, the whole case is in the
+  material it is profiled for, and the plate's switch fit is the one already tried in PETG.
+  Chosen from renders, not from a print.
+- **Trial renders, 2026-11-24:** the hero views of six pairs from the filament on hand, in
+  `cad/scenes/build/colours/` (not kept in git; `sheet-on-hand.png` shows them together):
+  Dark Beige and White, each with Orange, Brick Red and Yellow. Made with, for example,
+  `blender -b --python tools/scene_build.py -- --render --colours darkbeige-orange=DBC8B6,FF671F --camera "1 hero"`.
+  They are lit with white lamps on a grey floor with no colour grading (owner's request; a
+  first set under the scene's warm lamps made every colour look orange and was discarded).
+  They show nominal hex codes: the pure white body is brighter than a print will be, both
+  finishes are drawn alike, and carbon-fibre filament's matte, speckled surface is not shown.
+  A printed swatch is the only real test.
 
 - **The rolled edge** is an arc of 6 mm radius from 45° to upright: 1.8 mm in and 4.2 mm
   high. It starts at 45° so that the hood, which prints top down, needs no support there. It is
