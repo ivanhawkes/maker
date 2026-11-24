@@ -27,6 +27,7 @@ The geometry, switch count, dimensions, and relationships between the source and
 - [Retro case](docs/case-retro.md): the 1970s case for keyboard 2, built round the first case's insides.
 - [Dongle case](docs/dongle-case.md): the printed case for the hand-wired dongle, and its wiring.
 - [Showcase scenes](docs/scenes.md): the Blender files and stills of both keyboards, and how they are made.
+- [Target controller](docs/controller.md): the board bought, a nice!nano clone, and the tests it must pass.
 - [Filament on hand](docs/filament-on-hand.md): the owner's spools, for choosing colours.
 - [Parts](parts/README.md): local footprints, 3D models and datasheets for every part.
 - [Verification plan](docs/verification.md): digital checks and physical tests to plan and record.

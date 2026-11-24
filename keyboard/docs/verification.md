@@ -23,6 +23,9 @@ This is a planned checklist, not evidence that any test has passed. Record the d
 
 ## Checks The Design Work Has Asked For
 
+**First: the controller's acceptance tests** in [controller.md](controller.md#tests-to-pass).
+The board bought is a clone, and two of its tests come before any cell is connected.
+
 Specific checks that the design work to date has left for the bench. Each links to where the
 question arose. None is done.
 

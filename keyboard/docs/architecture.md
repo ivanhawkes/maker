@@ -142,6 +142,10 @@ An estimate from published figures, for each half. **Nothing is measured**: it i
 "weeks per charge" a number to agree and a current to measure against, not to promise a
 runtime. The dongle runs from USB and has no budget.
 
+**These figures are for a genuine nice!nano v2.** The board bought is a clone
+([controller.md](controller.md)), reported to draw anything from 4 µA to 700 µA more
+depending on its batch. Its measured currents decide whether it meets the target.
+
 **Inputs.** ZMK's power profiler data at the pinned commit
 (`firmware/workspace/zmk/docs/src/data/power.js` and `components/power-estimate.js`), which
 ZMK says were measured on nice!nanos with a Nordic Power Profiler Kit, to ±20 %:

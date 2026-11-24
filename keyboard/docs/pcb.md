@@ -216,7 +216,7 @@ fallback.
 | Tactile switch (SW_RST) | 4 | E-Switch TL3342F160QG | 612-TL3342F160 | EG2531CT-ND | |
 | Low-profile socket, 12 pin | 5 | Mill-Max 315-43-112-41-003000 | 575-3154311241003000 | No longer carried | Two per controller |
 | Low-profile pins | 60 | Mill-Max 3320-0-00-15-00-00-03-0 | 575-3320000150000030 | ED1134-ND | 24 per controller |
-| Controller | — | nice!nano v2 | Not sold | Not sold | **Ordered by the owner from AliExpress.** Check it is a genuine v2 (pinout, RAW as BATTERY+) before fitting |
+| Controller | — | Tenstar Robot "ProMicro NRF52840", a nice!nano v2 clone | Not sold | Not sold | **Bought by the owner from AliExpress; the target controller subject to testing (owner, 2026-11-24).** Not a genuine nice!nano v2: check RAW against B+ with a meter before any cell is connected ([controller.md](controller.md)) |
 | Key switches | — | Kailh Speed Bronze | Not sold | Not sold | **Ordered by the owner from AliExpress** |
 | Battery | 2 | 1S LiPo with protection circuit and JST-PH lead | See below | See below | Battery design still deferred |
 
@@ -849,6 +849,10 @@ The owner asked for the three changes that the [case design](case.md) suggested.
 The 1:1 prints in `pcb/print/` and the case in `cad/case/` are regenerated from these boards.
 
 ## Charger Check Against The Datasheet (2026-11-24)
+
+**This applies to a genuine nice!nano v2 only.** The board bought is a clone with a different
+charger and no power path ([controller.md](controller.md)): the timer and the figures below
+are not that board's. The section is kept in case a genuine board is used.
 
 Desk check only: TI's datasheet (SLUS810N, Rev. N, October 2021;
 `parts/datasheets/TI_BQ2407x_charger_SLUS810N.pdf`) read against the nice!nano's published schematic
