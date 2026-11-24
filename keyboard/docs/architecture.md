@@ -186,7 +186,9 @@ cap, or 12 hours of dark-but-powered. So "weeks per charge" holds only with the 
 as the requirement says, and the rule that the LED supply goes off when idle is what keeps a
 lit keyboard from emptying itself in half a day.
 
-**Proposed target and test, for the owner to decide** ([decisions](decisions.md)):
+**Target and test** ([decisions](decisions.md)). The target is the owner's (2026-11-24): at
+least 8 weeks per charge with no LED lighting. The conditions and the test are Claude's
+proposal:
 
 - **At least 8 weeks per charge for each half, lighting off, 8 hours awake a day, on the
   400 mAh cell.** That allows an average of 253 µA; the estimate is 75 µA, so there is a
