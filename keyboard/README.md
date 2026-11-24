@@ -2,7 +2,7 @@
 
 A personal keyboard project based on an accepted left-hand switch-position prototype. The goal is two mirrored, rechargeable keyboard halves communicating over Bluetooth Low Energy (BLE) with a separate desk controller connected to the PC by USB. The owner intends to print the cases on a Bambu Labs X2D.
 
-**Status (2026-11-23):** design in progress. Both PCB halves are generated and fully routed by script, and pass KiCad's design rule check; the firmware for both halves and the dongle compiles ([firmware](firmware/README.md)). Each half has a schematic drawn from its board, with KiCad's electrical rules check clean. Nothing has been fabricated or flashed, and there is no final case yet. Nothing here is verified on hardware.
+**Status (2026-11-24):** design in progress. Both PCB halves are generated and fully routed by script, and pass KiCad's design rule check; their fabrication files are generated and checked on the computer ([PCB design](docs/pcb.md#fabrication-outputs-2026-11-24)); the firmware for both halves and the dongle compiles ([firmware](firmware/README.md)). Each half has a schematic drawn from its board, with KiCad's electrical rules check clean. Nothing has been fabricated or flashed, and there is no final case yet. Nothing here is verified on hardware.
 
 ## Prototype
 
@@ -42,7 +42,7 @@ the devenv ([PCB design](docs/pcb.md#running-the-tools)).
 
 ```sh
 python tools/layout.py build       # layout/generated/ from layout/layout.yaml
-python tools/layout.py check       # 28 keys a half, no overlaps, exact mirror, outputs fresh
+python tools/layout.py check       # 28 keys a half, no overlaps (cutouts, real keycap outlines), exact mirror, outputs fresh
 ```
 
 **2. Boards and schematics** ([PCB design](docs/pcb.md)). These need KiCad's own Python:
@@ -58,6 +58,7 @@ export PYTHONPATH=$(echo "$K" | grep 'kicad-base-10')/lib/python3.14/site-packag
 "$PY" tools/pcb_generate.py        # both boards, routed, and their schematics; about 15 s
 "$PY" tools/pcb_check.py           # design rules, electrical rules, schematic parity; about 40 s
 "$PY" tools/pcb_review.py          # the boards' nets against the firmware's matrix
+"$PY" tools/fab_generate.py        # Gerbers, drill files, placement and parts list in pcb/fab/, checked; about 8 s
 
 for s in left right; do            # 1:1 prints for checking parts against the board
   kicad-cli pcb export pdf --mode-single --black-and-white --ev \

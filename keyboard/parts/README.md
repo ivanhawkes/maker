@@ -31,7 +31,7 @@ installed KiCad libraries.
 | (keycaps) | KLP Lamé, the MX set, black: a moulded set of 60 with four 1.5u (owner) | — | `third-party/klp-lame/mx-stem-mx-size/` (12 kinds). `mx-stem-choc-size/` is kept in case a later design wants Choc-size caps (owner) | — |
 | D1–28 | Diodes 1N4148W-7-F | `kicad/Diode_SMD.pretty/D_SOD-123` | `kicad/D_SOD-123.step` | `Diodes_1N4148W_switching_diode_SOD-123.pdf` |
 | LED1–28 | SK6812MINI-E (optional) | `kicad/LED_SMD.pretty/LED_SK6812MINI-E_3.2x2.8mm_P1.5mm_ReverseMount` | `kicad/LED_SK6812MINI-E_3.2x2.8mm_P1.5mm_ReverseMount.step` | `SK6812MINI-E_Opsco_rev02.pdf` |
-| U1 | nice!nano v2 (nRF52840) | `marbastlib/marbastlib-xp-promicroish.pretty/ProMicro_Reversible_Single` | `third-party/Nice_Nano_V2.step` | `nice-nano_v2_pinout.png`, `nice-nano_v2_schematic.png`, `Nordic_nRF52840_Product_Specification_v1.11.pdf` |
+| U1 | nice!nano v2 (nRF52840) | `marbastlib/marbastlib-xp-promicroish.pretty/ProMicro_Reversible_Single` | `third-party/Nice_Nano_V2.step` | `nice-nano_v2_pinout.png`, `nice-nano_v2_schematic.png`, `Nordic_nRF52840_Product_Specification_v1.11.pdf`, `TI_BQ2407x_charger_SLUS810N.pdf` (its charger) |
 | (U1 sockets) | Mill-Max 315-43-112-41-003000 strip, 3320-0-00-15-00-00-03-0 pins | U1's holes | — | `MillMax_310_311_315_series_socket_catalog_page.pdf`, `MillMax_3320-0-00-15-00-00-03-0_pin_DigiKey.pdf` |
 | J1 | JST S2B-PH-K-S | `kicad/Connector_JST.pretty/JST_PH_S2B-PH-K_1x02_P2.00mm_Horizontal` | `kicad/JST_PH_S2B-PH-K_1x02_P2.00mm_Horizontal.step` | `JST_PH_connector_series.pdf` |
 | H1–4 | Mounting hole, M3 (no part) | `kicad/MountingHole.pretty/MountingHole_3.2mm_M3` | — | — |

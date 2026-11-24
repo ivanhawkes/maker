@@ -1,0 +1,20 @@
+left: ok   every copper zone is filled as saved
+left: ok   11 Gerbers and 2 drill files written
+left: ok   layers drawn: F.Cu 464, In1.Cu 14384, In2.Cu 14312, B.Cu 1133, F.Paste 11, B.Paste 242, F.SilkS 8537, B.SilkS 23066, F.Mask 7608, B.Mask 18632, Edge.Cuts 244
+left: ok   outline 165.53 x 114.32 mm, the board's
+left: ok   holes as on the board: 109 x 0.3, 39 x 0.4, 2 x 0.75, 24 x 1, 56 x 3, 2 x 0.9 NPTH, 56 x 1.75 NPTH, 4 x 3.2 NPTH, 28 x 3.988 NPTH
+left: ok   all 320 holes inside the outline
+left: ok   every plated hole is on a F.Cu pad or via
+left: ok   every plated hole is on a B.Cu pad or via
+left: ok   placement file: 95 parts, 92 on the bottom; parts list: 95 parts
+left: board sha256 b9797903e4b3766ac77028fbe45a244fda4ab4309881d39565efda96e9a3bd61
+right: ok   every copper zone is filled as saved
+right: ok   11 Gerbers and 2 drill files written
+right: ok   layers drawn: F.Cu 447, In1.Cu 14184, In2.Cu 14096, B.Cu 1161, F.Paste 11, B.Paste 242, F.SilkS 8524, B.SilkS 23013, F.Mask 7614, B.Mask 18560, Edge.Cuts 244
+right: ok   outline 165.53 x 114.32 mm, the board's
+right: ok   holes as on the board: 103 x 0.3, 41 x 0.4, 2 x 0.75, 24 x 1, 56 x 3, 2 x 0.9 NPTH, 56 x 1.75 NPTH, 4 x 3.2 NPTH, 28 x 3.988 NPTH
+right: ok   all 316 holes inside the outline
+right: ok   every plated hole is on a F.Cu pad or via
+right: ok   every plated hole is on a B.Cu pad or via
+right: ok   placement file: 95 parts, 92 on the bottom; parts list: 95 parts
+right: board sha256 3963b5d2d2c129812ba509dc20efd573d4bad44b6d18a704db3c483a7d3ed996

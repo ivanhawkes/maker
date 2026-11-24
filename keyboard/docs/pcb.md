@@ -2,8 +2,9 @@
 
 Status: design started 2026-11-23. **v4 (4-layer, with the case's notches and mounting holes): both boards fully routed by script, DRC clean.**
 Generate and route with `python tools/pcb_generate.py` (no autorouter; about 15 s); the boards
-are written to `pcb/left/left.kicad_pcb` and `pcb/right/right.kicad_pcb`. Nothing is checked for
-fabrication, or ordered, and the footprints are unverified against parts. Each half has a
+are written to `pcb/left/left.kicad_pcb` and `pcb/right/right.kicad_pcb`. The
+[fabrication files](#fabrication-outputs-2026-11-24) are generated and checked on the computer;
+nothing is ordered, and the footprints are unverified against parts. Each half has a
 [schematic](#schematic-2026-11-23) drawn from its board: ERC is clean and it matches the board.
 The [electrical review](#electrical-review-2026-11-23) found no routing fault; its six proposals
 were accepted and the board changes [applied](#applied-2026-11-23) the same day. Results are in [v3](#v3-scripted-routing-2026-11-23) and [v4](#v4-notches-and-mounting-holes-2026-11-23); the method, every template and the findings are in
@@ -188,7 +189,8 @@ project, in [`parts/`](../parts/README.md), with their sources, licences and che
 4. Routing is scripted in the generator ([v3](#v3-scripted-routing-2026-11-23)), then checked
    with `kicad-cli pcb drc` against both fab houses' rules, and reviewed.
 5. Fabrication outputs (Gerbers, drill files and a BOM for hand assembly) come from
-   `kicad-cli`, plus a 3D STEP of the assembled board for case design.
+   `kicad-cli`, plus a 3D STEP of the assembled board for case design. Done 2026-11-24, but
+   for the STEP, which the case did not need: [fabrication outputs](#fabrication-outputs-2026-11-24).
 
 ## Provisional Parts List (2026-11-23)
 
@@ -559,6 +561,9 @@ Nix store are read-only there.
   removed on 2026-11-23 (it is in the git history up to commit `9cf459a`).
 - Pads: `python tools/pcb_pads.py pcb/left/left.kicad_pcb SW1 LED1` prints the named footprints'
   pads as placed, for checking against a datasheet.
+- Fabrication files: `python tools/fab_generate.py` (KiCad's Python) writes and checks
+  `pcb/fab/`; `--check` tells whether they are older than the boards
+  ([fabrication outputs](#fabrication-outputs-2026-11-24)).
 - Check: `python tools/pcb_check.py` runs DRC on both boards, tests that KiCad read the whole
   custom rules file, and prints a fingerprint of the routing. Exit 1 on any error.
   Pass one side per process to route both in parallel.
@@ -682,8 +687,9 @@ and findings below describe the board as reviewed, before those changes.
    firmware cap fails at 1.0 A. **Proposed:** power width and the 0.8/0.4 mm via for the Q1 and
    C1 stubs, a one-line change in `plane_vias`.
 6. **Charging with the LEDs lit.** The module's charger is a BQ24075 (schematic image) and RAW
-   is its battery pin, so the LEDs are a load on the cell, not on a system rail. From memory of
-   TI's datasheet, **not re-read and to verify**: charging ends when the current falls to about
+   is its battery pin, so the LEDs are a load on the cell, not on a system rail. Written from
+   memory of TI's datasheet, and **confirmed against it on 2026-11-24**
+   ([charger check](#charger-check-against-the-datasheet-2026-11-24)): charging ends when the current falls to about
    a tenth of the charge current, so even the dark LEDs' 28 mA can stop it finishing and the
    charger's safety timer may trip. Above about 0.1 A of LED current the cell discharges while
    plugged in. With the power switch off on USB there is no cell on RAW and the LEDs will not
@@ -702,6 +708,8 @@ commit.
 
 **Status 2026-11-23:** verified in ZMK's source at the pinned commit and built into the shield
 ([firmware/README.md](../firmware/README.md#lighting)). The cap, idle-off and P0.31 are settings.
+**2026-11-24:** the user's settings file can override the shield's cap (tried), so the build
+now stops above 20 %; and the lighting fades out over 5 s before idle-off.
 The start-up delay is not needed: ZMK resends the frame every 50 ms. Data-low rests on ZMK's
 order of operations plus R4 and C2, and needs a scope to confirm. Compile-time only.
 
@@ -840,6 +848,139 @@ The owner asked for the three changes that the [case design](case.md) suggested.
 
 The 1:1 prints in `pcb/print/` and the case in `cad/case/` are regenerated from these boards.
 
+## Charger Check Against The Datasheet (2026-11-24)
+
+Desk check only: TI's datasheet (SLUS810N, Rev. N, October 2021;
+`parts/datasheets/TI_BQ2407x_charger_SLUS810N.pdf`) read against the nice!nano's published schematic
+(`nice-nano_v2_schematic.png`). Nothing is measured, and the charger is on the module, so
+nothing here can be changed on these boards. It settles point 6 of the
+[electrical review](#electrical-review-2026-11-23), which was written from memory.
+
+**How the module wires its BQ24075** (read off the schematic image):
+
+| Pin | Wired to | Meaning (datasheet) |
+| --- | --- | --- |
+| BAT | VBAT, the module's RAW/B+ pads | The cell. Our LED supply is taken from here, so the charger cannot tell LED current from charge current |
+| OUT | VDDH: the nRF52840 and the 3.3 V regulator | The system rail. The controller's own current does not pass through BAT while on USB |
+| EN1 high, EN2 low | | USB500: input limited to 450 to 500 mA |
+| ISET | 10 kΩ to GND; JP1 "Charge Boost" adds 2 kΩ in parallel | Charge current 890 AΩ / R (797 to 975): **89 mA (80 to 98)**, or 534 mA (478 to 585) with the jumper closed. The datasheet gives 590 Ω to 8.9 kΩ as the valid range: 10 kΩ is just outside it |
+| TMR | Not connected | Default safety timers: pre-charge 30 min (24 to 36), fast charge **5 h (4 to 6)** |
+| CE low, SYSOFF low, TS 10 kΩ to GND | | Charger always enabled, battery always connected, no temperature sensing of the cell |
+| CHG | The orange LED | On while charging, off when done, **flashing at about 2 Hz on a timer fault** |
+
+**What the datasheet says, and what it means here:**
+
+- **Termination: confirmed.** Charging ends when the battery current falls to 10 % (9 to
+  11 %) of the charge current: about 9 mA (7 to 11). The BQ24075 has no pin to change it.
+  After that the charger disconnects the cell and starts again when it falls below 4.1 V
+  (4.06 to 4.14).
+- **LEDs lit while charging: confirmed.** Dark but powered, the 28 LEDs draw 28 mA from BAT
+  (their datasheet), three times the threshold, so the charger never sees the current fall
+  and holds the cell at 4.2 V until the fast-charge timer runs out. It then stops with a
+  fault, and the fault is cleared only by unplugging USB (or by pins the module ties off).
+  The timer is not slowed by this: it slows only for the charger's own current limiting.
+  Hence the rule already accepted: **VLED off when idle**, so a keyboard left plugged in
+  finishes its charge.
+- **LEDs brighter than the charge current: confirmed.** The charger regulates what leaves
+  BAT, so the cell gets the charge current less the LED current. At the 20 % cap (about
+  0.23 A) the cell discharges at about 0.14 A while plugged in.
+- **Power switch off on USB: confirmed in kind.** With no cell on BAT the charger runs its
+  battery-detection routine, charging and testing the capacitors on RAW in turn. The LEDs
+  would be fed from that, at 89 mA at most. Not a supported way to run them.
+- **New: a full charge from empty takes about as long as the safety timer.** The most the
+  charger can deliver before the timer expires is the charge current times the timer:
+  445 mAh at the typical figures (89 mA × 5 h), 319 mAh at both minimums, and less in
+  practice because the current tapers at the end. The case's cell is 400 mAh (CE04375). So a
+  charge from flat may stop on the timer with the orange LED flashing; unplugging and
+  plugging in again starts a new one. This is the timer doing its job, not a hazard, and a
+  top-up from part charge is well inside it. A larger cell (the 600 and 1100 mAh ones in the
+  parts list) needs a replug for every 320 to 440 mAh or so. This is arithmetic from the two
+  documents, with a charge current set just outside the datasheet's range: **to confirm on
+  the bench** by timing a charge from the cell's cut-off and watching the LED.
+- The Charge Boost jumper would shorten the charge, but at about 0.5 A it is over 1C for a
+  400 mAh cell. It stays open ([review, point 4](#electrical-review-2026-11-23)).
+
+## Fabrication Outputs (2026-11-24)
+
+Generated and checked on the computer only. **Nothing is ordered or sent, and this is not
+approval to order.** The bought parts are still to be measured against the 1:1 prints, the
+board house is not chosen, and both houses' rule pages are to be re-read first.
+
+`"$PY" tools/fab_generate.py` (KiCad's Python, as for the generator; about 8 s) writes, for
+each half, into `pcb/fab/`:
+
+| File | What |
+| --- | --- |
+| `<side>-gerbers.zip` | What a board house is sent: the 11 Gerbers and 2 drill files below, and nothing else |
+| `<side>/<side>-F_Cu.gtl`, `-In1_Cu.g1`, `-In2_Cu.g2`, `-B_Cu.gbl` | Copper, in stack order: front, GND plane, VLED plane, back |
+| `-F_Paste.gtp`, `-B_Paste.gbp`, `-F_Silkscreen.gto`, `-B_Silkscreen.gbo`, `-F_Mask.gts`, `-B_Mask.gbs` | Paste, silkscreen and mask |
+| `-Edge_Cuts.gm1` | The outline, and the 28 LED cut-outs inside it |
+| `-PTH.drl`, `-NPTH.drl` | Plated and non-plated holes, Excellon, millimetres |
+| `-pos.csv` | Placement file: 95 parts, 92 of them on the bottom |
+| `-bom.csv` | Parts list, written from the board |
+| `-job.gbrjob` | KiCad's job file; not in the zip |
+| `report.txt` | What the run printed, and each board file's sha256 |
+
+Settings: KiCad 10.0.8 `kicad-cli`; Gerber X2, millimetres, 4.6 format, Protel file
+extensions; silkscreen clipped where the mask is open (`--subtract-soldermask`), so no ink
+lands on a pad whatever the board house does; drill files in the Gerbers' coordinates, plated
+and non-plated apart. The Gerbers carry the time they were made, so two runs differ in those
+lines only.
+
+**Checks, made on every run** (exit 1 on a failure). The files are read back with the tool's
+own small parsers and compared with the board as `pcbnew` reads it:
+
+| Check | Left | Right |
+| --- | --- | --- |
+| Copper zones filled as saved | Yes | Yes |
+| 11 Gerbers and 2 drill files written; every layer but F.Paste drawn | Yes | Yes |
+| Outline's extent is the board's | 165.53 × 114.32 mm | 165.53 × 114.32 mm |
+| Hole sizes and counts as on the board | 320: 109 × 0.3, 39 × 0.4, 2 × 0.75, 24 × 1.0, 56 × 3.0 plated; 2 × 0.9, 56 × 1.75, 4 × 3.2, 28 × 3.988 not | 316: as left but 103 × 0.3 and 41 × 0.4 |
+| Every hole inside the outline | Yes | Yes |
+| Every plated hole on a pad or via of F.Cu and of B.Cu (drills and copper share an origin and a hand) | 230 of 230 | 226 of 226 |
+| Placement file lists every placed part on the board's side | 95 | 95 |
+
+- **The checks can fail** (tried once, by hand, 2026-11-24): the left drill file against the
+  right board's copper, moved 1 mm and mirrored each put all 230 plated holes off a pad, and
+  the hole counts differed.
+- **`tools/fab_generate.py --check`** fails when a board file's sha256 is not the one in
+  `report.txt`: the files in `pcb/fab/` are then older than the board. Run it before an order.
+- **Read back with a second program:** gerbonara 1.6.3 (`nix shell
+  nixpkgs#python3Packages.gerbonara -c gerbonara layers pcb/fab/left-gerbers.zip`, and `render
+  --top` or `--bottom`) names every layer correctly from the zip alone, inner layers 1 and 2
+  included, finds 230 + 90 and 226 + 90 holes, and gives the same outline. Its pictures of
+  both faces of the left board were looked at: outline, notches, cut-outs, holes, pads and
+  silkscreen are where the board has them. Its two warnings (a `G90` after the drill header,
+  a macro with spare parameters) are about KiCad's style, not faults. gerbv, the usual
+  viewer, is marked broken in nixpkgs.
+- `tools/pcb_check.py` at the same boards: 0 unconnected, 0 errors, parity and ERC clean,
+  fingerprints `6baa8230127f6a1d` and `2f7fbd9eff4a3a65` as in v4.
+
+**Found while making them:**
+
+- KiCad's own parts-list export from the schematic prints `SW_PWR?` and `SW_RST?` and warns
+  of annotation errors: a reference that does not end in a number counts as unannotated. ERC
+  does not report it. The parts list is therefore written from the board, where the
+  references are plain. Renaming the two would change the silkscreen and these documents:
+  left as it is, for the owner to say.
+- The parts list has what is soldered to the board. The controller, its sockets and pins and
+  the battery are not in it (the controller is marked as not a part to buy with the board):
+  the [provisional parts list](#provisional-parts-list-2026-11-23) is still the buying list.
+- Silkscreen: the labels `R3` and `Q2` lie partly over R3's pads on the bottom, and are now
+  clipped there. Legible, but they could be moved in the generator. Not changed.
+- F.Paste has only SW_PWR's and SW_RST's pads (11 openings); the other 242 are on the bottom.
+  A stencil for the bottom alone covers all but those two parts.
+- The Gerbers' project line reads `rev?`: the boards have no revision in their title block.
+- The inner layers' file names end `.g1` and `.g2`. Say the stack order on the order form
+  all the same: F.Cu, In1 (GND), In2 (VLED), B.Cu.
+
+**Before an order** (the owner orders; ask first): measure the parts against the 1:1 prints;
+choose the house and re-read its [rules](#fab-house-design-rules-2026-11-23); run
+`tools/pcb_check.py`, then `tools/fab_generate.py`; load each zip into the house's own viewer
+and compare it with KiCad; give 4 layers, 1.6 mm, the stack order, and the answer on
+non-plated socket holes ([open items](#open-items)); check what the 28 cut-outs inside the
+outline cost; and order a solder-paste stencil for each board, bottom side.
+
 ## Open Items
 
 - Done 2026-11-23: the electrical review, and its accepted changes
@@ -847,8 +988,10 @@ The 1:1 prints in `pcb/print/` and the case in `cad/case/` are regenerated from 
   compile only, and the [schematic](#schematic-2026-11-23), and the outline settled with the
   case ([v4](#v4-notches-and-mounting-holes-2026-11-23)). **Next:** before any order, measure
   the bought parts against a 1:1 print of the board.
-- To verify: the BQ24075's charge-termination behaviour against TI's datasheet (not in
-  `parts/datasheets/`), and the antenna's extent on the bought module.
+- Done 2026-11-24, on paper: the BQ24075's charge termination against TI's datasheet
+  ([charger check](#charger-check-against-the-datasheet-2026-11-24)). Bench: time a full
+  charge from the cell's cut-off against the 5 h safety timer. Still to verify: the antenna's
+  extent on the bought module.
 - Bench: the soft-start values (R3, C2), with a scope on RAW.
 - Controller height, unread: the Mill-Max catalogue figure is ambiguous about the socket's
   seated height (0.071 in or 0.095 in). On the right half the module is face down, so its
@@ -858,13 +1001,14 @@ The 1:1 prints in `pcb/print/` and the case in `cad/case/` are regenerated from 
 - Done on paper 2026-11-23: every footprint is checked against its datasheet
   ([parts/README.md](../parts/README.md#footprint-check-against-datasheets-2026-11-23)). Two
   faults found and fixed in the generator the same day: the power switch now sits on the board
-  edge with its actuator overhanging by 1.0 mm, and the LED silkscreen mark is at the part's cut
+  edge with its actuator overhanging by 1.0 mm (1.85 mm since v4), and the LED silkscreen mark is at the part's cut
   corner (pin 3, GND). Both boards: 0 unconnected, 0 DRC errors, two runs identical (left 814
   tracks / 146 vias, right 846 / 142). New warnings: the switch's silkscreen is clipped by the
   board edge, twice a board. Still to do: measure the bought parts against a 1:1 print
   (the PDFs are in `pcb/print/`, made 2026-11-23).
-- Add the real KLP Lamé keycap outlines to `tools/layout.py check` (the prototype shows they fit,
-  about 2 mm apart by eye).
+- Done 2026-11-24: the real KLP Lamé keycap outlines are in `tools/layout.py check`
+  ([layout/README.md](../layout/README.md#keycap-outlines-in-the-check-2026-11-24)); the tightest
+  pair is T2–T3 at 0.56 mm.
 - After the review, in this order: the ZMK shield from `pcb/pins.yaml`, then the schematic
   (last: generated from the same script as the board, it can only agree with itself), and the
   board outline settled with the case design. The power switch follows the outline: the

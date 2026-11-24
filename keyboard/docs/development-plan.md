@@ -140,18 +140,27 @@ before starting it. Claude's suggested order: the keycap outlines, the fabricati
 then the charging check.
 
 - Software:
-  - Add the real KLP Lamé keycap outlines to `tools/layout.py check`
-    ([pcb.md](pcb.md#open-items)); the models are in `parts/3d/third-party/klp-lame/`. The case
-    generators' keycap clearance check could use them too, in place of plain blocks.
-  - Generate and review the fabrication outputs (Gerbers, drill files, parts list, placement
-    files). None exists yet. Ordering still waits on measured parts; preparing these does not.
-  - The lighting firmware: the fade to black after 60 s and the brightness cap are agreed
-    ([decisions.md](decisions.md)) but not written. Compile-check only.
+  - **Done 2026-11-24:** the real KLP Lamé keycap outlines are in `tools/layout.py check`
+    ([layout/README.md](../layout/README.md#keycap-outlines-in-the-check-2026-11-24)): no
+    overlap, the tightest pair T2–T3 at 0.56 mm. Which cap goes where is now in
+    `layout/layout.yaml`, read by the check and the scenes. The case generators keep their
+    plain blocks, which contain the real outlines.
+  - **Done 2026-11-24, on the computer only:** the fabrication outputs (Gerbers, drill files,
+    parts list, placement files) are in `pcb/fab/`, written and checked by
+    `tools/fab_generate.py` and read back with a second program
+    ([pcb.md](pcb.md#fabrication-outputs-2026-11-24)). Not an approval to order: that still
+    waits on measured parts, the choice of house and the owner.
+  - **Done 2026-11-24, compile only:** the lighting firmware. Lit for 60 s after a half's last
+    key press, then a 5 s fade to black; 50 ms to light up (owner, 2026-11-24); the 20 % cap
+    now stops the build if raised ([firmware/README.md](../firmware/README.md#lighting)).
+    Nothing is flashed: the look of the fade is to judge on the LEDs.
   - Retro tenting wedges, deferred by the owner ([case-retro.md](case-retro.md)); a retro
     dongle case if wanted.
 - Desk research:
-  - The BQ24075's charge termination against TI's datasheet, which is not in
-    `parts/datasheets/` yet.
+  - **Done 2026-11-24, on paper:** the BQ24075's charge termination against TI's datasheet,
+    now in `parts/datasheets/` ([pcb.md](pcb.md#charger-check-against-the-datasheet-2026-11-24)).
+    The review's point stands. New: a 400 mAh cell charged from flat at the module's 89 mA
+    takes about as long as the charger's 5 h safety timer; to time on the bench.
   - Match off-white, burnt orange, brown and mustard to Bambu Lab's PETG and PLA ranges
     ([case-retro.md](case-retro.md)).
   - The position of the nice!nano's reset button, so the dongle's case can have a pen hole
@@ -174,11 +183,12 @@ then the charging check.
   - Where the 22 seconds for each 4k still goes has not been measured
     ([scenes.md](scenes.md)); the 2k set has not been rendered.
 
-Still to verify, from the review: the BQ24075's charge termination against TI's datasheet, the
+Still to verify, from the review: a full charge against the charger's safety timer (bench), the
 antenna's extent on the bought module, the soft-start values on the bench, and one real LED's
 pinout with a meter ([pcb.md](pcb.md#schematic-2026-11-23)). Run `python tools/pcb_check.py`,
 `tools/pcb_review.py`, `tools/zmk_generate.py --check` and `tools/layout.py check` after any
-change; all four pass at this commit. After a board change also run `tools/case_board.py`,
+change; all four pass at this commit. After a board change also run `tools/fab_generate.py`,
+or `pcb/fab/` is older than the board (`--check` tells). After a board change also run `tools/case_board.py`,
 `tools/case_generate.py`, `tools/wedge_generate.py` and `tools/case_retro_generate.py` ([case.md](case.md#generating-and-checking)).
 
 ## 4. Assemble And Validate
