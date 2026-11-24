@@ -851,8 +851,7 @@ The 1:1 prints in `pcb/print/` and the case in `cad/case/` are regenerated from 
 ## Charger Check Against The Datasheet (2026-11-24)
 
 Desk check only: TI's datasheet (SLUS810N, Rev. N, October 2021;
-`parts/datasheets/TI_BQ2407x_charger_SLUS810N.pdf`; kept locally and not yet in the repository, which
-is public, until the owner says so: its address and checksum are in `SOURCES.tsv`) read against the nice!nano's published schematic
+`parts/datasheets/TI_BQ2407x_charger_SLUS810N.pdf`) read against the nice!nano's published schematic
 (`nice-nano_v2_schematic.png`). Nothing is measured, and the charger is on the module, so
 nothing here can be changed on these boards. It settles point 6 of the
 [electrical review](#electrical-review-2026-11-23), which was written from memory.
