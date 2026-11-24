@@ -55,6 +55,14 @@ LIFT = {"plinth": -52, "stripe": -34, "screws": -30, "tray": 0, "cell": 26, "boa
         "plate": 80, "lid": 92, "switches": 106, "caps": 138}
 SPLAY, HALF_X = 8.0, 128.0   # assembled: each half turned outwards by this, its origin this far from the middle
 
+
+def linear(code):
+    """A hex colour code as the linear RGB that Blender's materials take."""
+    return tuple(((c / 255 + 0.055) / 1.055) ** 2.4 if c > 10 else c / 255 / 12.92 for c in bytes.fromhex(code.lstrip("#")))
+
+
+# The retro case's colours are its filaments' nominal ones (owner, 2026-11-24): Bambu PETG Basic
+# Dark Beige for the body, Orange for the plate and the stripe. The rest are picked by eye.
 LOOKS = {
     "kb1": {
         "case": ((0.014, 0.014, 0.016), 0.42), "plate": ((0.014, 0.014, 0.016), 0.42), "accent": ((0.014, 0.014, 0.016), 0.42),
@@ -69,7 +77,7 @@ LOOKS = {
         ],
     },
     "retro": {
-        "case": ((0.80, 0.76, 0.64), 0.48), "plate": ((0.62, 0.20, 0.015), 0.45), "accent": ((0.62, 0.20, 0.015), 0.45),
+        "case": (linear("DBC8B6"), 0.48), "plate": (linear("FF671F"), 0.45), "accent": (linear("FF671F"), 0.45),
         "caps": ((0.86, 0.85, 0.80), 0.36),
         "floor": ((0.115, 0.050, 0.022), 0.55), "world": ((0.060, 0.028, 0.012), 1.0),
         "lights": [
@@ -81,12 +89,6 @@ LOOKS = {
         ],
     },
 }
-
-
-
-def linear(code):
-    """A hex colour code as the linear RGB that Blender's materials take."""
-    return tuple(((c / 255 + 0.055) / 1.055) ** 2.4 if c > 10 else c / 255 / 12.92 for c in bytes.fromhex(code.lstrip("#")))
 
 
 if TRIAL:   # for judging colour: white lamps, a grey floor and no colour grading. The finishes stay as they are

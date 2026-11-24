@@ -85,7 +85,8 @@ body and #CE7B21 for the accent.
   hand: Dark Beige (30403, nominal #DBC8B6) for the tray, hood and plinth, and Orange (30301,
   nominal #FF671F) for the plate and the stripe. Nothing is bought, the whole case is in the
   material it is profiled for, and the plate's switch fit is the one already tried in PETG.
-  Chosen from renders, not from a print.
+  Chosen from renders, not from a print. The showcase scenes and stills use these colours
+  since the same day ([scenes.md](scenes.md)).
 - **Trial renders, 2026-11-24:** the hero views of six pairs from the filament on hand, in
   `cad/scenes/build/colours/` (not kept in git; `sheet-on-hand.png` shows them together):
   Dark Beige and White, each with Orange, Brick Red and Yellow. Made with, for example,

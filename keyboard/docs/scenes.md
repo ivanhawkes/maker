@@ -1,6 +1,7 @@
 # Showcase Scenes
 
-Status: **built and rendered 2026-11-23.** These are pictures of the design files, not of a
+Status: **built 2026-11-23; both files and every still made again 2026-11-24**, with the retro
+case in its chosen filament colours. These are pictures of the design files, not of a
 built keyboard: nothing here is evidence of fit or function. The keycaps are the published
 models, not yet checked against the owner's set.
 
@@ -85,8 +86,9 @@ back to the CPU. Measured here: the 20 stills at 4k took 10 minutes on the 5060 
 8 minutes 35 seconds on both cards. The second card helps little. Keeping the scene
 loaded between stills (`use_persistent_data`) was tried and made no difference: about 22
 seconds a still either way. What the rest of that time goes on has not been measured. On the CPU (a Ryzen 9 3900X) the 1080p set took 24
-minutes and one 4k still 4 minutes, about eight times slower. The 1080p stills in the
-repository are the CPU ones; the 2k set has not been rendered.
+minutes and one 4k still 4 minutes, about eight times slower. The stills in the repository
+are from 2026-11-24, on both cards: the 1080p set took 3 minutes and the 4k set 9 minutes
+35 seconds, each with the scenes built first. The 2k set has not been rendered.
 
 ## Credit And Licence
 
@@ -101,15 +103,14 @@ carry that credit wherever they are shown. The switch model is from kiswitch (MI
 - The keycaps are the published models; the moulded set may differ. To check when measured.
 - Since 2026-11-24 `tools/scene_build.py` reads which cap goes where from
   `layout/layout.yaml`. The table was compared with the script's old one for all 28 keys and
-  is the same, and the script has since built and rendered the retro scene with it (the
-  colour trials of 2026-11-24). The kept `.blend` files and stills have not been rebuilt:
-  they are from the old copy.
+  is the same. The kept `.blend` files and stills are built from it.
 - `--colours` writes its scene file and stills to `cad/scenes/build/` only, so a trial never
   replaces the kept files. A trial is lit for judging colour, not for mood: white lamps, a
   grey floor and no colour grading. It shows nominal hex codes, and one finish for every part.
-- Colours are picked by eye, not matched to Bambu Lab filaments or to the caps. The kept
-  retro stills predate the filament choice of 2026-11-24 (Dark Beige with Orange); the colour
-  trials in the build folder show it.
+- The retro case's body, plate and stripe are its filaments' nominal colours (Bambu PETG
+  Basic Dark Beige #DBC8B6 and Orange #FF671F; owner, 2026-11-24), seen under the scene's warm
+  lamps on a brown floor, which push them towards orange. A print will not match a hex code
+  exactly. Every other colour is picked by eye, keyboard 1's black and the keycaps included.
 - The prints are shown smooth, with a fine grain: no layer lines or bed texture.
 - No power switch is shown, so its slot shows the controller's USB connector behind it as a
   bright shape.
