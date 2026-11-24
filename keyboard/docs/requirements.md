@@ -20,7 +20,7 @@
 ## Target Behavior
 
 - The PC sees one usable USB keyboard via the desk controller, with keys from both halves operating together.
-- Each half runs for weeks per charge with RGB off and typical daily typing. The numeric target is still to be agreed.
+- Each half runs for weeks per charge with RGB off and typical daily typing. The numeric target is still to be agreed. Proposed 2026-11-24, for the owner to decide: at least 8 weeks at 8 hours awake a day on the 400 mAh cell, an average of 253 µA or less; the estimate is about 27 weeks ([power budget](architecture.md#power-budget-2026-11-24)).
 - Both halves reconnect after power cycling and can be charged independently. Validate startup and recovery when either half is absent or reconnects.
 - When populated, RGB lighting is usable on both halves and can be switched off to conserve power; lighting is ambient (global effects). It stays off unless the owner is typing, fades to black after 60 s without a key press, and its power is switched off when dark. Builds with no LEDs must retain normal keyboard operation.
 - The keyboard is usable flat as well as with the selected tenting option, with a stable, non-slip base and no interference with cables or the user's hands.

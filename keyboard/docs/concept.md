@@ -139,3 +139,5 @@ has no power constraint and handles the keymap, the display and USB.
    documented.
 4. Choose a cell size that fits the space under the plate and meets the
    "weeks" runtime target, using the ZMK power profiler and then measurements.
+   Estimated 2026-11-24: about 27 weeks on the 400 mAh cell
+   ([power budget](architecture.md#power-budget-2026-11-24)); measurements to come.

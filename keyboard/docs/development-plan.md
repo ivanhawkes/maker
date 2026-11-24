@@ -165,7 +165,10 @@ then the charging check.
     ([case-retro.md](case-retro.md)).
   - The position of the nice!nano's reset button, so the dongle's case can have a pen hole
     ([dongle-case.md](dongle-case.md)).
-  - The power budget: "weeks per charge" has no number or test conditions yet.
+  - **Done 2026-11-24, an estimate only:** the power budget
+    ([architecture.md](architecture.md#power-budget-2026-11-24)). About 27 weeks per charge
+    with the lighting off; a target of 8 weeks and its test are proposed for the owner to
+    decide.
 - For the owner to decide:
   - The keymap: the thumb keys and the Fn layer are still a first proposal
     ([firmware/README.md](../firmware/README.md)).

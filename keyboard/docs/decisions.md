@@ -31,7 +31,7 @@ No parts, firmware versions, manufacturing orders, or geometry changes are appro
   - Switches: plate-mounted MX-compatible switches in Kailh hot-swap sockets.
   - RGB: optional per-key under-switch LEDs with ambient global effects only. Off by default, with LED power switched off when unused. Per-key reactive effects and layer colours are out of scope.
   - Extras: none on the halves; a small status display on the dongle.
-  - Runtime target: weeks per charge with RGB off and typical daily typing. The numeric target and test conditions are still to be agreed.
+  - Runtime target: weeks per charge with RGB off and typical daily typing. The numeric target and test conditions are still to be agreed. **Proposed by Claude 2026-11-24, open:** at least 8 weeks for each half at 8 hours awake a day on the 400 mAh cell, tested as an average current of 253 µA or less ([power budget](architecture.md#power-budget-2026-11-24)).
   - Hosts: Linux and Windows. macOS is not a target.
   - Board: nice!nano for both halves and the dongle. The owner will order and bench-test the boards; design work assumes they are fit for purpose as a mature, widely used ZMK board.
   - RGB behaviour: expected to be used lightly, if at all. It stays off unless the owner is typing and fades to black after 60 s without a key press.
@@ -65,6 +65,7 @@ No parts, firmware versions, manufacturing orders, or geometry changes are appro
   - Build area in the profile: 256 × 256 × 261 mm.
 - **Deferred:** Battery specification and design are for Claude to undertake later, subject to owner approval and safety review.
 - **Decided 2026-11-24 (owner): the lighting's fades.** Fast in, slow out: the LEDs light up over 50 ms and fade out over 5 s. The fade-out starts 60 s after the last key press on that half. Written as a small driver in the firmware module, since ZMK has no fade; compiled only ([firmware/README.md](../firmware/README.md#lighting)).
+- **Estimated 2026-11-24, from ZMK's published figures, nothing measured:** with the lighting off each half averages about 75 µA at 8 hours awake a day, about 27 weeks on the 400 mAh cell (21 at worst). Even a 120 mAh cell gives about 11 weeks, so runtime does not decide the cell's size. With the lighting on the cell lasts hours: 1.5 h at white at the 20 % cap ([power budget](architecture.md#power-budget-2026-11-24)).
 - **Found 2026-11-24, on paper, for the battery choice:** the nice!nano charges at about 89 mA and its charger stops after 5 h (4 to 6) if the charge has not finished. A 400 mAh cell charged from flat is about at that limit, and a larger cell needs USB unplugged and plugged in again part-way. Not a hazard; to time on the bench ([pcb.md](pcb.md#charger-check-against-the-datasheet-2026-11-24)).
 - **Decided 2026-11-23 (owner): inputs to the case design.**
   - Design from specifications, with room to adjust: the owner does not have the parts yet.

@@ -136,6 +136,74 @@ Each half needs a suitable rechargeable cell and a validated charging and protec
 
 Estimate battery life only after choosing the cell, LED count, brightness, and controller: compare usable capacity with measured or defensibly estimated average current for typing, idle, sleep, and lighting states. Confirm with real measurements; do not treat theoretical estimates as runtime guarantees.
 
+## Power Budget (2026-11-24)
+
+An estimate from published figures, for each half. **Nothing is measured**: it is here to give
+"weeks per charge" a number to agree and a current to measure against, not to promise a
+runtime. The dongle runs from USB and has no budget.
+
+**Inputs.** ZMK's power profiler data at the pinned commit
+(`firmware/workspace/zmk/docs/src/data/power.js` and `components/power-estimate.js`), which
+ZMK says were measured on nice!nanos with a Nordic Power Profiler Kit, to ±20 %:
+
+| Item | Current | When |
+| --- | --- | --- |
+| nice!nano v2: regulator 15 µA, other 3 µA | 18 µA | Always, deep sleep included |
+| Cell self-discharge, 5 % a month | 28 µA for 400 mAh | Always |
+| Split peripheral, connected and idle | 20 µA | Awake |
+| A key held down: 365 µA, for 2 % of the time (ZMK's assumption) | 7 µA | Awake |
+| The lighting feature's SPI, "while underglow is turned on" | 60 µA | Awake. Counted here even with the lighting off, since it is not clear the SPI rests then: the cautious reading |
+
+- "Awake" is any time within 15 minutes of a key press on that half; after that the half is
+  in deep sleep (`CONFIG_ZMK_IDLE_SLEEP_TIMEOUT=900000`, as built) and only the first two rows
+  apply.
+- As built, the matrix is scanned on interrupts, not polled, which is what ZMK's idle figure
+  assumes, and nrfx's workaround for the nRF52840's SPIM3 current fault (anomaly 195) is
+  compiled in.
+- Usable capacity is taken as 85 % of the label (ZMK's figure); the worst case is 80 % and
+  20 % more current.
+- Not included, all small or unknown: the cell's protection circuit (a few µA, typically),
+  leakage through the LED supply switch, and battery-level reports.
+
+**Lighting off.** Average current is 46 µA plus 87 µA for the share of the day the half is
+awake (400 mAh cell):
+
+| Awake each day | Average current | Per charge | Worst case |
+| --- | --- | --- | --- |
+| 4 h | 60 µA | 34 weeks | 26 weeks |
+| 8 h | 75 µA | 27 weeks | 21 weeks |
+| 12 h | 89 µA | 23 weeks | 18 weeks |
+| 24 h (never asleep) | 133 µA | 15 weeks | 12 weeks |
+
+At 8 h a day, other cells: 120 mAh gives 11 weeks (worst 9), 600 mAh 34 weeks, 1100 mAh
+45 weeks. Self-discharge is over a third of the 400 mAh figure, so a larger cell gains less
+than its capacity suggests. Without the 60 µA for the SPI the 400 mAh figure is 37 weeks.
+
+**Lighting on.** The LEDs at the cap draw about three thousand times the rest. From the
+[electrical review](pcb.md#electrical-review-2026-11-23): 0.23 A with all 28 at white at the
+20 % cap, and 28 mA powered but dark. A 400 mAh cell gives about 1.5 hours of white at the
+cap, or 12 hours of dark-but-powered. So "weeks per charge" holds only with the lighting off,
+as the requirement says, and the rule that the LED supply goes off when idle is what keeps a
+lit keyboard from emptying itself in half a day.
+
+**Proposed target and test, for the owner to decide** ([decisions](decisions.md)):
+
+- **At least 8 weeks per charge for each half, lighting off, 8 hours awake a day, on the
+  400 mAh cell.** That allows an average of 253 µA; the estimate is 75 µA, so there is a
+  factor of three in hand for what is not counted and for the figures being wrong.
+- **Test:** measure the current into the battery connector at about 3.8 V in three states,
+  lighting off: deep sleep (18 µA expected, plus the protection circuit), connected and idle
+  (about 40 to 100 µA), and a key held (about 380 µA more). Weight them as above. Pass if the
+  average is 253 µA or less. A multimeter's burden voltage upsets readings this small: use a
+  power profiler or a µCurrent-style adapter.
+
+**What it means for the cell.** Runtime does not decide the cell's size: even 120 mAh meets
+"weeks". The 400 mAh cell the case is built round is kept as the recommendation; it gives
+about six months, and three times the lit time of the small one. Daily use takes about
+2 mAh, so a top-up is minutes, and the charger's safety timer
+([charger check](pcb.md#charger-check-against-the-datasheet-2026-11-24)) only matters for a
+charge from flat.
+
 ## References
 
 - [ZMK dongle integration](https://zmk.dev/docs/hardware-integration/dongle)

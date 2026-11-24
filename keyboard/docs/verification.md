@@ -31,6 +31,10 @@ question arose. None is done.
   out (done) or flashes at about 2 Hz (timer fault), and whether replugging USB restarts the
   charge. Expected from the datasheet: about 5 h for a 400 mAh cell, at the timer's limit
   ([pcb.md](pcb.md#charger-check-against-the-datasheet-2026-11-24)).
+- **The power budget's three currents**, lighting off: deep sleep, connected and idle, and a
+  key held, into the battery connector with a power profiler
+  ([architecture.md](architecture.md#power-budget-2026-11-24)). In particular whether the
+  lighting feature's SPI draws its 60 µA with the lighting off.
 - **Charging with the lighting on.** With VLED on and the LEDs dark, confirm the charge does
   not finish; with the lighting idle (VLED off), confirm it does (same section).
 - **Cell current at the brightness cap.** All 28 LEDs at white, 20 %: about 0.23 A expected,
